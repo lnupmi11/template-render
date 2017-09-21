@@ -112,6 +112,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
+    <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="Utils\Functions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils\Functions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
