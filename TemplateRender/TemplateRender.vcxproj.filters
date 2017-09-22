@@ -27,13 +27,13 @@
     <ClCompile Include="Utils\Functions.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Tests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\Tests.h">
+      <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
