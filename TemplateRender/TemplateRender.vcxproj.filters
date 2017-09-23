@@ -19,6 +19,9 @@
     <Filter Include="Tests">
       <UniqueIdentifier>{8b570535-b574-4003-b541-216641707701}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DTO">
+      <UniqueIdentifier>{9e615125-d94e-4d0e-95c4-eb4180ec8af9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp">
@@ -27,6 +30,12 @@
     <ClCompile Include="Utils\Functions.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="DTO\DataObject.cpp">
+      <Filter>DTO</Filter>
+    </ClCompile>
+    <ClCompile Include="DTO\DataManager.cpp">
+      <Filter>DTO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">
@@ -34,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="Tests\Tests.h">
       <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="DTO\DataObject.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="DTO\DataManager.h">
+      <Filter>DTO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
