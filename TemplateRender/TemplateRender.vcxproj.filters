@@ -36,6 +36,9 @@
     <ClCompile Include="DTO\DataManager.cpp">
       <Filter>DTO</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Parser.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">
@@ -50,5 +53,16 @@
     <ClInclude Include="DTO\DataManager.h">
       <Filter>DTO</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\Parser.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CppCodeTemplate.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tests\TestCppHtmlPage.htm">
+      <Filter>Tests</Filter>
+    </None>
   </ItemGroup>
 </Project>

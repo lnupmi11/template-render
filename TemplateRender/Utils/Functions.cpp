@@ -8,7 +8,7 @@ std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
 {
 	std::ifstream file;
 	file.open(fileName);
-	
+
 	if (!file.is_open())
 	{
 		std::cout << "can not open file " << fileName << "\n";
@@ -30,7 +30,6 @@ void HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::st
 	file.close();
 }
 
-
 void HelperFunctions::createCpp(const std::string& cppCode, const std::string& fileName)
 {
 	_mkdir("_cppcache_");
@@ -46,6 +45,15 @@ void HelperFunctions::createCpp(const std::string& cppCode, const std::string& f
 	file.close();
 	std::cout << "File '" + fileName + "' is created.\n";
 }
+
+std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartOfCppCode)
+{
+	std::string result = programBegin;
+	result += mainPartOfCppCode;
+	result += programEnd;
+	return result;
+}
+
 void HelperFunctions::createBat(std::vector<std::string> filesToDelete, const std::string& fileName)
 {
 	std::ofstream file;
@@ -65,6 +73,7 @@ void HelperFunctions::createBat(std::vector<std::string> filesToDelete, const st
 	file.close();
 	std::cout << "File '" + fileName + "' for removing trash is created.\n";
 }
+
 void HelperFunctions::compile(const std::string& cppFilePath)
 {
 	std::string terminalPath = cppFilePath;
@@ -73,6 +82,7 @@ void HelperFunctions::compile(const std::string& cppFilePath)
 	system(command.c_str());
 	std::cout << "File '" + cppFilePath + "' is created.\n";
 }
+
 void HelperFunctions::run(const std::string& filePath)
 {
 	std::cout << "Running " + filePath + "...\n";

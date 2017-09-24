@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include"CppCodeTemplate.h"
 
 class HelperFunctions
 {
@@ -17,6 +18,10 @@ public :
 	// Info
 	// Creates .cpp file from string variable
 	static void createCpp(const std::string& cppCode, const std::string& fileName);
+
+	// Info
+	// Add  begin(also libraries) and end to cpp code;
+	static std::string createCompletedCppCode(const std::string& mainPartOfCppCode);
 
 	// Info
 	// Creates .bat file for deleting unnecessary files

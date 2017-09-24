@@ -3,8 +3,17 @@
 #include <Windows.h>
 #include <direct.h>
 #include "../Utils/Functions.h"
+#include "../Utils/Parser.h"
 
 using namespace std;
+
+
+void testParseToCpp()
+{
+	string result = Parser::parseToCpp(HelperFunctions::getCppHtmlCode("Tests/TestCppHtmlPage.htm"));
+	string cppProgram = HelperFunctions::createCompletedCppCode(result);
+}
+
 
 string composedCppCode()
 {
