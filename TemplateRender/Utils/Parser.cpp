@@ -6,6 +6,27 @@
 // function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
 // also include nested cycles
 // but now work only for loop for (to changes this we need to add more checks in isLoop() dunction ) 
+void append(std::string &str, const std::string &subStr) 
+{
+	for (int i = 0; i<subStr.size(); ++i) 
+	{
+		if (subStr[i] == '"') 
+		{
+			if (i != 0 && subStr[i-1] == char(92)) 
+			{
+				str+=subStr[i];
+			}
+			str+=char(92); // ascii code of '\'
+			str+='"';
+		}
+		else 
+		{
+			str+=subStr[i];
+		}
+	}
+}
+
+
 string Parser::parseToCpp(string& cppHtmlCode)
 {
 	static string cppCode("");
@@ -22,9 +43,9 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 	if (startPos != 0 && startPos != -1)
 	{
-		ForCompilation.append("file << \" ");
-		ForCompilation.append(cppHtmlCode.substr(0, startPos));
-		ForCompilation.append(" \";  ");
+		append(ForCompilation, "file << \" ");
+		append(ForCompilation, cppHtmlCode.substr(0, startPos));
+		append(ForCompilation, " \";  ");
 		cppHtmlCode.erase(0, startPos);
 	}
 
@@ -34,20 +55,20 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 		if (isLoop(cppCode))
 		{
-			ForCompilation += cppCode;
+			append(ForCompilation, cppCode);
 			parseToCpp(cppHtmlCode);
 		}
 		else
 		{
 			if (cppCode != "{" && cppCode != "}")
 			{
-				ForCompilation += " file <<  ";
-				ForCompilation += cppCode;
-				ForCompilation += ";";
+				append(ForCompilation, " file <<  ");
+				append(ForCompilation, cppCode);
+				append(ForCompilation, ";");
 			}
 			if (cppCode == "{" || cppCode == "}")
 			{
-				ForCompilation += cppCode;
+				append(ForCompilation, cppCode);
 			}
 			parseToCpp(cppHtmlCode);
 		}
@@ -57,9 +78,9 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 	if (startPos == -1 && endPos == -1 && cppHtmlCode != "")
 	{
-		ForCompilation += "file << \" ";
-		ForCompilation.append(cppHtmlCode.substr(0, startPos));
-		ForCompilation.append(" \";  ");
+		append(ForCompilation, "file << \" ");
+		append(ForCompilation, cppHtmlCode.substr(0, startPos));
+		append(ForCompilation, " \";  ");
 		cppHtmlCode.erase(0, startPos);
 	}
 
@@ -87,7 +108,7 @@ void Parser::removeGapsAndTabsBeforeCode(string & code)
 	
 	while (code[0] == ' ' || code[0] == '\n')
 	{
-	code.erase(0, 1);
+		code.erase(0, 1);
 	}
 	/*regex anySymbol("[^\\s] ");
 	regex_replace(code, anySymbol, "");*/
