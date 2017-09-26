@@ -100,6 +100,18 @@ bool Parser::isLoop(const string & str)
 	return result;
 }
 
+bool Parser::isForeach(const string & str)
+{
+	//for(auto n : nums)
+	regex loopForExpr("\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)");
+	if (regex_search(str.begin(), str.end(), loopForExpr))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 //
 //// Info
 //// delete spaces and tabs before code 
