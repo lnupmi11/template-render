@@ -43,9 +43,9 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 	if (startPos != 0 && startPos != -1)
 	{
-		append(ForCompilation, "file << \" ");
+		ForCompilation.append("file << \" ");
 		append(ForCompilation, cppHtmlCode.substr(0, startPos));
-		append(ForCompilation, " \";  ");
+		ForCompilation.append(" \";  ");
 		cppHtmlCode.erase(0, startPos);
 	}
 
@@ -62,9 +62,9 @@ string Parser::parseToCpp(string& cppHtmlCode)
 		{
 			if (cppCode != "{" && cppCode != "}")
 			{
-				append(ForCompilation, " file <<  ");
+				ForCompilation.append(" file <<  ");
 				append(ForCompilation, cppCode);
-				append(ForCompilation, ";");
+				ForCompilation.append(";");
 			}
 			if (cppCode == "{" || cppCode == "}")
 			{
@@ -78,9 +78,9 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 	if (startPos == -1 && endPos == -1 && cppHtmlCode != "")
 	{
-		append(ForCompilation, "file << \" ");
+		ForCompilation.append("file << \" ");
 		append(ForCompilation, cppHtmlCode.substr(0, startPos));
-		append(ForCompilation, " \";  ");
+		ForCompilation.append(" \";  ");
 		cppHtmlCode.erase(0, startPos);
 	}
 
