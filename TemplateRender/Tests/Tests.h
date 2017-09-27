@@ -15,47 +15,52 @@ void testParseToCpp()
 }
 
 
-string composedCppCode()
+// Used in CREATE_AND_COMPILE_CPP() test to prevent code duplication.
+void returnFunction()
 {
-	std::string result = "#include <Windows.h>\n";
-	result += "#include <fstream>\n";
-	result += "#include <direct.h>\n";
-	result += "int main()\n";
-	result += "{\n";
-	result += "ShowWindow(GetConsoleWindow(), SW_HIDE);\n";
-	result += "_mkdir(\"Rendered_HTML_Page\");\n";
-	result += "std::ofstream file;\n";
-	result += "file.open(\"Rendered_HTML_Page/index.html\");\n";
-	result += "if (file.is_open())\n";
-	result += "{\n";
-	result += "file << \"<h2>Index Page!</h2>\\n\";";
-	result += "for (size_t i = 0; i < 10; i++)\n";
-	result += "{\n";
-	result += "file << \"<p>Paragraph \" << (i + 1) << \"</p>\\n\";\n";
-	result += "}\n";
-	result += "file.close();\n";
-	result += "}\n";
-	result += "ShellExecute(NULL, NULL, \".\\\\_cppcache_\\\\sd.bat\", NULL, NULL, SW_SHOWDEFAULT);";
-	result += "return 0;\n";
-	result += "}\n";
-	return result;
+	HelperFunctions::run("_cppcache_/sd.bat", SW_HIDE);
+	Sleep(500);
+	_rmdir("_cppcache_");
 }
 
 void CREATE_AND_COMPILE_CPP()
 {
 	cout << "Running test: CREATE_AND_COMPILE_CPP()...\n";
-	HelperFunctions hp;
-	hp.createCpp(composedCppCode(), "a.cpp");
-	hp.compile("a.cpp");
+	string parsedToCpp = Parser::parseToCpp(HelperFunctions::getCppHtmlCode("Tests/TestCppHtmlPage.htm"));
+	if (parsedToCpp.size() == 0)
+	{
+		return;
+	}
+	string cppCode = HelperFunctions::createCompletedCppCode(parsedToCpp);
+	if (cppCode.size() == 0)
+	{
+		return;
+	}
 	vector<string> deleteList;
 	deleteList.push_back("a.cpp");
 	deleteList.push_back("a.exe");
-	hp.createBat(deleteList, "sd.bat");
-	hp.run("_cppcache_\\a.exe");
+	if (!HelperFunctions::createBat(deleteList, "sd.bat"))
+	{
+		_rmdir("_cppcache_");
+		return;
+	}
+	if (!HelperFunctions::createCpp(cppCode, "a.cpp"))
+	{
+		returnFunction();
+		return;
+	}
+	if (!HelperFunctions::compile("a.cpp"))
+	{
+		returnFunction();
+		return;
+	}
+	if (!HelperFunctions::run("_cppcache_\\a.exe", SW_HIDE))
+	{
+		returnFunction();
+		return;
+	}
 	cout << "Trash is removed.\n";
 	Sleep(500);
 	_rmdir("_cppcache_");
-	hp.run("Rendered_HTML_Page\\index.html");
-	cout << "\n";
-	system("pause");
+	HelperFunctions::run("Rendered_HTML_Page\\index.html", SW_SHOWDEFAULT);
 }

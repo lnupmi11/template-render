@@ -13,11 +13,11 @@ public :
 
 	// Info
 	// Create a final html page
-	static void createHtmlPage(const std::string& htmlCode , const std::string& fileName);
+	static bool createHtmlPage(const std::string& htmlCode , const std::string& fileName);
 	
 	// Info
 	// Creates .cpp file from string variable
-	static void createCpp(const std::string& cppCode, const std::string& fileName);
+	static bool createCpp(const std::string& cppCode, const std::string& fileName);
 
 	// Info
 	// Add  begin(also libraries) and end to cpp code;
@@ -25,14 +25,14 @@ public :
 
 	// Info
 	// Creates .bat file for deleting unnecessary files
-	static void createBat(std::vector<std::string> filesToDelete, const std::string& fileName);
+	static bool createBat(std::vector<std::string> filesToDelete, const std::string& fileName);
 
 	// Info
 	// Compiles .cpp file using g++
-	static void compile(const std::string& cppFilePath);
+	static bool compile(const std::string& cppFilePath);
 
 	// Info
 	// Runs files
-	static void run(const std::string& filePath);
+	static bool run(const std::string& filePath, const int& windowState);
 
 };
