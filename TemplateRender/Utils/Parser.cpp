@@ -2,10 +2,13 @@
 #include<regex>
 #include<algorithm>
 
-//info 
-// function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
-// also include nested cycles
-// but now work only for loop for (to changes this we need to add more checks in isLoop() dunction ) 
+
+
+
+//Info
+/// <summary><c>append</c> is a method in the static class <c>Parser</c> .
+/// Function which add \ before "  for compilation without errors (invalid synatax)  
+/// </summary>
 void append(std::string &str, const std::string &subStr) 
 {
 	for (int i = 0; i<subStr.size(); ++i) 
@@ -26,7 +29,11 @@ void append(std::string &str, const std::string &subStr)
 	}
 }
 
-
+///
+//info 
+// function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
+// also include nested cycles
+// but now work only for loop for (to changes this we need to add more checks in isLoop() dunction ) 
 string Parser::parseToCpp(string& cppHtmlCode)
 {
 	static string cppCode("");
@@ -82,12 +89,13 @@ string Parser::parseToCpp(string& cppHtmlCode)
 		append(ForCompilation, cppHtmlCode.substr(0, startPos));
 		ForCompilation.append(" \";  ");
 		cppHtmlCode.erase(0, startPos);
+		ForCompilation.erase(remove(ForCompilation.begin(),ForCompilation.end(), '\n'), ForCompilation.end());
 	}
 
 	return ForCompilation;
 }
 
-
+///
 bool Parser::isLoop(const string & str)
 {
 	bool result;
@@ -100,6 +108,7 @@ bool Parser::isLoop(const string & str)
 	return result;
 }
 
+// TODO : transfer regex from this method to to isLoop method .  
 bool Parser::isForeach(const string & str)
 {
 	//for(auto n : nums)
@@ -112,7 +121,7 @@ bool Parser::isForeach(const string & str)
 	return false;
 }
 
-//
+///
 //// Info
 //// delete spaces and tabs before code 
 void Parser::removeGapsAndTabsBeforeCode(string & code)
@@ -126,6 +135,7 @@ void Parser::removeGapsAndTabsBeforeCode(string & code)
 	regex_replace(code, anySymbol, "");*/
 }
 
+///
 // Info
 // get only cpp code from string(from pos1 to pos2 ) and delete this string from cppHtmlCode
 string Parser::erase(string & cppHtmlCode, string::size_type pos1, string::size_type pos2)

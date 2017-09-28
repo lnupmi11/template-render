@@ -1,0 +1,9 @@
+﻿  Functions.cpp
+  Parser.cpp
+  DataManager.cpp
+d:\c++\template-render\templaterender\dto\datamanager.cpp(10): warning C4101: 'attributes': unreferenced local variable
+  DataObject.cpp
+  AppStart.cpp
+  Generating Code...
+  TemplateRender.vcxproj -> D:\c++\template-render\x64\Debug\TemplateRender.exe
+  TemplateRender.vcxproj -> D:\c++\template-render\x64\Debug\TemplateRender.pdb (Partial PDB)
