@@ -21,6 +21,5 @@ static const string programBegin = "#include <Windows.h>\n "
 
 static const string programEnd = "}\n"
 "file.close();\n"
-"ShellExecute(NULL, NULL, \".\\\\_cppcache_\\\\sd.bat\", NULL, NULL, SW_SHOWDEFAULT);"
 "return 0;\n"
 "}\n";

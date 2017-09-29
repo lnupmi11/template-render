@@ -1,8 +1,6 @@
 #include "Functions.h"
-#include "../Header.h"
-#include <Windows.h>
 #include <fstream>
-#include <direct.h>
+#include <Windows.h>
 
 std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
 {
@@ -40,7 +38,11 @@ bool HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::st
 
 bool HelperFunctions::createCpp(const std::string& cppCode, const std::string& fileName)
 {
-	_mkdir("_cppcache_");
+	if (!HelperFunctions::run("mkdir _cppcache_"))
+	{
+		std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: can not create folder.\n";
+		return false;
+	}
 	std::ofstream file;
 	file.open("_cppcache_/" + fileName);
 	if (!file.is_open())
@@ -64,7 +66,11 @@ std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartO
 
 bool HelperFunctions::createBat(std::vector<std::string> filesToDelete, const std::string& fileName)
 {
-	_mkdir("_cppcache_");
+	if (!HelperFunctions::run("mkdir _cppcache_"))
+	{
+		std::cerr << "Error occurred in 'HelperFunctions::createBat()' function: can not create folder.\n";
+		return false;
+	}
 	std::ofstream file;
 	file.open("_cppcache_/" + fileName);
 	if (!file.is_open())
@@ -72,6 +78,7 @@ bool HelperFunctions::createBat(std::vector<std::string> filesToDelete, const st
 		std::cerr << "Error occurred in 'HelperFunctions::createBat()' function: file was not opened for writting.\n";
 		return false;
 	}
+	file << "@echo off\n";
 	file << "cd \"_cppcache_\"\n";
 	if (filesToDelete.size() != 0)
 	{
@@ -82,7 +89,7 @@ bool HelperFunctions::createBat(std::vector<std::string> filesToDelete, const st
 	}
 	file << "del \"%~f0\"";
 	file.close();
-	std::cout << "File '" + fileName + "' for removing trash is created.\n";
+	std::cout << "File '" + fileName + "' is created.\n";
 	return true;
 }
 
@@ -94,30 +101,47 @@ bool HelperFunctions::compile(const std::string& cppFilePath)
 		return false;
 	}
 	std::string command = "g++ _cppcache_/" + cppFilePath + " -o _cppcache_/" + cppFilePath.substr(0, cppFilePath.size() - 4);
-	size_t status = system(command.c_str());
-	if (status != CMD_EXECUTE_SUCCESS)
+	if (!HelperFunctions::run(command))
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: compilation error.\n";
 		return false;
 	}
-	std::cout << "File '" + cppFilePath + "' is created.\n";
+	std::cout << "File '" + cppFilePath + "' is compiled.\n";
 	return true;
 }
 
-bool HelperFunctions::run(const std::string& filePath, const int& windowState)
+bool HelperFunctions::run(const std::string& command)
 {
-	if (filePath.size() == 0)
+	if (command.size() == 0 || command.find_first_not_of(' ') == std::string::npos)
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::run()' function: path to executable file is none.\n";
+		std::cerr << "Error occurred in 'HelperFunctions::run()' function: incorrect command.\n";
 		return false;
 	}
-	std::cout << "Running " + filePath + "...\n";
-	std::string command = ".\\" + filePath;
-	size_t status = (size_t)ShellExecute(NULL, "open", command.c_str(), NULL, NULL, windowState);
-	if (status != SHELL_EXECUTE_SUCCESS)
+	STARTUPINFO startupInfo;
+	PROCESS_INFORMATION processInfo;
+	ZeroMemory(&startupInfo, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
+	ZeroMemory(&processInfo, sizeof(processInfo));
+	if (!CreateProcess(NULL, const_cast<char*>(("cmd /c " + command).c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &processInfo))
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::run()' function: incorrect execute command.\n";
+		std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command << "' was not executed.\n";
 		return false;
 	}
-	return true;
+	WaitForSingleObject(processInfo.hProcess, INFINITE);
+	if (CloseHandle(processInfo.hProcess))
+	{
+		if (CloseHandle(processInfo.hThread))
+		{
+			return true;
+		}
+		else
+		{
+			std::cerr << "Error occurred in 'HelperFunctions::run()' function: thread of process '" << command << "' was not closed properly.\n";
+		}
+	}
+	else
+	{
+		std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command << "' was not closed properly.\n";
+	}
+	return false;
 }

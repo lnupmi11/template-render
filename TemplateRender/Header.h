@@ -1,3 +1,0 @@
-#pragma once
-#define SHELL_EXECUTE_SUCCESS 42
-#define CMD_EXECUTE_SUCCESS 0

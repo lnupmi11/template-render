@@ -5,7 +5,7 @@
 
 class HelperFunctions
 {
-public :
+public:
 
 	// Info
 	// Get all from cpphtml(simple html page with our cpp code) page     
@@ -28,11 +28,11 @@ public :
 	static bool createBat(std::vector<std::string> filesToDelete, const std::string& fileName);
 
 	// Info
-	// Compiles .cpp file using g++
+	// Compiles c++ code using g++ compiler
 	static bool compile(const std::string& cppFilePath);
 
 	// Info
-	// Runs files
-	static bool run(const std::string& filePath, const int& windowState);
+	// Runs cmd commands
+	static bool run(const std::string& command);
 
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <Windows.h>
-#include <direct.h>
 #include "../Utils/Functions.h"
 #include "../Utils/Parser.h"
 
@@ -18,15 +17,14 @@ void testParseToCpp()
 // Used in CREATE_AND_COMPILE_CPP() test to prevent code duplication.
 void returnFunction()
 {
-	HelperFunctions::run("_cppcache_/sd.bat", SW_HIDE);
-	Sleep(500);
-	_rmdir("_cppcache_");
+	HelperFunctions::run("_cppcache_/sd.bat");
+	HelperFunctions::run("rmdir _cppcache_");
 }
 
 void CREATE_AND_COMPILE_CPP()
 {
 	cout << "Running test: CREATE_AND_COMPILE_CPP()...\n";
-	string parsedToCpp = Parser::parseToCpp(HelperFunctions::getCppHtmlCode("Tests/TestCppHtmlPage.htm"));
+	string parsedToCpp = Parser::parseToCpp(HelperFunctions::getCppHtmlCode("../../TemplateRender/Tests/TestCppHtmlPage.htm"));
 	if (parsedToCpp.size() == 0)
 	{
 		return;
@@ -41,7 +39,7 @@ void CREATE_AND_COMPILE_CPP()
 	deleteList.push_back("a.exe");
 	if (!HelperFunctions::createBat(deleteList, "sd.bat"))
 	{
-		_rmdir("_cppcache_");
+		HelperFunctions::run("rmdir _cppcache_");
 		return;
 	}
 	if (!HelperFunctions::createCpp(cppCode, "a.cpp"))
@@ -54,13 +52,13 @@ void CREATE_AND_COMPILE_CPP()
 		returnFunction();
 		return;
 	}
-	if (!HelperFunctions::run("_cppcache_\\a.exe", SW_HIDE))
+	if (!HelperFunctions::run("_cppcache_\\a.exe"))
 	{
 		returnFunction();
 		return;
 	}
+	HelperFunctions::run("_cppcache_\\sd.bat");
 	cout << "Trash is removed.\n";
-	Sleep(500);
-	_rmdir("_cppcache_");
-	HelperFunctions::run("Rendered_HTML_Page\\index.html", SW_SHOWDEFAULT);
+	HelperFunctions::run("rmdir _cppcache_");
+	HelperFunctions::run("Rendered_HTML_Page\\index.html");
 }
