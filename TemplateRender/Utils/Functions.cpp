@@ -38,13 +38,16 @@ bool HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::st
 
 bool HelperFunctions::createCpp(const std::string& cppCode, const std::string& fileName)
 {
-	if (!HelperFunctions::run("mkdir _cppcache_"))
+	if (!HelperFunctions::directoryExists("_cpptemp_"))
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: can not create folder.\n";
-		return false;
+		if (!HelperFunctions::run("mkdir _cpptemp_"))
+		{
+			std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: can not create folder.\n";
+			return false;
+		}
 	}
 	std::ofstream file;
-	file.open("_cppcache_/" + fileName);
+	file.open("_cpptemp_/" + fileName);
 	if (!file.is_open())
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: file was not opened for writting.\n";
@@ -66,20 +69,23 @@ std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartO
 
 bool HelperFunctions::createBat(std::vector<std::string> filesToDelete, const std::string& fileName)
 {
-	if (!HelperFunctions::run("mkdir _cppcache_"))
+	if (!HelperFunctions::directoryExists("_cpptemp_"))
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::createBat()' function: can not create folder.\n";
-		return false;
+		if (!HelperFunctions::run("mkdir _cpptemp_"))
+		{
+			std::cerr << "Error occurred in 'HelperFunctions::createBat()' function: can not create folder.\n";
+			return false;
+		}
 	}
 	std::ofstream file;
-	file.open("_cppcache_/" + fileName);
+	file.open("_cpptemp_/" + fileName);
 	if (!file.is_open())
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::createBat()' function: file was not opened for writting.\n";
 		return false;
 	}
 	file << "@echo off\n";
-	file << "cd \"_cppcache_\"\n";
+	file << "cd \"_cpptemp_\"\n";
 	if (filesToDelete.size() != 0)
 	{
 		for (std::vector<std::string>::iterator i = filesToDelete.begin(); i != filesToDelete.end(); i++)
@@ -100,7 +106,7 @@ bool HelperFunctions::compile(const std::string& cppFilePath)
 		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: path to cpp file is none.\n";
 		return false;
 	}
-	std::string command = "g++ _cppcache_/" + cppFilePath + " -o _cppcache_/" + cppFilePath.substr(0, cppFilePath.size() - 4);
+	std::string command = "g++ _cpptemp_/" + cppFilePath + " -o _cpptemp_/" + cppFilePath.substr(0, cppFilePath.size() - 4);
 	if (!HelperFunctions::run(command))
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: compilation error.\n";
@@ -142,6 +148,20 @@ bool HelperFunctions::run(const std::string& command)
 	else
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command << "' was not closed properly.\n";
+	}
+	return false;
+}
+
+bool HelperFunctions::directoryExists(const std::string& directory)
+{
+	DWORD dirAttributes = GetFileAttributesA(directory.c_str());
+	if (dirAttributes == INVALID_FILE_ATTRIBUTES)
+	{
+		return false;
+	}
+	if (dirAttributes && FILE_ATTRIBUTE_DIRECTORY)
+	{
+		return true;
 	}
 	return false;
 }

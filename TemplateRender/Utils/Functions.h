@@ -35,4 +35,8 @@ public:
 	// Runs cmd commands
 	static bool run(const std::string& command);
 
+	// Info
+	// Check if directory exists
+	static bool directoryExists(const std::string& directory);
+
 };

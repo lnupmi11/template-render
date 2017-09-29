@@ -17,8 +17,11 @@ void testParseToCpp()
 // Used in CREATE_AND_COMPILE_CPP() test to prevent code duplication.
 void returnFunction()
 {
-	HelperFunctions::run("_cppcache_/sd.bat");
-	HelperFunctions::run("rmdir _cppcache_");
+	if (HelperFunctions::directoryExists("_cpptemp_"))
+	{
+		HelperFunctions::run("_cpptemp_/sd.bat");
+		HelperFunctions::run("rmdir _cpptemp_");
+	}
 }
 
 void CREATE_AND_COMPILE_CPP()
@@ -39,7 +42,10 @@ void CREATE_AND_COMPILE_CPP()
 	deleteList.push_back("a.exe");
 	if (!HelperFunctions::createBat(deleteList, "sd.bat"))
 	{
-		HelperFunctions::run("rmdir _cppcache_");
+		if (HelperFunctions::directoryExists("_cpptemp_"))
+		{
+			HelperFunctions::run("rmdir _cpptemp_");
+		}
 		return;
 	}
 	if (!HelperFunctions::createCpp(cppCode, "a.cpp"))
@@ -52,13 +58,19 @@ void CREATE_AND_COMPILE_CPP()
 		returnFunction();
 		return;
 	}
-	if (!HelperFunctions::run("_cppcache_\\a.exe"))
+	if (!HelperFunctions::run("_cpptemp_\\a.exe"))
 	{
 		returnFunction();
 		return;
 	}
-	HelperFunctions::run("_cppcache_\\sd.bat");
-	cout << "Trash is removed.\n";
-	HelperFunctions::run("rmdir _cppcache_");
-	HelperFunctions::run("Rendered_HTML_Page\\index.html");
+	if (HelperFunctions::directoryExists("_cpptemp_"))
+	{
+		HelperFunctions::run("_cpptemp_\\sd.bat");
+		cout << "Temporary files were removed.\n";
+		HelperFunctions::run("rmdir _cpptemp_");
+	}
+	if (HelperFunctions::directoryExists("Rendered_HTML_Page"))
+	{
+		HelperFunctions::run("Rendered_HTML_Page\\index.html");
+	}
 }
