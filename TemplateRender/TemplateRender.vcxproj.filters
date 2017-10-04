@@ -22,6 +22,9 @@
     <Filter Include="DTO">
       <UniqueIdentifier>{9e615125-d94e-4d0e-95c4-eb4180ec8af9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{ae14127f-3eb2-4fd2-b368-c3c15cc2a1b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="Utils\Parser.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TemplateRender.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Utils\CppCodeTemplate.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TemplateRender.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
