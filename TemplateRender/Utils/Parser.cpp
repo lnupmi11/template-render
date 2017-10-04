@@ -98,28 +98,28 @@ string Parser::parseToCpp(string& cppHtmlCode)
 ///
 bool Parser::isLoop(const string & str)
 {
-	bool result;
-	result = false;
-	regex loopForExpr("\\s*for\\s*\\(\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)");
-	if (regex_search(str.begin(), str.end(), loopForExpr))
-	{
-		result = true;
-	}
-	return result;
+	const string forRegex = "\\s*for\\s*\\(\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)";
+	//for(auto n : nums)
+	const string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)";
+
+	bool checkFor = regexCheck(str, forRegex);
+	bool checkForeach = regexCheck(str, foreachRegex);
+
+	return checkFor || checkForeach;
 }
 
-// TODO : transfer regex from this method to to isLoop method .  
-bool Parser::isForeach(const string & str)
+bool Parser::regexCheck(const string & str, const string & regexStr)
 {
-	//for(auto n : nums)
-	regex loopForExpr("\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)");
-	if (regex_search(str.begin(), str.end(), loopForExpr))
+	regex expr(regexStr);
+	if (regex_search(str.begin(), str.end(), expr))
 	{
 		return true;
 	}
 
 	return false;
 }
+
+
 
 ///
 //// Info

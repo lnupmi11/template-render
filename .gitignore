@@ -38,3 +38,5 @@ TemplateRender/.vs/
 #Debug
 TemplateRender/Debug/
 #Debug/
+TemplateRender/x64/Debug/
+x64/Debug/

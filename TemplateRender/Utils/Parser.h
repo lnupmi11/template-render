@@ -4,6 +4,8 @@ using namespace std;
 
 class Parser
 {
+private:
+	static bool regexCheck(const string & str, const string & regexStr);
 public:
 	/// <summary>
 	/// <see cref="parseToCpp"/>
@@ -13,8 +15,6 @@ public:
 	/// <see cref="isLoop"/>
 	/// </summary>
 	static bool isLoop(const string& str);
-	
-	static bool isForeach(const string& str);
 	/// <summary>
 	/// <see cref="removeGapsAndTabsBeforeCode"/>
 	/// </summary>
