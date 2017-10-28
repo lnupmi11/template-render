@@ -1,5 +1,6 @@
 @echo off
-set MINGW_NAME=MinGW-4.5
+set MINGW_NAME=MinGW-6.3
+set MINGW_VERSION=6.3
 set cdPath=%1
 
 echo //-------------------------------------------------------------------------//
@@ -16,12 +17,12 @@ echo //-------------------------------------------------------------------------
 echo // Downloading packages...
 
 echo // - C compiler and shared runtime
-wget -q -O_downloaded/gcc-core-4.5.0-1-mingw32-bin.tar.lzma http://prdownloads.sourceforge.net/mingw/gcc-core-4.5.0-1-mingw32-bin.tar.lzma?download
-wget -q -O_downloaded/libgcc-4.5.0-1-mingw32-dll-1.tar.lzma http://prdownloads.sourceforge.net/mingw/libgcc-4.5.0-1-mingw32-dll-1.tar.lzma?download
+wget -q -O_downloaded/gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma http://prdownloads.sourceforge.net/mingw/gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma?download
+wget -q -O_downloaded/libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma http://prdownloads.sourceforge.net/mingw/libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma?download
 
 echo // - C++ compiler and shared runtime
-wget -q -O_downloaded/gcc-c++-4.5.0-1-mingw32-bin.tar.lzma http://prdownloads.sourceforge.net/mingw/gcc-c%%2B%%2B-4.5.0-1-mingw32-bin.tar.lzma?download
-wget -q -O_downloaded/libstdc++-4.5.0-1-mingw32-dll-6.tar.lzma http://prdownloads.sourceforge.net/mingw/libstdc%%2B%%2B-4.5.0-1-mingw32-dll-6.tar.lzma?download
+wget -q -O_downloaded/gcc-c++-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma http://prdownloads.sourceforge.net/mingw/gcc-c%%2B%%2B-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma?download
+wget -q -O_downloaded/libstdc++-%MINGW_VERSION%.0-1-mingw32-dll-6.tar.lzma http://prdownloads.sourceforge.net/mingw/libstdc%%2B%%2B-%MINGW_VERSION%.0-1-mingw32-dll-6.tar.lzma?download
 
 echo // - Binutils
 wget -q -O_downloaded/binutils-2.20.1-2-mingw32-bin.tar.gz http://prdownloads.sourceforge.net/mingw/binutils-2.20.1-2-mingw32-bin.tar.gz?download
@@ -44,10 +45,10 @@ wget -q -O_downloaded/libgmp-5.0.1-1-mingw32-dll-10.tar.lzma http://prdownloads.
 wget -q -O_downloaded/libpthread-2.8.0-3-mingw32-dll-2.tar.lzma http://prdownloads.sourceforge.net/mingw/libpthread-2.8.0-3-mingw32-dll-2.tar.lzma?download
 
 echo // - Shared library for OpenMP support
-wget -q -O_downloaded/libgomp-4.5.0-1-mingw32-dll-1.tar.lzma http://prdownloads.sourceforge.net/mingw/libgomp-4.5.0-1-mingw32-dll-1.tar.lzma?download
+wget -q -O_downloaded/libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma http://prdownloads.sourceforge.net/mingw/libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma?download
 
 echo // - Shared library for stack protection support
-wget -q -O_downloaded/libssp-4.5.0-1-mingw32-dll-0.tar.lzma http://prdownloads.sourceforge.net/mingw/libssp-4.5.0-1-mingw32-dll-0.tar.lzma?download
+wget -q -O_downloaded/libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar.lzma http://prdownloads.sourceforge.net/mingw/libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar.lzma?download
 
 echo // - Debugger (gdb)
 wget -q -O_downloaded/gdb-7.1-2-mingw32-bin.tar.gz http://prdownloads.sourceforge.net/mingw/gdb-7.1-2-mingw32-bin.tar.gz?download
@@ -61,10 +62,10 @@ wget -q -O_downloaded/make-3.81-20090914-mingw32-bin.tar.gz http://prdownloads.s
 echo //-------------------------------------------------------------------------//
 echo // Uncompressing files...
 
-7za.exe x -bd -y -o_downloaded2 _downloaded/gcc-core-4.5.0-1-mingw32-bin.tar.lzma >NUL
-7za.exe x -bd -y -o_downloaded2 _downloaded/libgcc-4.5.0-1-mingw32-dll-1.tar.lzma >NUL
-7za.exe x -bd -y -o_downloaded2 _downloaded/gcc-c++-4.5.0-1-mingw32-bin.tar.lzma >NUL
-7za.exe x -bd -y -o_downloaded2 _downloaded/libstdc++-4.5.0-1-mingw32-dll-6.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/gcc-c++-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/libstdc++-%MINGW_VERSION%.0-1-mingw32-dll-6.tar.lzma >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/binutils-2.20.1-2-mingw32-bin.tar.gz >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/mingwrt-3.18-mingw32-dll.tar.gz >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/mingwrt-3.18-mingw32-dev.tar.gz >NUL
@@ -77,8 +78,8 @@ echo // Uncompressing files...
 7za.exe x -bd -y -o_downloaded2 _downloaded/libmpfr-2.4.1-1-mingw32-dll-1.tar.lzma >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/libgmp-5.0.1-1-mingw32-dll-10.tar.lzma >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/libpthread-2.8.0-3-mingw32-dll-2.tar.lzma >NUL
-7za.exe x -bd -y -o_downloaded2 _downloaded/libgomp-4.5.0-1-mingw32-dll-1.tar.lzma >NUL
-7za.exe x -bd -y -o_downloaded2 _downloaded/libssp-4.5.0-1-mingw32-dll-0.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma >NUL
+7za.exe x -bd -y -o_downloaded2 _downloaded/libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar.lzma >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/gdb-7.1-2-mingw32-bin.tar.gz >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/libexpat-2.0.1-1-mingw32-dll-1.tar.gz >NUL
 7za.exe x -bd -y -o_downloaded2 _downloaded/make-3.81-20090914-mingw32-bin.tar.gz >NUL
@@ -88,10 +89,10 @@ echo // Uncompressing files...
 echo //-------------------------------------------------------------------------//
 echo // Unarchiving files...
 
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/gcc-core-4.5.0-1-mingw32-bin.tar >NUL
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libgcc-4.5.0-1-mingw32-dll-1.tar >NUL
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/gcc-c++-4.5.0-1-mingw32-bin.tar >NUL
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libstdc++-4.5.0-1-mingw32-dll-6.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/gcc-c++-%MINGW_VERSION%.0-1-mingw32-bin.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libstdc++-%MINGW_VERSION%.0-1-mingw32-dll-6.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/binutils-2.20.1-2-mingw32-bin.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/mingwrt-3.18-mingw32-dll.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/mingwrt-3.18-mingw32-dev.tar >NUL
@@ -104,8 +105,8 @@ echo // Unarchiving files...
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libmpfr-2.4.1-1-mingw32-dll-1.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libgmp-5.0.1-1-mingw32-dll-10.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libpthread-2.8.0-3-mingw32-dll-2.tar >NUL
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libgomp-4.5.0-1-mingw32-dll-1.tar >NUL
-7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libssp-4.5.0-1-mingw32-dll-0.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar >NUL
+7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/gdb-7.1-2-mingw32-bin.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/libexpat-2.0.1-1-mingw32-dll-1.tar >NUL
 7za.exe x -bd -y -o%MINGW_NAME% _downloaded2/make-3.81-20090914-mingw32-bin.tar >NUL
@@ -134,10 +135,10 @@ echo // Removing temporary files...
 del tests\test_c.exe
 del tests\test_cpp.exe
 
-del _downloaded\gcc-core-4.5.0-1-mingw32-bin.tar.lzma
-del _downloaded\libgcc-4.5.0-1-mingw32-dll-1.tar.lzma
-del _downloaded\gcc-c++-4.5.0-1-mingw32-bin.tar.lzma
-del _downloaded\libstdc++-4.5.0-1-mingw32-dll-6.tar.lzma
+del _downloaded\gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma
+del _downloaded\libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma
+del _downloaded\gcc-c++-%MINGW_VERSION%.0-1-mingw32-bin.tar.lzma
+del _downloaded\libstdc++-%MINGW_VERSION%.0-1-mingw32-dll-6.tar.lzma
 del _downloaded\binutils-2.20.1-2-mingw32-bin.tar.gz
 del _downloaded\mingwrt-3.18-mingw32-dll.tar.gz
 del _downloaded\mingwrt-3.18-mingw32-dev.tar.gz
@@ -150,38 +151,36 @@ del _downloaded\libmpc-0.8.1-1-mingw32-dll-2.tar.lzma
 del _downloaded\libmpfr-2.4.1-1-mingw32-dll-1.tar.lzma
 del _downloaded\libgmp-5.0.1-1-mingw32-dll-10.tar.lzma
 del _downloaded\libpthread-2.8.0-3-mingw32-dll-2.tar.lzma
-del _downloaded\libgomp-4.5.0-1-mingw32-dll-1.tar.lzma
-del _downloaded\libssp-4.5.0-1-mingw32-dll-0.tar.lzma
+del _downloaded\libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar.lzma
+del _downloaded\libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar.lzma
 del _downloaded\gdb-7.1-2-mingw32-bin.tar.gz
 del _downloaded\libexpat-2.0.1-1-mingw32-dll-1.tar.gz
 del _downloaded\make-3.81-20090914-mingw32-bin.tar.gz
 
-del _downloaded2\gcc-core-4.5.0-1-mingw32-bin.tar
-del _downloaded2\libgcc-4.5.0-1-mingw32-dll-1.tar
-del _downloaded2\gcc-c++-4.5.0-1-mingw32-bin.tar
-del _downloaded2\libstdc++-4.5.0-1-mingw32-dll-6.tar
-del _downloaded2\binutils-2.20.1-2-mingw32-bin.tar
-del _downloaded2\mingwrt-3.18-mingw32-dll.tar
-del _downloaded2\mingwrt-3.18-mingw32-dev.tar
-del _downloaded2\w32api-3.14-mingw32-dev.tar
-del _downloaded2\mpc-0.8.1-1-mingw32-dev.tar
-del _downloaded2\mpfr-2.4.1-1-mingw32-dev.tar
-del _downloaded2\gmp-5.0.1-1-mingw32-dev.tar
-del _downloaded2\pthreads-w32-2.8.0-3-mingw32-dev.tar
-del _downloaded2\libmpc-0.8.1-1-mingw32-dll-2.tar
-del _downloaded2\libmpfr-2.4.1-1-mingw32-dll-1.tar
-del _downloaded2\libgmp-5.0.1-1-mingw32-dll-10.tar
-del _downloaded2\libpthread-2.8.0-3-mingw32-dll-2.tar
-del _downloaded2\libgomp-4.5.0-1-mingw32-dll-1.tar
-del _downloaded2\libssp-4.5.0-1-mingw32-dll-0.tar
-del _downloaded2\gdb-7.1-2-mingw32-bin.tar
-del _downloaded2\libexpat-2.0.1-1-mingw32-dll-1.tar
-del _downloaded2\make-3.81-20090914-mingw32-bin.tar
+REM del _downloaded2\gcc-core-%MINGW_VERSION%.0-1-mingw32-bin.tar
+REM del _downloaded2\libgcc-%MINGW_VERSION%.0-1-mingw32-dll-1.tar
+REM del _downloaded2\gcc-c++-%MINGW_VERSION%.0-1-mingw32-bin.tar
+REM del _downloaded2\libstdc++-%MINGW_VERSION%.0-1-mingw32-dll-6.tar
+REM del _downloaded2\binutils-2.20.1-2-mingw32-bin.tar
+REM del _downloaded2\mingwrt-3.18-mingw32-dll.tar
+REM del _downloaded2\mingwrt-3.18-mingw32-dev.tar
+REM del _downloaded2\w32api-3.14-mingw32-dev.tar
+REM del _downloaded2\mpc-0.8.1-1-mingw32-dev.tar
+REM del _downloaded2\mpfr-2.4.1-1-mingw32-dev.tar
+REM del _downloaded2\gmp-5.0.1-1-mingw32-dev.tar
+REM del _downloaded2\pthreads-w32-2.8.0-3-mingw32-dev.tar
+REM del _downloaded2\libmpc-0.8.1-1-mingw32-dll-2.tar
+REM del _downloaded2\libmpfr-2.4.1-1-mingw32-dll-1.tar
+REM del _downloaded2\libgmp-5.0.1-1-mingw32-dll-10.tar
+REM del _downloaded2\libpthread-2.8.0-3-mingw32-dll-2.tar
+REM del _downloaded2\libgomp-%MINGW_VERSION%.0-1-mingw32-dll-1.tar
+REM del _downloaded2\libssp-%MINGW_VERSION%.0-1-mingw32-dll-0.tar
+REM del _downloaded2\gdb-7.1-2-mingw32-bin.tar
+REM del _downloaded2\libexpat-2.0.1-1-mingw32-dll-1.tar
+REM del _downloaded2\make-3.81-20090914-mingw32-bin.tar
 
 rmdir _downloaded
 rmdir _downloaded2
-
-
 
 echo //-------------------------------------------------------------------------//
 echo // SUCCESS
@@ -190,7 +189,7 @@ echo //
 echo // You have %MINGW_NAME% ready to use in the following path:
 echo // %CD%\%MINGW_NAME%
 echo //
-echo // You can execute Run-cmd-with-Mingw-4.5.bat to use gcc, g++, etc. from the
+echo // You can execute Run-cmd-with-Mingw-%MINGW_VERSION%.bat to use gcc, g++, etc. from the
 echo // command line if you do not want to modify your PATH variable.
 echo //
 
@@ -212,4 +211,3 @@ echo // Error downloading, installing, or testing the compiler
 REM End of program
 :end
 echo //-------------------------------------------------------------------------//
-pause
