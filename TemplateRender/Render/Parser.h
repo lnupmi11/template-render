@@ -23,5 +23,14 @@ public:
 	/// <see cref="erase"/>
 	/// </summary>
 	static string erase(string& cppHtmlCode, string::size_type pos1, string::size_type pos2);
+	/// <summary>
+	/// <see cref="isVariableDeclaration"/>
+	/// </summary>
+	static bool isVariableDeclaration(const string& str);
+	/// <summary>
+	/// <see cref="isCppHtmlTagsValid"/>
+	/// </summary>
+	static bool isCppHtmlTagsValid(string::size_type start, string::size_type end);
+
 };
 

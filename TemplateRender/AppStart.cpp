@@ -8,7 +8,6 @@ int main()
 	objectManger.print();*/
 	CREATE_AND_COMPILE_CPP();
 //	testParseToCpp();
-
 	system("pause");
 	return 0;
 }

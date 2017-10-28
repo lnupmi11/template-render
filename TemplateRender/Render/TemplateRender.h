@@ -2,6 +2,7 @@
 #include<iostream>
 using namespace std;
 
+
 class TemplateRender {
 private:
 	static string getFileContent(const string path);

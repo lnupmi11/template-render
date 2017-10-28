@@ -2,15 +2,15 @@
 #include <iostream>
 #include <Windows.h>
 #include "../Utils/Functions.h"
-#include "../Utils/Parser.h"
+#include "../Render/Parser.h"
 
 // If you run program from x64/Debug use next defines:
-#define TEMPLATE_PATH "..\\..\\TemplateRender\\Tests\\TestCppHtmlPage.htm"
-#define MINGW_PATH "..\\..\\TemplateRender\\MinGW"
+//#define TEMPLATE_PATH "..\\..\\TemplateRender\\Tests\\TestCppHtmlPage.htm"
+//#define MINGW_PATH "..\\..\\TemplateRender\\MinGW"
 
 // If you run program from Visual Studio debugger or simply Ctrl+F5 use next defines:
-//#define TEMPLATE_PATH "Tests\\TestCppHtmlPage.htm"
-//#define MINGW_PATH "MinGW"
+#define TEMPLATE_PATH "Tests\\TestCppHtmlPage.htm"
+#define MINGW_PATH "MinGW"
 
 using namespace std;
 
@@ -34,7 +34,7 @@ void returnFunction()
 
 void CREATE_AND_COMPILE_CPP()
 {
-	if (HelperFunctions::installMinGW(MINGW_PATH))
+	if (/*HelperFunctions::installMinGW(MINGW_PATH)*/1)
 	{
 		cout << "Running test: CREATE_AND_COMPILE_CPP()...\n";
 		string parsedToCpp = Parser::parseToCpp(HelperFunctions::getCppHtmlCode(TEMPLATE_PATH));

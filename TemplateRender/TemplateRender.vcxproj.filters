@@ -25,6 +25,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{ae14127f-3eb2-4fd2-b368-c3c15cc2a1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{c85f46f6-7c3a-4320-aab5-6ec4f1b39a10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp">
@@ -39,10 +42,10 @@
     <ClCompile Include="DTO\DataManager.cpp">
       <Filter>DTO</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\Parser.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Render\TemplateRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Parser.cpp">
       <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,13 +62,16 @@
     <ClInclude Include="DTO\DataManager.h">
       <Filter>DTO</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Parser.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\CppCodeTemplate.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Render\TemplateRender.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Data.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Parser.h">
       <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
