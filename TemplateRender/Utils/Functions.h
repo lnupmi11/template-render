@@ -39,4 +39,8 @@ public:
 	// Check if directory exists
 	static bool directoryExists(const std::string& directory);
 
+	// Info
+	// Install MinGW
+	static bool installMinGW(const std::string& mingwPath);
+
 };

@@ -1,6 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Functions.h"
 #include <fstream>
 #include <Windows.h>
+
+#include <stdlib.h>
+#include <sstream>
 
 std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
 {
@@ -106,7 +110,7 @@ bool HelperFunctions::compile(const std::string& cppFilePath)
 		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: path to cpp file is none.\n";
 		return false;
 	}
-	std::string command = "g++ _cpptemp_/" + cppFilePath + " -o _cpptemp_/" + cppFilePath.substr(0, cppFilePath.size() - 4);
+	std::string command = "g++ _cpptemp_\\" + cppFilePath + " -o _cpptemp_\\" + cppFilePath.substr(0, cppFilePath.size() - 4);
 	if (!HelperFunctions::run(command))
 	{
 		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: compilation error.\n";
@@ -130,7 +134,7 @@ bool HelperFunctions::run(const std::string& command)
 	ZeroMemory(&processInfo, sizeof(processInfo));
 	if (!CreateProcess(NULL, const_cast<char*>(("cmd /c " + command).c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &processInfo))
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command << "' was not executed.\n";
+		std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command << "' was not executed. Code: " << GetLastError() << "\n";
 		return false;
 	}
 	WaitForSingleObject(processInfo.hProcess, INFINITE);
@@ -160,6 +164,15 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 		return false;
 	}
 	if (dirAttributes && FILE_ATTRIBUTE_DIRECTORY)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool HelperFunctions::installMinGW(const std::string& mingwPath)
+{
+	if (HelperFunctions::run(mingwPath + "\\init.bat " + mingwPath))
 	{
 		return true;
 	}

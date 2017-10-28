@@ -40,3 +40,9 @@ TemplateRender/Debug/
 #Debug/
 TemplateRender/x64/Debug/
 x64/Debug/
+
+!TemplateRender/MinGW/7za.exe
+!TemplateRender/MinGW/wget.exe
+
+TemplateRender/MinGW/_downloaded/
+TemplateRender/MinGW/_downloaded2/
