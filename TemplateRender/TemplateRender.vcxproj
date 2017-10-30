@@ -121,9 +121,9 @@
     <ClCompile Include="Utils\Functions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Data\Data.h" />
     <ClInclude Include="DTO\DataObject.h" />
     <ClInclude Include="DTO\DataManager.h" />
+    <ClInclude Include="Render\Compile.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Utils\CppCodeTemplate.h" />
     <ClInclude Include="Render\Parser.h" />
@@ -131,6 +131,7 @@
     <ClInclude Include="Utils\Functions.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Rendered_HTML_Page\index.html" />
     <None Include="Tests\TestCppHtmlPage.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>

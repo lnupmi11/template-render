@@ -2,7 +2,7 @@
 #include "TemplateRender.h"
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
-#include"../Data/Data.h"
+#include"Compile.h"
 
 string TemplateRender::getFileContent(const string htmlPagePath)
 {
@@ -25,9 +25,15 @@ string TemplateRender::completedCppCode(string code)
 	return cppCode;
 }
 
-void TemplateRender::render(const string htmlPagePath)
+void TemplateRender::render(const string& htmlPagePath)
 {
-	string parsedCppCode = getCppCode(htmlPagePath);
-	Data::object;
+	string parsedCppCode = getCppCode(htmlPagePath);	
 	string cppCode = completedCppCode(parsedCppCode);
+
+	ofstream ofs;
+	ofs.open("Render//Compile.h", ios_base::out | ios_base::trunc);
+	ofs << cppCode;
+	ofs.close();
+
+	compile();
 }

@@ -1,13 +1,11 @@
 #include "Tests/Tests.h"
 #include "DTO\DataManager.h"
+#include "Render\TemplateRender.h"
 using namespace std;
 
 int main()
 {
-	/*DataManager objectManger("data.txt");
-	objectManger.print();*/
-	CREATE_AND_COMPILE_CPP();
-//	testParseToCpp();
+	TemplateRender::render("Tests\\TestCppHtmlPage.htm");
 	system("pause");
 	return 0;
 }

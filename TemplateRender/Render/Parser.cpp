@@ -161,7 +161,7 @@ bool Parser::isVariableDeclaration(const string & str)
 {
 	bool result;
 	result = false;
-	regex varDeclar("auto\\s{1,}[A-Za-z]{1,}\\s{1,}=\\s{1,}([A-Za-z]{1,}|[0-9]{1,})\\s*;");
+	regex varDeclar("\\s*auto\\s{1,}[A-Za-z]{1,}\\s{1,}=\\s{1,}([A-Za-z]{1,}|[0-9]{1,})\\s*;\\s*");
 	if (regex_match(str, varDeclar))
 	{
 		result = true;
