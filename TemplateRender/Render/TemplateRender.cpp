@@ -3,21 +3,23 @@
 #include "TemplateRender.h"
 #include "Compile.h"
 
-
-string TemplateRender::getCppCode(const string htmlPagePath)
+string TemplateRender::getCppCode(const string& htmlPagePath)
 {
-	string content = HelperFunctions::getCppHtmlCode(htmlPagePath);
-	string cppCode = Parser::parseToCpp(content);
-
+	string result;
+	string htmlFileContent;
+	htmlFileContent = HelperFunctions::getCppHtmlCode(htmlPagePath);
+	string cppCode;
+	cppCode = Parser::parseToCpp(htmlFileContent);
 	if (cppCode.size() == 0)
 	{
 		throw exception("Parsed file is empty.");
 	}
+	result = HelperFunctions::createCompletedCppCode(cppCode);
 
-	return cppCode;
+	return result;
 }
 
-void TemplateRender::createCompileFunction(const string & cppCode, const string & outputPath)
+void TemplateRender::createCompileFunction(const string& cppCode, const string& outputPath)
 {
 	ofstream ofs;
 	ofs.open(outputPath, ios_base::out | ios_base::trunc);
@@ -27,12 +29,15 @@ void TemplateRender::createCompileFunction(const string & cppCode, const string 
 
 void TemplateRender::render(const string& htmlPagePath, DataObject& Model)
 {
-	const string outputCppFilePath = "Render//Compile.h";
 	try
 	{
-		string parsedCppCode = getCppCode(htmlPagePath);
-		string cppCode = HelperFunctions::createCompletedCppCode(parsedCppCode);
-		createCompileFunction(cppCode, outputCppFilePath);
+		string cppCode;
+		cppCode = getCppCode(htmlPagePath);
+		
+		if (HelperFunctions::isStateModified(cppCode, HelperFunctions::getFileContent("Render//Compile.h")))
+		{
+			createCompileFunction(cppCode, COMPILEDCPPFILEPATH);
+		}
 		compile(Model);
 	}
 	catch (const ofstream::failure& e)
@@ -41,7 +46,7 @@ void TemplateRender::render(const string& htmlPagePath, DataObject& Model)
 	}
 	catch (const exception& e)
 	{
-		cout << e.what()<<"\n";
+		cout << e.what() << "\n";
 	}
 	catch (...)
 	{

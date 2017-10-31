@@ -26,6 +26,11 @@ map<string, string> DataObject::getEnumerator()
 	return this->attributes;
 }
 
+size_t DataObject::getSize()
+{
+	return this->numOfAttributes;
+}
+
 istream& operator>>(istream& is, DataObject& obj)
 {
 	string key, value;
@@ -49,4 +54,9 @@ ostream& operator<<(ostream& os, DataObject& obj)
 string DataObject::operator[](string key)
 {
 	return attributes[key];
+}
+
+string DataObject::operator[](size_t index)
+{
+	return string();
 }

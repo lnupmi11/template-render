@@ -5,10 +5,10 @@
 </HEAD>
 <BODY>
   
-    <%for(auto item :  Model.getEnumerator()) %>
+    <%for(auto i= 0 ; i < Model.getSize(); i++  )%>
     <%{%>
 
-     <% item.getInfo()%> 
+     <% Model[i] %> 
     <%}%>
 
     <%for(auto k =0; k < 10 ; k++)%>

@@ -1,54 +1,50 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "Functions.h"
-#include <fstream>
-#include <Windows.h>
 
-#include <stdlib.h>
-#include <sstream>
-
-std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
+string HelperFunctions::getCppHtmlCode(const string& fileName)
 {
 	validateFileName(fileName);
 
-	std::ifstream file;
+	ifstream file;
 	file.open(fileName);
 	if (!file.is_open())
 	{
 		string exceptionMessage = "can not open file " + fileName;
-		throw exception(exceptionMessage.c_str());
+		throw ifstream::failure(exceptionMessage.c_str());
 	}
-	std::string result((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	string result((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
 	file.close();
 
 	return result;
 }
 
-bool HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::string& fileName)
+string HelperFunctions::createCompletedCppCode(const string& ñppCode)
 {
-	validateFileName(fileName);
-
-	std::ofstream file;
-	file.open(fileName);
-	if (!file.is_open())
-	{
-		string exceptionMessage = "can not open file " + fileName;
-		throw exception(exceptionMessage.c_str());
-	}
-	file << htmlCode;
-	file.close();
-	return true;
-}
-
-
-std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartOfCppCode)
-{
-	std::string result = programBegin;
-	result += mainPartOfCppCode;
-	result += programEnd;
+	string result(HelperFunctions::PROGRAMBEGIN);
+	result += ñppCode;
+	result += HelperFunctions::PROGRAMEND;
 	return result;
 }
 
-void HelperFunctions::validateFileName(const std::string& fileName)
+string HelperFunctions::getFileContent(const string & path)
+{
+	ifstream file(path);
+	string result;
+	if (file.is_open())
+	{
+		istream_iterator<char> begin(file), end;
+		result = string(begin, end);
+	}
+	return result;
+}
+
+bool HelperFunctions::isStateModified(const string & previousVersion, const string & currentVersion)
+{
+	bool result;
+	result = previousVersion != currentVersion;
+	return result;
+}
+
+void HelperFunctions::validateFileName(const string& fileName)
 {
 	if (fileName.size() == 0)
 	{
