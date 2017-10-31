@@ -37,6 +37,8 @@ TemplateRender/.vs/
 
 #Debug
 TemplateRender/Debug/
+TemplateRender/_cpptemp_/
+TemplateRender/Rendered_HTML_Page/
 #Debug/
 TemplateRender/x64/Debug/
 x64/Debug/

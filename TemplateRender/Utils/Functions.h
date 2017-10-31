@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include <vector>
-#include"CppCodeTemplate.h"
+#include "CppCodeTemplate.h"
+#include "Constants.h"
 
 class HelperFunctions
 {
@@ -24,10 +24,6 @@ public:
 	static std::string createCompletedCppCode(const std::string& mainPartOfCppCode);
 
 	// Info
-	// Creates .bat file for deleting unnecessary files
-	static bool createBat(std::vector<std::string> filesToDelete, const std::string& fileName);
-
-	// Info
 	// Compiles c++ code using g++ compiler
 	static bool compile(const std::string& cppFilePath);
 
@@ -38,9 +34,5 @@ public:
 	// Info
 	// Check if directory exists
 	static bool directoryExists(const std::string& directory);
-
-	// Info
-	// Install MinGW
-	static bool installMinGW(const std::string& mingwPath);
 
 };

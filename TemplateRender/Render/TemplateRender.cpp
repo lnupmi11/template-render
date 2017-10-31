@@ -62,36 +62,36 @@ void TemplateRender::run(const string filePath)
 	}
 }
 
-void TemplateRender::createDeleteFilesBat(vector<string> deleteList, const string fileName)
-{
-	if (!HelperFunctions::createBat(deleteList, fileName))
-	{
-		string errorMessage = "Cannot create bat file";
-		throw exception(errorMessage.c_str());
-	}
-}
+//void TemplateRender::createDeleteFilesBat(vector<string> deleteList, const string fileName)
+//{
+//	if (!HelperFunctions::createBat(deleteList, fileName))
+//	{
+//		string errorMessage = "Cannot create bat file";
+//		throw exception(errorMessage.c_str());
+//	}
+//}
 
 void TemplateRender::deleteDirectory(const string path)
 {
-	HelperFunctions::run("rmdir " + path);
+	HelperFunctions::run("rmdir /S /Q " + path);
 }
 
 void TemplateRender::render(const string htmlPagePath)
 {
 	const string folderPath = "_cpptemp_";
-	const string cppFileName = "a.cpp";
-	const string exeFileName = "a.exe";
-	const string batFileName = "sd.bat";
+	const string cppFileName = "temp.cpp";
+	const string exeFileName = "temp.exe";
+//	const string batFileName = "sd.bat";
 
 	try
 	{
 		string parsedCppCode = getCppCode(htmlPagePath);
 		string cppCode = completedCppCode(parsedCppCode);
 
-		vector<string> deleteList;
-		deleteList.push_back(cppFileName);
-		deleteList.push_back(exeFileName);
-		createDeleteFilesBat(deleteList, batFileName);
+		//vector<string> deleteList;
+		//deleteList.push_back(cppFileName);
+		//deleteList.push_back(exeFileName);
+		//createDeleteFilesBat(deleteList, batFileName);
 
 		createCppFile(cppCode, cppFileName);
 		compileCppFile(cppFileName);
