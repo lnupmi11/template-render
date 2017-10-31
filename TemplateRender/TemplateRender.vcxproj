@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{8E8E1205-210E-4730-8AB4-7E681FF6D3DE}</ProjectGuid>
     <RootNamespace>TemplateRender</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,13 +41,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -114,14 +114,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
-    <ClCompile Include="DTO\DataObject.cpp" />
+    <ClCompile Include="Entity\DataObject.cpp" />
     <ClCompile Include="DTO\DataManager.cpp" />
     <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DTO\DataObject.h" />
+    <ClInclude Include="Entity\DataObject.h" />
     <ClInclude Include="DTO\DataManager.h" />
     <ClInclude Include="Render\Compile.h" />
     <ClInclude Include="Render\TemplateRender.h" />
@@ -131,7 +131,6 @@
     <ClInclude Include="Utils\Functions.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rendered_HTML_Page\index.html" />
     <None Include="Tests\TestCppHtmlPage.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>

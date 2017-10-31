@@ -1,7 +1,7 @@
 #include<vector>
 #include<string>
 #include<fstream>
-#include"DataObject.h"
+#include"../Entity/DataObject.h"
 using namespace std;
 
 class DataManager

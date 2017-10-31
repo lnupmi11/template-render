@@ -110,20 +110,21 @@ string Parser::parseToCpp(string& cppHtmlCode)
 
 bool Parser::isLoop(const string & str)
 {
-	const string forRegex = "\\s*for\\s*\\(\\s*auto \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)";
-	const string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)";
+	const string forRegex = "\\s*for\\s*\\(\\s*auto \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)\\s*";
+	const string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\s*\\)\\s*";
+	const string foreachEnumeratorRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\.[A-z]{1,}\\(\\s*\\)\\s*\\)\\s*";
 
 	bool checkFor = regexCheck(str, forRegex);
 	bool checkForeach = regexCheck(str, foreachRegex);
-
-	return checkFor || checkForeach;
+	bool checkForeachEnumerator = regexCheck(str, foreachEnumeratorRegex);
+	return checkFor || checkForeach || checkForeachEnumerator;
 }
 
 
 bool Parser::regexCheck(const string & str, const string & regexStr)
 {
 	regex expr(regexStr);
-	if (regex_search(str.begin(), str.end(), expr))
+	if (regex_match(str.begin(), str.end(), expr))
 	{
 		return true;
 	}

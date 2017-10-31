@@ -25,6 +25,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{ae14127f-3eb2-4fd2-b368-c3c15cc2a1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{165d7a1e-e819-431a-98ec-bd0689a414b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp">
@@ -32,9 +35,6 @@
     </ClCompile>
     <ClCompile Include="Utils\Functions.cpp">
       <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="DTO\DataObject.cpp">
-      <Filter>DTO</Filter>
     </ClCompile>
     <ClCompile Include="DTO\DataManager.cpp">
       <Filter>DTO</Filter>
@@ -45,6 +45,9 @@
     <ClCompile Include="Render\Parser.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Entity\DataObject.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">
@@ -52,9 +55,6 @@
     </ClInclude>
     <ClInclude Include="Tests\Tests.h">
       <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="DTO\DataObject.h">
-      <Filter>DTO</Filter>
     </ClInclude>
     <ClInclude Include="DTO\DataManager.h">
       <Filter>DTO</Filter>
@@ -71,11 +71,13 @@
     <ClInclude Include="Render\Compile.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\DataObject.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests\TestCppHtmlPage.htm">
       <Filter>Tests</Filter>
     </None>
-    <None Include="Rendered_HTML_Page\index.html" />
   </ItemGroup>
 </Project>

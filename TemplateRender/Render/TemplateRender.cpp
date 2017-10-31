@@ -1,7 +1,8 @@
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
-#include"Compile.h"
 #include "TemplateRender.h"
+#include"Compile.h"
+
 
 string TemplateRender::getFileContent(const string htmlPagePath)
 {
@@ -33,18 +34,36 @@ string TemplateRender::completedCppCode(string code)
 	return cppCode;
 }
 
-	
-
-void TemplateRender::render(const string& htmlPagePath , DataObject& data )
+void TemplateRender::createCompileFunction(const string & cppCode)
 {
-	string parsedCppCode = getCppCode(htmlPagePath);
-	string cppCode = completedCppCode(parsedCppCode);
-
 	ofstream ofs;
 	ofs.open("Render//Compile.h", ios_base::out | ios_base::trunc);
 	ofs << cppCode;
 	ofs.close();
+}
 
-	compile();
+
+
+void TemplateRender::render(const string& htmlPagePath, DataObject& Model)
+{
+	string parsedCppCode = getCppCode(htmlPagePath);
+	string cppCode = completedCppCode(parsedCppCode);
+	createCompileFunction(cppCode);
+	try
+	{
+		compile(Model);
+	}
+	catch (const ofstream::failure& e)
+	{
+		cout << "Exception opening/reading file \n" << e.what() << "\n";
+	}
+	catch (const exception& e)
+	{
+		cout << e.what()<<"\n";
+	}
+	catch (...)
+	{
+		cout << "UNKNOWN ERROR \n";
+	}
 
 }

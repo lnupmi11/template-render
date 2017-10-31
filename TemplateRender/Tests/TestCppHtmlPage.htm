@@ -5,9 +5,15 @@
 </HEAD>
 <BODY>
   
+    <%for(auto item :  Model.getEnumerator()) %>
+    <%{%>
+
+     <% item.getInfo()%> 
+    <%}%>
+
     <%for(auto k =0; k < 10 ; k++)%>
     <%{%>
-     t
+     My name is Olya Pastuschak
     <%}%>
 
 
