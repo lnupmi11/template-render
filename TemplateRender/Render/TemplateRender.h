@@ -6,10 +6,8 @@ using namespace std;
 
 class TemplateRender {
 private:
-	static string getFileContent(const string path);
 	static string getCppCode(const string path);
-	static string completedCppCode(const string path);
-	static void createCompileFunction(const string& cppCode);
+	static void createCompileFunction(const string& cppCode, const string & outputPath);
 public:
 	static void render(const string& htmlPagePath , DataObject& data);
 };

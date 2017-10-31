@@ -160,14 +160,9 @@ string Parser::erase(string & cppHtmlCode, string::size_type pos1, string::size_
 // check if part of cpp code is a variable declaration 
 bool Parser::isVariableDeclaration(const string & str)
 {
-	bool result;
-	result = false;
-	regex varDeclar("\\s*auto\\s{1,}[A-Za-z]{1,}\\s{1,}=\\s{1,}([A-Za-z]{1,}|[0-9]{1,})\\s*;\\s*");
-	if (regex_match(str, varDeclar))
-	{
-		result = true;
-	}
-	return result;
+	const string varDeclarRegex = "\\s*auto\\s{1,}[A-Za-z]{1,}\\s{1,}=\\s{1,}([A-Za-z]{1,}|[0-9]{1,})\\s*;\\s*";
+
+	return regexCheck(str, varDeclarRegex);
 }
 
 

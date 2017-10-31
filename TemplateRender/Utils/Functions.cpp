@@ -8,32 +8,31 @@
 
 std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
 {
-	if (fileName.size() == 0)
-	{
-		std::cerr << "Error occurred in 'HelperFunctions::getCppHtmlCode()' function: incorrect path to html file.\n";
-		return "";
-	}
+	validateFileName(fileName);
+
 	std::ifstream file;
 	file.open(fileName);
-
 	if (!file.is_open())
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::getCppHtmlCode()' function: can not open file " << fileName << "\n";
-		return "";
+		string exceptionMessage = "can not open file " + fileName;
+		throw exception(exceptionMessage.c_str());
 	}
 	std::string result((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	file.close();
+
 	return result;
 }
 
 bool HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::string& fileName)
 {
+	validateFileName(fileName);
+
 	std::ofstream file;
 	file.open(fileName);
 	if (!file.is_open())
 	{
-		std::cerr << "Error occurred in 'HelperFunctions::createHtmlPage()' function: can not write data to file '" << fileName << "'\n";
-		return false;
+		string exceptionMessage = "can not open file " + fileName;
+		throw exception(exceptionMessage.c_str());
 	}
 	file << htmlCode;
 	file.close();
@@ -47,4 +46,12 @@ std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartO
 	result += mainPartOfCppCode;
 	result += programEnd;
 	return result;
+}
+
+void HelperFunctions::validateFileName(const std::string& fileName)
+{
+	if (fileName.size() == 0)
+	{
+		throw invalid_argument("File name is empty.");
+	}
 }

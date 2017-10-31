@@ -5,6 +5,8 @@
 
 class HelperFunctions
 {
+private:
+	static void validateFileName(const std::string& fileName);
 public:
 
 	// Info
