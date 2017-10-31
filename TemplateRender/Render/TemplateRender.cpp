@@ -7,6 +7,10 @@
 string TemplateRender::getFileContent(const string htmlPagePath)
 {
 	string content = HelperFunctions::getCppHtmlCode(htmlPagePath);
+	if (content.size() == 0)
+	{
+		throw exception("File is empty.");
+	}
 
 	return content;
 }
@@ -15,6 +19,12 @@ string TemplateRender::getCppCode(const string htmlPagePath)
 {
 	string content = getFileContent(htmlPagePath);
 	string cppCode = Parser::parseToCpp(content);
+
+	if (cppCode.size() == 0)
+	{
+		throw exception("Parsed file is empty.");
+	}
+
 	return cppCode;
 }
 
@@ -25,9 +35,11 @@ string TemplateRender::completedCppCode(string code)
 	return cppCode;
 }
 
-void TemplateRender::render(const string& htmlPagePath)
+	
+
+void TemplateRender::render(const string& htmlPagePath , const DataObject& data)
 {
-	string parsedCppCode = getCppCode(htmlPagePath);	
+	string parsedCppCode = getCppCode(htmlPagePath);
 	string cppCode = completedCppCode(parsedCppCode);
 
 	ofstream ofs;
@@ -36,4 +48,5 @@ void TemplateRender::render(const string& htmlPagePath)
 	ofs.close();
 
 	compile();
+
 }
