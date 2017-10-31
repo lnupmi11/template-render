@@ -59,9 +59,6 @@
     <ClInclude Include="DTO\DataManager.h">
       <Filter>DTO</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\CppCodeTemplate.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Render\TemplateRender.h">
       <Filter>Render</Filter>
     </ClInclude>

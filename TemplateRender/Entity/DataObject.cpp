@@ -5,12 +5,12 @@ DataObject::DataObject()
 	numOfAttributes = 0;
 }
 
-DataObject::DataObject(int _numOfAttributes)
+DataObject::DataObject(size_t _numOfAttributes)
 {
 	numOfAttributes = _numOfAttributes;
 }
 
-DataObject::DataObject(int _numOfAttributes, map<string, string> _attributes)
+DataObject::DataObject(size_t _numOfAttributes, map<string, string> _attributes)
 {
 	numOfAttributes = _numOfAttributes;
 	attributes = _attributes;
@@ -26,10 +26,15 @@ map<string, string> DataObject::getEnumerator()
 	return this->attributes;
 }
 
+size_t DataObject::getSize()
+{
+	return this->numOfAttributes;
+}
+
 istream& operator>>(istream& is, DataObject& obj)
 {
 	string key, value;
-	for (int i = 0; i < obj.numOfAttributes; ++i)
+	for (size_t i = 0; i < obj.numOfAttributes; ++i)
 	{
 		is >> key >> value;
 		obj.attributes[key] = value;
@@ -49,4 +54,9 @@ ostream& operator<<(ostream& os, DataObject& obj)
 string DataObject::operator[](string key)
 {
 	return attributes[key];
+}
+
+string DataObject::operator[](size_t index)
+{
+	return string();
 }

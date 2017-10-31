@@ -7,7 +7,6 @@ void DataManager::readObjects(string& filename)
 	ifstream fin;
 	fin.open(filename);
 	string line = "";
-	map<string, string>* attributes;
 	string objectData = "";
 	int numOfAttributes = 0;
 	while (true)

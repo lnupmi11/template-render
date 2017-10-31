@@ -1,10 +1,94 @@
 #include "Parser.h"
-#include<regex>
-#include<algorithm>
 
-void append(string &str, const string &subStr)
+//info 
+// function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
+// also include nested cycles
+// but now work only for loop for (to changes this we need to add more checks in isLoop() function ) 
+string Parser::parseToCpp(string& cppHtmlCode)
 {
-	for (int i = 0; i < subStr.size(); ++i)
+	static string cppCode("");
+	string::size_type cppCodeBegin, cppCodeEnd;
+	string::size_type commentStart, commentEnd;
+
+	removeGapsAndTabsInCode(cppHtmlCode);
+	static  string result("");
+
+	commentStart = cppHtmlCode.find("<!--");
+	commentEnd = cppHtmlCode.find("-->");
+
+	cppCodeBegin = cppHtmlCode.find("<%");
+	cppCodeEnd = cppHtmlCode.find("%>");
+
+	while (cppCodeBegin < commentEnd && cppCodeBegin > commentStart && cppCodeEnd < commentEnd)
+	{
+		cppCodeBegin = cppHtmlCode.find("<%", commentEnd);
+		cppCodeEnd = cppHtmlCode.find("%>", commentEnd);
+	}
+
+	if (cppCodeBegin != 0 && cppCodeBegin != -1)
+	{
+		result.append("file << \" ");
+		append(result, cppHtmlCode.substr(0, cppCodeBegin));
+		result.append(" \";  ");
+		cppHtmlCode.erase(0, cppCodeBegin);
+	}
+
+	while (cppCodeBegin != -1 || cppCodeEnd != -1)
+	{
+		if (!isCppHtmlTagsValid(cppCodeBegin, cppCodeEnd))
+		{
+			throw exception("invald cppHtml syntaxes at html file \n");
+		}
+
+		cppCode = erase(cppHtmlCode, 0, cppCodeEnd - cppCodeBegin);
+
+		if (isLoop(cppCode))
+		{
+			append(result, cppCode);
+			parseToCpp(cppHtmlCode);
+		}
+		else
+		{
+			if (cppCode != "{" && cppCode != "}")
+			{
+				if (isVariableDeclaration(cppCode))
+				{
+					result.append(cppCode);
+				}
+				else
+				{
+					result.append(" file <<  ");
+					append(result, cppCode);
+					result.append(";");
+				}
+			}
+			if (cppCode == "{" || cppCode == "}")
+			{
+				append(result, cppCode);
+			}
+			parseToCpp(cppHtmlCode);
+		}
+		cppCodeBegin = cppHtmlCode.find("<%");
+		cppCodeEnd = cppHtmlCode.find("%>");
+	}
+
+	if (cppCodeBegin == -1 && cppCodeEnd == -1 && cppHtmlCode != "")
+	{
+		result.append("file << \" ");
+		append(result, cppHtmlCode.substr(0, cppCodeBegin));
+		result.append(" \";  ");
+		cppHtmlCode.erase(0, cppCodeBegin);
+		result.erase(remove(result.begin(), result.end(), '\n'), result.end());
+	}
+
+	return result;
+}
+
+
+
+void Parser::append(string& str, const string& subStr)
+{
+	for (size_t i = 0; i < subStr.size(); ++i)
 	{
 		if (subStr[i] == '"')
 		{
@@ -23,118 +107,37 @@ void append(string &str, const string &subStr)
 }
 
 
-//info 
-// function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
-// also include nested cycles
-// but now work only for loop for (to changes this we need to add more checks in isLoop() dunction ) 
-string Parser::parseToCpp(string& cppHtmlCode)
-{
-	static string cppCode("");
-	string::size_type startPos, endPos;
-	string::size_type commentStart, commentEnd;
-
-	removeGapsAndTabsBeforeCode(cppHtmlCode);
-	static  string ForCompilation = "";
-
-	commentStart = cppHtmlCode.find("<!--");
-	commentEnd = cppHtmlCode.find("-->");
-
-	startPos = cppHtmlCode.find("<%");
-	endPos = cppHtmlCode.find("%>");
-
-	while (startPos < commentEnd && startPos > commentStart && endPos < commentEnd)
-	{
-		startPos = cppHtmlCode.find("<%", commentEnd);
-		endPos = cppHtmlCode.find("%>", commentEnd);
-	}
-
-	if (startPos != 0 && startPos != -1)
-	{
-		ForCompilation.append("file << \" ");
-		append(ForCompilation, cppHtmlCode.substr(0, startPos));
-		ForCompilation.append(" \";  ");
-		cppHtmlCode.erase(0, startPos);
-	}
-
-	while (startPos != -1 || endPos != -1)
-	{
-		if (!isCppHtmlTagsValid(startPos, endPos))
-		{
-			throw exception("invald cppHtml syntaxes at html file \n");
-		}
-
-		cppCode = erase(cppHtmlCode, 0, endPos - startPos);
-
-		if (isLoop(cppCode))
-		{
-			append(ForCompilation, cppCode);
-			parseToCpp(cppHtmlCode);
-		}
-		else
-		{
-			if (cppCode != "{" && cppCode != "}")
-			{
-				if (isVariableDeclaration(cppCode))
-				{
-					ForCompilation.append(cppCode);
-				}
-				else
-				{
-					ForCompilation.append(" file <<  ");
-					append(ForCompilation, cppCode);
-					ForCompilation.append(";");
-				}
-			}
-			if (cppCode == "{" || cppCode == "}")
-			{
-				append(ForCompilation, cppCode);
-			}
-			parseToCpp(cppHtmlCode);
-		}
-		startPos = cppHtmlCode.find("<%");
-		endPos = cppHtmlCode.find("%>");
-	}
-
-	if (startPos == -1 && endPos == -1 && cppHtmlCode != "")
-	{
-		ForCompilation.append("file << \" ");
-		append(ForCompilation, cppHtmlCode.substr(0, startPos));
-		ForCompilation.append(" \";  ");
-		cppHtmlCode.erase(0, startPos);
-		ForCompilation.erase(remove(ForCompilation.begin(), ForCompilation.end(), '\n'), ForCompilation.end());
-	}
-
-	return ForCompilation;
-}
-
-
-bool Parser::isLoop(const string & str)
+bool Parser::isLoop(const string& str)
 {
 	const string forRegex = "\\s*for\\s*\\(\\s*auto \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)\\s*";
+	const string forRegex2 = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[A-z]{1,}\\s*<\\s*[A-z]{1,}\\.[A-z]{1,}\\(\\s*\\)\\s*;\\s*[A-z]{1,}\\+\\+\\s*\\)\\s*";
 	const string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\s*\\)\\s*";
 	const string foreachEnumeratorRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\.[A-z]{1,}\\(\\s*\\)\\s*\\)\\s*";
 
-	bool checkFor = regexCheck(str, forRegex);
-	bool checkForeach = regexCheck(str, foreachRegex);
-	bool checkForeachEnumerator = regexCheck(str, foreachEnumeratorRegex);
-	return checkFor || checkForeach || checkForeachEnumerator;
+	bool isFor = regexCheck(str, forRegex);
+	bool isFor2 = regexCheck(str, forRegex2);
+	bool isForeach = regexCheck(str, foreachRegex);
+	bool isForeachEnumerator = regexCheck(str, foreachEnumeratorRegex);
+	return isFor || isForeach || isForeachEnumerator || isFor2;
 }
 
 
-bool Parser::regexCheck(const string & str, const string & regexStr)
+bool Parser::regexCheck(const string& str, const string& regexStr)
 {
 	regex expr(regexStr);
+	bool result;
+	result = false;
 	if (regex_match(str.begin(), str.end(), expr))
 	{
-		return true;
+		result = true;
 	}
-	return false;
+	return result;
 }
 
 
 //// Info
 //// delete spaces and tabs before code 
-void Parser::removeGapsAndTabsBeforeCode(string & code)
+void Parser::removeGapsAndTabsInCode(string& code)
 {
 	while (code[0] == ' ' || code[0] == '\n')
 	{
@@ -145,24 +148,27 @@ void Parser::removeGapsAndTabsBeforeCode(string & code)
 
 // Info
 // get only cpp code from string(from pos1 to pos2 ) and delete this string from cppHtmlCode
-string Parser::erase(string & cppHtmlCode, string::size_type pos1, string::size_type pos2)
+string Parser::erase(string& cppHtmlCode, string::size_type pos1, string::size_type pos2)
 {
-	removeGapsAndTabsBeforeCode(cppHtmlCode);
-	string tmp = cppHtmlCode.substr(pos1, pos2 + 2);
+	removeGapsAndTabsInCode(cppHtmlCode);
+	string result;
+	result = cppHtmlCode.substr(pos1, pos2 + 2);
 	cppHtmlCode.erase(pos1, pos2 + 2);
-	tmp.erase(tmp.find("<%"), 2);
-	tmp.erase(tmp.find("%>"), 2);
-	return tmp;
+	result.erase(result.find("<%"), 2);
+	result.erase(result.find("%>"), 2);
+
+	return result;
 }
 
 
 // info
 // check if part of cpp code is a variable declaration 
-bool Parser::isVariableDeclaration(const string & str)
+bool Parser::isVariableDeclaration(const string& str)
 {
 	const string varDeclarRegex = "\\s*auto\\s{1,}[A-Za-z]{1,}\\s{1,}=\\s{1,}([A-Za-z]{1,}|[0-9]{1,})\\s*;\\s*";
-
-	return regexCheck(str, varDeclarRegex);
+	bool isVarDeclar = regexCheck(str, varDeclarRegex);
+	
+	return isVarDeclar;
 }
 
 
@@ -176,6 +182,7 @@ bool Parser::isCppHtmlTagsValid(string::size_type start, string::size_type end)
 	{
 		result = false;
 	}
+
 	return result;
 }
 
