@@ -1,8 +1,7 @@
-#pragma once
-#include "TemplateRender.h"
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
 #include"Compile.h"
+#include "TemplateRender.h"
 
 string TemplateRender::getFileContent(const string htmlPagePath)
 {
@@ -31,13 +30,12 @@ string TemplateRender::getCppCode(const string htmlPagePath)
 string TemplateRender::completedCppCode(string code)
 {
 	string cppCode = HelperFunctions::createCompletedCppCode(code);
-
 	return cppCode;
 }
 
 	
 
-void TemplateRender::render(const string& htmlPagePath , const DataObject& data)
+void TemplateRender::render(const string& htmlPagePath , DataObject& data )
 {
 	string parsedCppCode = getCppCode(htmlPagePath);
 	string cppCode = completedCppCode(parsedCppCode);

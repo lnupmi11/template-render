@@ -1,3 +1,11 @@
-﻿  TemplateRender.cpp
+﻿  Functions.cpp
+  Parser.cpp
+d:\c++\template-render\templaterender\render\parser.cpp(7): warning C4018: '<': signed/unsigned mismatch
+  TemplateRender.cpp
+  DataManager.cpp
+d:\c++\template-render\templaterender\dto\datamanager.cpp(10): warning C4101: 'attributes': unreferenced local variable
+  DataObject.cpp
+  AppStart.cpp
+  Generating Code...
   TemplateRender.vcxproj -> D:\c++\template-render\Debug\TemplateRender.exe
   TemplateRender.vcxproj -> D:\c++\template-render\Debug\TemplateRender.pdb (Partial PDB)
