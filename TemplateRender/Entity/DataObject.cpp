@@ -56,7 +56,3 @@ string DataObject::operator[](string key)
 	return attributes[key];
 }
 
-string DataObject::operator[](size_t index)
-{
-	return string();
-}

@@ -4,18 +4,11 @@
     <TITLE></TITLE>
 </HEAD>
 <BODY>
-  
-    <%for(auto i= 0 ; i < Model.getSize(); i++  )%>
-    <%{%>
-
-     <% Model[i] %> 
-    <%}%>
-
+    <%for(auto& elem : Model)%>
+    <%elem%>
     <%for(auto k =0; k < 10 ; k++)%>
     <%{%>
      My name is Olya Pastuschak
     <%}%>
-
-
 </BODY>
 </HTML>

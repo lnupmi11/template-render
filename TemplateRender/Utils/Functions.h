@@ -16,7 +16,7 @@ private:
 		" #include <string>\n "
 		" #include <list> \n "
 		" #include <fstream>\n "
-		" void compile(DataObject& Model)\n "
+		" void compile(Model& Model)\n "
 		"{\n "
 		"std::ofstream file;\n"
 		"file.open(\"Rendered_HTML_Page//Index.html\" , ios_base::out | ios_base::trunc  );\n"

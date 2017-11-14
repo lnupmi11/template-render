@@ -4,6 +4,8 @@
 // function which create code for compilation (without including libraries and without standard start of the progarms and the end) 
 // also include nested cycles
 // but now work only for loop for (to changes this we need to add more checks in isLoop() function ) 
+
+
 string Parser::parseToCpp(string& cppHtmlCode)
 {
 	static string cppCode("");
@@ -112,13 +114,15 @@ bool Parser::isLoop(const string& str)
 	const string forRegex = "\\s*for\\s*\\(\\s*auto \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)\\s*";
 	const string forRegex2 = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[A-z]{1,}\\s*<\\s*[A-z]{1,}\\.[A-z]{1,}\\(\\s*\\)\\s*;\\s*[A-z]{1,}\\+\\+\\s*\\)\\s*";
 	const string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\s*\\)\\s*";
+	const string foreachRegex2 = "\\s*for\\s*\\(\\s*auto&\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\s*\\)\\s*";
 	const string foreachEnumeratorRegex = "\\s*for\\s*\\(\\s*auto\\s*[A-z]{1,}\\s*\\:\\s*[A-z]{1,}\\.[A-z]{1,}\\(\\s*\\)\\s*\\)\\s*";
 
 	bool isFor = regexCheck(str, forRegex);
 	bool isFor2 = regexCheck(str, forRegex2);
 	bool isForeach = regexCheck(str, foreachRegex);
+	bool isForeach2 = regexCheck(str, foreachRegex2);
 	bool isForeachEnumerator = regexCheck(str, foreachEnumeratorRegex);
-	return isFor || isForeach || isForeachEnumerator || isFor2;
+	return isFor || isForeach || isForeach2 || isForeachEnumerator || isFor2;
 }
 
 
@@ -182,7 +186,6 @@ bool Parser::isCppHtmlTagsValid(string::size_type start, string::size_type end)
 	{
 		result = false;
 	}
-
 	return result;
 }
 

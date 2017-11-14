@@ -1,6 +1,6 @@
 #include<iostream>
 #include<fstream>
-#include"../DTO/DataManager.h"
+#include"../DTO/Model.h"
 using namespace std;
 
 
@@ -11,5 +11,5 @@ private:
 	static string getCppCode(const string& path);
 	static void createCompileFunction(const string& cppCode, const string& outputPath);
 public:
-	static void render(const string& htmlPagePath, DataObject& data);
+	static void render(const string& htmlPagePath, Model& data);
 };

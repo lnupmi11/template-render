@@ -27,7 +27,7 @@ void TemplateRender::createCompileFunction(const string& cppCode, const string& 
 	ofs.close();
 }
 
-void TemplateRender::render(const string& htmlPagePath, DataObject& Model)
+void TemplateRender::render(const string& htmlPagePath, Model& Model)
 {
 	try
 	{
