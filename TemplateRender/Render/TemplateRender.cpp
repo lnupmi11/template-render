@@ -35,12 +35,14 @@ string ExePath() {
 	return string(buffer).substr(0, pos);
 }
 
-void TemplateRender::render(const string& htmlPagePath, DataObject& Model)
+
+void TemplateRender::render(const string& htmlPagePath, Model& Model)
 {
 	try
 	{
 		string cppCode;
 		cppCode = getCppCode(htmlPagePath);
+
 
 		string previousCompiledCpp;
 		previousCompiledCpp = HelperFunctions::getFileContent(COMPILEDCPPFILEPATH);

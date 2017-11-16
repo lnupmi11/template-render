@@ -18,5 +18,4 @@ public:
 	friend istream& operator>>(istream& is, DataObject& ob);
 	friend ostream& operator<<(ostream& os, DataObject& ob);
 	string operator[](string key);
-	string operator[](size_t index);
 };

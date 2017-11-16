@@ -16,7 +16,7 @@ private:
 		" #include <string>\n "
 		" #include <list> \n "
 		" #include <fstream>\n "
-		" void compile(DataObject& Model)\n "
+		" void compile(Model& Model)\n "
 		"{\n "
 		"std::ofstream file;\n"
 		"file.open(\"..//TemplateRender//Rendered_HTML_Page//Index.html\" , ios_base::out | ios_base::trunc  );\n"
@@ -41,10 +41,7 @@ public:
 	// Info
 	// Add  begin(also libraries) and end to cpp code;
 	static string createCompletedCppCode(const string& ñppCode);
-
 	static void execute(const string& command);
-
 	static string getFileContent(const string& path);
-
 	static bool isStateModified(const string& previousVersion, const string& currentVersion);
 };

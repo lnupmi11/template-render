@@ -1,6 +1,7 @@
 #include "Functions.h"
 #include<Windows.h>
 
+
 string HelperFunctions::getCppHtmlCode(const string& fileName)
 {
 	validateFileName(fileName);
@@ -25,6 +26,7 @@ string HelperFunctions::createCompletedCppCode(const string& ñppCode)
 	result += HelperFunctions::PROGRAMEND;
 	return result;
 }
+
 
 void HelperFunctions::execute(const string& command)
 {

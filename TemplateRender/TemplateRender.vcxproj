@@ -116,14 +116,14 @@
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
     <ClCompile Include="Entity\DataObject.cpp" />
-    <ClCompile Include="DTO\DataManager.cpp" />
+    <ClCompile Include="DTO\Model.cpp" />
     <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity\DataObject.h" />
-    <ClInclude Include="DTO\DataManager.h" />
+    <ClInclude Include="DTO\Model.h" />
     <ClInclude Include="Render\Compile.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Render\Parser.h" />

@@ -1,17 +1,21 @@
-#include"DataManager.h"
+#include"Model.h"
 #include<sstream>
 #include<iostream>
 
-void DataManager::readObjects(string& filename)
+void Model::read(string& filename)
 {
-	ifstream fin;
-	fin.open(filename);
+	ifstream ifs;
+	ifs.open(filename);
+	if (ifs.fail())
+	{
+		throw ios_base::failure("could not open " + filename);
+	}
 	string line = "";
 	string objectData = "";
 	int numOfAttributes = 0;
 	while (true)
 	{
-		getline(fin, line);
+		getline(ifs, line);
 		if (line == ".") break;
 		else if (line == "#")
 		{
@@ -34,20 +38,27 @@ void DataManager::readObjects(string& filename)
 	}
 }
 
-DataManager::DataManager(string filename)
-{
-	readObjects(filename);
-}
 
-void DataManager::print()
+void Model::print(ofstream& ofs)
 {
 	for (vector<DataObject>::iterator it = objects.begin(); it != objects.end(); ++it)
 	{
-		cout << (*it) << endl;
+		ofs << (*it) << endl;
 	}
 }
 
-vector<DataObject> DataManager::getObjects()
+size_t Model::getSize()
 {
-	return objects;
+	return objects.size();
+}
+
+
+ofstream& operator<<(ofstream& ofs, Model& model)
+{
+	for (auto& elem : model.objects)
+	{
+		ofs << elem;
+	}
+	ofs << endl;
+	return ofs;
 }
