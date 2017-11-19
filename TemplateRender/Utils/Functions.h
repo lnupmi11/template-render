@@ -36,3 +36,22 @@ public:
 	static bool directoryExists(const std::string& directory);
 
 };*/
+
+#pragma once
+#include <string>
+
+class HelperFunctions
+{
+public:
+
+	static std::string retrieveCode(const std::string& code);
+
+	static size_t codeType(const std::string& code);
+
+	static std::string parse(const std::string& code);
+
+	static void createHTML(const std::string& htmlCode, const std::string& pageName);
+
+	static void render(const std::string& templateName);
+
+};

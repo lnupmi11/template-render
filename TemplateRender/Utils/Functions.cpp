@@ -139,3 +139,32 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 	DWORD dirAttributes = GetFileAttributesA(directory.c_str());
 	return dirAttributes != INVALID_FILE_ATTRIBUTES && dirAttributes & FILE_ATTRIBUTE_DIRECTORY;
 }*/
+
+#include <fstream>
+#include <iostream>
+#include "Functions.h"
+
+std::string HelperFunctions::retrieveCode(const std::string& code)
+{
+
+}
+
+size_t HelperFunctions::codeType(const std::string& code)
+{
+
+}
+
+std::string HelperFunctions::parse(const std::string& code)
+{
+
+}
+
+void HelperFunctions::createHTML(const std::string& htmlCode, const std::string& pageName)
+{
+
+}
+
+void HelperFunctions::render(const std::string& templateName)
+{
+
+}
