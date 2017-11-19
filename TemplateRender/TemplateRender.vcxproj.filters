@@ -82,5 +82,8 @@
     <None Include="Tests\TestCppHtmlPage.htm">
       <Filter>Tests</Filter>
     </None>
+    <None Include="Tests\index.html">
+      <Filter>Tests</Filter>
+    </None>
   </ItemGroup>
 </Project>

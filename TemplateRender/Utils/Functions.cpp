@@ -140,16 +140,16 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 	return dirAttributes != INVALID_FILE_ATTRIBUTES && dirAttributes & FILE_ATTRIBUTE_DIRECTORY;
 }*/
 
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <regex>
-#include<algorithm>
+#include <algorithm>
 #include "Functions.h"
 #include "../Render/Parser.h"
 
 std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
 {
-	string result="";
+	string result = "";
 	std::regex forRegex("\\s*for\\s*\\(\\s*auto | \\s*size_t |\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)");
 	std::smatch loopCondt;
 	std::regex_search(code, loopCondt, forRegex);
@@ -177,7 +177,7 @@ std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOf
 		increment = false;
 		numberOfIteration = startCount- endCount;
 	}
-	std::copy(code.begin() + loopCondition.length(), code.end(), result);
+	std::copy(code.begin() + loopCondition.length(), code.end(), result);	// TODO: code.end() - 1
 	return result;
 }
 
@@ -208,33 +208,85 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 std::string HelperFunctions::runCode(const std::string& code)
 {
-
+	int numberOfIters = 0;
+	bool increment, fewer;
+	std::string body = HelperFunctions::retrieveBody(code, numberOfIters, increment, fewer);
+	std::string result = "";
+	switch (HelperFunctions::codeType(code))
+	{
+	case 1:
+		// TODO: for loop statement (result += ...)
+		break;
+	case 2:
+		// TODO: foreach statement (result += ...)
+		break;
+	case 3:
+		// TODO: if statement (result += ...)
+		break;
+	default:
+		throw exception("Incorrect type of code");
+		break;
+	}
+	return result;
 }
 
-std::string HelperFunctions::parse(const std::string& code)
+std::string HelperFunctions::parseBlock(const std::string& code)
 {
+	std::smatch data;
+	std::regex regexBegin("TODO: regex for all loops");						// TODO:
+	std::regex regexEnd("TODO: regex for {% endfor %} and {% endif %}");	// TODO:
+	std::string result("");
+	size_t end = code.find("{%");
+	if (end == string::npos)
+	{
+		result += code;
+	}
+	else
+	{
+		for (size_t i = 0; i < end; i++)
+		{
+			result += code[i];
+		}
+		if (std::regex_search(code, data, regexBegin))
+		{
+			size_t begin = data.position(0);
+			if (std::regex_search(code, data, regexEnd))
+			{
+				size_t end = data.position(data.size() - 1);
+				std::string completedPart = HelperFunctions::runCode(string(begin, end));
+				result += HelperFunctions::parseBlock(completedPart);
 
+				// TODO: find pos after {% endfor(endif) %} end write it to 'end' variable.
+
+				for (size_t i = end; i < code.size(); i++)
+				{
+					result += code[i];
+				}
+			}
+			else
+			{
+				throw std::exception("Invalid code in html page");
+			}
+		}
+	}
+	return result;
 }
 
 std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
-	
 	ifstream read;
 	read.open(templateName);
 	std::string result="";
 	if (read.is_open())
 	{
-		result.assign((std::istreambuf_iterator<char>(read)),
-			std::istreambuf_iterator<char>());
+		result.assign((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
 		read.close();
-		
 	}
 	else
 	{
 		throw  std::exception("File not found");
 	}
 	return result;
-
 }
 
 void HelperFunctions::createHTML(const std::string& html, const std::string& htmlPath)
@@ -253,7 +305,5 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 
 void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
 {
-	std::string html = HelperFunctions::readTemplate(templatePath);
-	std::string htmlCode = HelperFunctions::parse(html);
-	HelperFunctions::createHTML(htmlCode, htmlPath);
+	// TODO: main logic
 }

@@ -132,6 +132,7 @@
     <ClInclude Include="Utils\Functions.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Tests\index.html" />
     <None Include="Tests\TestCppHtmlPage.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
