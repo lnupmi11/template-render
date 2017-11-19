@@ -48,10 +48,14 @@ public:
 
 	static size_t codeType(const std::string& code);
 
+	static std::string runCode(const std::string& code);
+
 	static std::string parse(const std::string& code);
 
-	static void createHTML(const std::string& htmlCode, const std::string& pageName);
+	static std::string readTemplate(const std::string& templateName);
 
-	static void render(const std::string& templateName);
+	static void createHTML(const std::string& html, const std::string& htmlPath);
+
+	static void render(const std::string& templatePath, const std::string& htmlPath);
 
 };

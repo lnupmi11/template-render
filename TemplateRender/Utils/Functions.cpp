@@ -154,17 +154,38 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 }
 
+std::string HelperFunctions::runCode(const std::string& code)
+{
+
+}
+
 std::string HelperFunctions::parse(const std::string& code)
 {
 
 }
 
-void HelperFunctions::createHTML(const std::string& htmlCode, const std::string& pageName)
+std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
 
 }
 
-void HelperFunctions::render(const std::string& templateName)
+void HelperFunctions::createHTML(const std::string& html, const std::string& htmlPath)
 {
+	std::ofstream file(htmlPath);
+	if (file.is_open())
+	{
+		file << html;
+		file.close();
+	}
+	else
+	{
+		throw std::exception(("Can not open file '" + htmlPath + "' for writting.").c_str());
+	}
+}
 
+void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
+{
+	std::string html = HelperFunctions::readTemplate(templatePath);
+	std::string htmlCode = HelperFunctions::parse(html);
+	HelperFunctions::createHTML(htmlCode, htmlPath);
 }
