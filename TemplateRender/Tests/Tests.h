@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include <iostream>
 #include <Windows.h>
@@ -50,4 +51,4 @@ void CREATE_AND_COMPILE_CPP()
 		HelperFunctions::run("Rendered_HTML_Page\\index.html");
 	}
 	cout << " OK\n";
-}
+}*/

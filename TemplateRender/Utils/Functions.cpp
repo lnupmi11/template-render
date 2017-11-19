@@ -1,3 +1,4 @@
+/*
 #define _CRT_SECURE_NO_WARNINGS
 #include "Functions.h"
 #include <fstream>
@@ -137,4 +138,4 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 {
 	DWORD dirAttributes = GetFileAttributesA(directory.c_str());
 	return dirAttributes != INVALID_FILE_ATTRIBUTES && dirAttributes & FILE_ATTRIBUTE_DIRECTORY;
-}
+}*/

@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <string>
 #include "CppCodeTemplate.h"
 #include "Constants.h"
@@ -35,4 +35,4 @@ public:
 	// Check if directory exists
 	static bool directoryExists(const std::string& directory);
 
-};
+};*/

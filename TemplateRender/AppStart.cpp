@@ -6,8 +6,11 @@ int main()
 {
 	/*DataManager objectManger("data.txt");
 	objectManger.print();*/
-	CREATE_AND_COMPILE_CPP();
+//	CREATE_AND_COMPILE_CPP();
 //	testParseToCpp();
+
+
+
 	system("pause");
 	return 0;
 }
