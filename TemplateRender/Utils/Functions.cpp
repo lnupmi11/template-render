@@ -1,4 +1,5 @@
 #include "Functions.h"
+#include"..//GlobalVariables.h"
 #include<Windows.h>
 
 
@@ -60,4 +61,51 @@ void HelperFunctions::validateFileName(const string& fileName)
 	{
 		throw invalid_argument("File name is empty.");
 	}
+}
+
+bool is64Bit = false;
+string ROOTFOLDERPATH;
+string TMPDATAPATH;
+string EXEFILEPATH;
+string COMPILEDCPPFILEPATH;
+string INDEXHTMLFILEPATH;
+string CPPHTMFILEPATH;
+string DEVPROMPTPATH;
+string VSPATH;
+
+void HelperFunctions::createPaths()
+{
+	char buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	EXEFILEPATH = string(buffer);
+	size_t rootPos = EXEFILEPATH.rfind("template-render") + 15;
+	ROOTFOLDERPATH = EXEFILEPATH.substr(0, rootPos);
+	TMPDATAPATH = ROOTFOLDERPATH + "\\TemplateRender\\tmpData.txt";
+	VSPATH = ROOTFOLDERPATH + "\\TemplateRender\\vspath.txt";
+	COMPILEDCPPFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Render\\Compile.h";
+	INDEXHTMLFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Rendered_HTML_Page\\index.html";
+	CPPHTMFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Tests\\TestCppHtmlPage.htm";
+	DEVPROMPTPATH = "C:\\Program Files\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat";
+}
+
+void HelperFunctions::setArchitecture()
+{
+	execute("%comspec% /c \" wmic os get osarchitecture > " + TMPDATAPATH + "\"");
+	ifstream ifs;
+	ifs.open(TMPDATAPATH);
+	if (ifs.fail())
+	{
+		throw ifstream::failure(TMPDATAPATH);
+	}
+	char ch;
+	while (!ifs.eof())
+	{
+		ifs >> ch;
+		if (ch == '6')
+		{
+			is64Bit = true;
+			break;
+		}
+	}
+	ifs.close();
 }

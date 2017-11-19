@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClInclude Include="Entity\DataObject.h" />
     <ClInclude Include="DTO\Model.h" />
+    <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="Render\Compile.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Render\Parser.h" />

@@ -1,8 +1,11 @@
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
 #include "TemplateRender.h"
+#include "..//GlobalVariables.h"
 #include "Compile.h"
 
+string VSWHEREPATH = "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe";
+string VSLOCATION = "";
 
 string TemplateRender::getCppCode(const string& htmlPagePath)
 {
@@ -35,11 +38,37 @@ string ExePath() {
 	return string(buffer).substr(0, pos);
 }
 
+void TemplateRender::presetVariables()
+{
+	HelperFunctions::createPaths();
+	HelperFunctions::setArchitecture();
+}
+
+void TemplateRender::setVSLocation()
+{
+	const string command = "%comspec% /c \"call \"" + VSWHEREPATH + "\" -property installationPath > " + VSPATH + "\"";
+
+	HelperFunctions::execute(command);
+
+	ifstream ifs;
+	ifs.open(VSPATH);
+	if (ifs.fail())
+	{
+		throw ios_base::failure(TMPDATAPATH);
+	}
+	getline(ifs, VSLOCATION);
+	ifs.close();
+
+	DEVPROMPTPATH = VSLOCATION + "\\Common7\\Tools\\VsDevCmd.bat";
+}
+
 
 void TemplateRender::render(const string& htmlPagePath, Model& Model)
 {
 	try
 	{
+		presetVariables();
+
 		string cppCode;
 		cppCode = getCppCode(htmlPagePath);
 
@@ -52,6 +81,8 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 
 		currentCpp.erase(remove_if(currentCpp.begin(), currentCpp.end(), isspace), currentCpp.end());
 		remove_if(previousCompiledCpp.begin(), previousCompiledCpp.end(), isspace);
+
+		setVSLocation();
 
 		ifstream ifs("log.txt");
 		size_t state;
@@ -66,19 +97,23 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			}
 			ofstream ofs;
 			ofs.open("log.txt", ios_base::out | ios_base::trunc);
+
 			switch (state)
 			{
 			case 0:
 			{
 				createCompileFunction(cppCode, COMPILEDCPPFILEPATH);
 				ofs << 1;
-				ShellExecute(NULL, "open", const_cast<char*>((ExePath()+"\\TemplateRender.exe" ).c_str()),  NULL, NULL, SW_SHOWDEFAULT);
+				ShellExecute(NULL, "open", const_cast<char*>((EXEFILEPATH).c_str()), NULL, NULL, SW_SHOWDEFAULT);
 				exit(0);
 			}
 			case 1:
 			{
 				ofs << 2;
-				HelperFunctions::execute(DEVPROMPTPATH + ExePath() + EXEFILEPATH);
+				string tmp = EXEFILEPATH;
+				tmp.resize(tmp.length() - 19);
+				const string command = "%comspec% /k call \"" + DEVPROMPTPATH + "\" && cd /d " + ROOTFOLDERPATH + " && devenv TemplateRender.sln /build && cd /d " + tmp + " && TemplateRender.exe && exit" ;
+				HelperFunctions::execute(command);
 				exit(0);
 			}
 			case 2:
@@ -92,12 +127,9 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			}
 			ofs.close();
 		}
-		
-		string path = ExePath();
-		path.resize(path.length() - 5);
-		path += "TemplateRender\\Rendered_HTML_Page\\index.html";
-		cout <<"\n" <<path;
-		ShellExecute(0, "open", path.c_str(),
+
+		cout << "\n" << INDEXHTMLFILEPATH;
+		ShellExecute(0, "open", INDEXHTMLFILEPATH.c_str(),
 			NULL,
 			NULL, SW_NORMAL);
 

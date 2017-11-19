@@ -1,13 +1,13 @@
 #include "Render\TemplateRender.h"
-using namespace std;
+#include"GlobalVariables.h"
 #include"Utils\Functions.h"
+
+using namespace std;
 
 int main()
 {
-
 	Model data;
-	//data.read(string("data.txt"));
-	TemplateRender::render("..\\TemplateRender\\Tests\\TestCppHtmlPage.htm", data);
+	TemplateRender::render(CPPHTMFILEPATH, data);
 	system("pause");
 	return 0;
 }

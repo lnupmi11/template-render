@@ -12,14 +12,14 @@ private:
 	static void validateFileName(const string& fileName);
 
 	static constexpr const char*  PROGRAMBEGIN =
-		" #include <iostream>\n "
-		" #include <string>\n "
-		" #include <list> \n "
-		" #include <fstream>\n "
-		" void compile(Model& Model)\n "
+		"#include <iostream>\n"
+		"#include <string>\n"
+		"#include <list> \n"
+		"#include <fstream>\n"
+		"void compile(Model& Model)\n "
 		"{\n "
 		"std::ofstream file;\n"
-		"file.open(\"..//TemplateRender//Rendered_HTML_Page//Index.html\" , ios_base::out | ios_base::trunc  );\n"
+		"file.open(INDEXHTMLFILEPATH, ios_base::out | ios_base::trunc);\n"
 		"if (file.is_open())\n "
 		"{\n";
 
@@ -44,4 +44,6 @@ public:
 	static void execute(const string& command);
 	static string getFileContent(const string& path);
 	static bool isStateModified(const string& previousVersion, const string& currentVersion);
+	static void setArchitecture();
+	static void createPaths();
 };
