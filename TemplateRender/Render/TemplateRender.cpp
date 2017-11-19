@@ -1,7 +1,7 @@
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
 #include "TemplateRender.h"
-#include "..//GlobalVariables.h"
+#include "../GlobalVariables.h"
 #include "Compile.h"
 
 string VSWHEREPATH = "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe";
@@ -42,11 +42,15 @@ void TemplateRender::presetVariables()
 {
 	HelperFunctions::createPaths();
 	HelperFunctions::setArchitecture();
+	if (is32Bit)
+	{
+		VSWHEREPATH =  "C:\\Program Files\\Microsoft Visual Studio\\Installer\\vswhere.exe";
+	}
 }
 
 void TemplateRender::setVSLocation()
 {
-	const string command = "%comspec% /c \"call \"" + VSWHEREPATH + "\" -property installationPath > " + VSPATH + "\"";
+	const string command = "%comspec% /c call \"" + VSWHEREPATH + "\" -property installationPath > " + VSPATH;
 
 	HelperFunctions::execute(command);
 

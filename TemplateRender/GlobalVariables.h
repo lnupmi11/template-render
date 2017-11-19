@@ -2,6 +2,7 @@
 using namespace std;
 
 extern bool is64Bit;
+extern bool is32Bit;
 extern string CPPHTMFILEPATH;
 extern string ROOTFOLDERPATH;
 extern string TMPDATAPATH;

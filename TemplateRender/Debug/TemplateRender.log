@@ -1,21 +1,2 @@
-﻿Build started 17.11.2017 1:13:36.
-     1>Project "D:\c++\template-render\TemplateRender\TemplateRender.vcxproj" on node 2 (Build target(s)).
-     1>InitializeBuildStatus:
-         Creating "Debug\TemplateRender.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
-       ClCompile:
-         C:\Program Files\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX86\x86\CL.exe /c /ZI /nologo /W3 /WX- /diagnostics:classic /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc141.pdb" /doc"Debug\\" /Gd /TP /analyze- /errorReport:prompt /FS Render\TemplateRender.cpp
-         TemplateRender.cpp
-       Link:
-         C:\Program Files\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\c++\template-render\Debug\TemplateRender.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FASTLINK /PDB:"D:\c++\template-render\Debug\TemplateRender.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\c++\template-render\Debug\TemplateRender.lib" /MACHINE:X86 Debug\AppStart.obj
-         Debug\DataObject.obj
-         Debug\Model.obj
-         Debug\TemplateRender.obj
-         Debug\Parser.obj
-         Debug\Functions.obj
-         TemplateRender.vcxproj -> D:\c++\template-render\Debug\TemplateRender.exe
-       XdcMake:
-         C:\Program Files\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX86\x86\xdcmake.exe /old "TemplateRender" /nologo /Fo"D:\c++\template-render\Debug\TemplateRender.xml" /FsDebug\AppStart.xdc /FsDebug\DataObject.xdc /FsDebug\Model.xdc /FsDebug\TemplateRender.xdc /FsDebug\Parser.xdc /FsDebug\Functions.xdc
-       FinalizeBuildStatus:
-         Deleting file "Debug\TemplateRender.tlog\unsuccessfulbuild".
-         Touching "Debug\TemplateRender.tlog\TemplateRender.lastbuildstate".
-     1>Done Building Project "D:\c++\template-render\TemplateRender\TemplateRender.vcxproj" (Build target(s)).
+﻿  TemplateRender.cpp
+  TemplateRender.vcxproj -> D:\c++\template-render\Debug\TemplateRender.exe

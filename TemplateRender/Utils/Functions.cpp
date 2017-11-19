@@ -64,6 +64,7 @@ void HelperFunctions::validateFileName(const string& fileName)
 }
 
 bool is64Bit = false;
+bool is32Bit = false;
 string ROOTFOLDERPATH;
 string TMPDATAPATH;
 string EXEFILEPATH;
@@ -104,6 +105,11 @@ void HelperFunctions::setArchitecture()
 		if (ch == '6')
 		{
 			is64Bit = true;
+			break;
+		}
+		else if(ch == '3')
+		{
+			is32Bit = true;
 			break;
 		}
 	}
