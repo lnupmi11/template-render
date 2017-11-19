@@ -45,7 +45,7 @@ class HelperFunctions
 {
 public:
 
-	static std::string retrieveCode(const std::string& code);
+	static std::string retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer);
 
 	static size_t codeType(const std::string& code);
 

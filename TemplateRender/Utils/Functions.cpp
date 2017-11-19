@@ -147,9 +147,38 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include "Functions.h"
 #include "../Render/Parser.h"
 
-std::string HelperFunctions::retrieveCode(const std::string& code)
+std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
 {
-
+	string result="";
+	std::regex forRegex("\\s*for\\s*\\(\\s*auto | \\s*size_t |\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)");
+	std::smatch loopCondt;
+	std::regex_search(code, loopCondt, forRegex);
+	string loopCondition = loopCondt.str();
+	int startCount = stoi(loopCondition.substr(loopCondition.find('=')+1, loopCondition.find(';', loopCondition.find('='))));
+	int endCount;
+	if (loopCondition.find('<') != std::string::npos)
+	{
+		fewer = true;
+		endCount = stoi(loopCondition.substr(loopCondition.find('<')+1, loopCondition.find(';', loopCondition.find('<'))));
+	}
+	if(loopCondition.find('>') != std::string::npos)
+	{
+		fewer = false;
+		endCount = stoi(loopCondition.substr(loopCondition.find('>') + 1, loopCondition.find(';', loopCondition.find('>'))));
+	}
+	
+	if (loopCondition.find("++") != std::string::npos)
+	{
+		numberOfIteration = endCount - startCount;
+		increment = true;
+	}
+	else if (loopCondition.find("--") != std::string::npos)
+	{
+		increment = false;
+		numberOfIteration = startCount- endCount;
+	}
+	std::copy(code.begin() + loopCondition.length(), code.end(), result);
+	return result;
 }
 
 size_t HelperFunctions::codeType(const std::string& code)
