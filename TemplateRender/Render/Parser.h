@@ -4,9 +4,9 @@ using namespace std;
 
 class Parser
 {
-private:
-	static bool regexCheck(const string & str, const string & regexStr);
+
 public:
+	static bool regexCheck(const string & str, const string & regexStr);
 	/// <summary>
 	/// <see cref="parseToCpp"/>
 	/// </summary>

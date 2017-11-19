@@ -40,6 +40,7 @@ public:
 #pragma once
 #include <string>
 
+
 class HelperFunctions
 {
 public:

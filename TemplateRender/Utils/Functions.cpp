@@ -142,7 +142,10 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 
 #include <fstream>
 #include <iostream>
+#include <regex>
+#include<algorithm>
 #include "Functions.h"
+#include "../Render/Parser.h"
 
 std::string HelperFunctions::retrieveCode(const std::string& code)
 {
@@ -151,7 +154,27 @@ std::string HelperFunctions::retrieveCode(const std::string& code)
 
 size_t HelperFunctions::codeType(const std::string& code)
 {
+	int result;
+	const std::string forRegex = "\\s*for\\s*\\(\\s*auto | \\s*size_t |\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)";
+	//const std::string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)";
+	const std::string ifRegex = "\\s*if\\s*\\(\\s*[a-z]{1,}\\s*< |\\s*> \\s*[a-z]{1,}\\s*\\)";
 
+	bool checkFor = Parser::regexCheck(code, forRegex);
+	//bool checkForeach = Parser::regexCheck(code, foreachRegex);
+	bool checkIf = Parser::regexCheck(code, ifRegex);
+	if (checkFor)
+	{
+		result = 1;
+	}
+	/*else if (checkForeach)
+	{
+		result = 2;
+	}*/
+	else if (checkIf)
+	{
+		result = 3;
+	}
+	return result;
 }
 
 std::string HelperFunctions::runCode(const std::string& code)
@@ -166,6 +189,22 @@ std::string HelperFunctions::parse(const std::string& code)
 
 std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
+	
+	ifstream read;
+	read.open(templateName);
+	std::string result="";
+	if (read.is_open())
+	{
+		result.assign((std::istreambuf_iterator<char>(read)),
+			std::istreambuf_iterator<char>());
+		read.close();
+		
+	}
+	else
+	{
+		throw  std::exception("File not found");
+	}
+	return result;
 
 }
 
