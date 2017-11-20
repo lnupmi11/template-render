@@ -145,12 +145,13 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include <regex>
 #include <algorithm>
 #include "Functions.h"
+#include "Constants.h"
 #include "../Render/Parser.h"
 
 std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
 {
 	string result = "";
-	std::regex forRegex("\\s*for\\s*\\(\\s*auto | \\s*size_t |\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)");
+	std::regex forRegex(CONSTANT::FOR_REGEX);
 	std::smatch loopCondt;
 	std::regex_search(code, loopCondt, forRegex);
 	string loopCondition = loopCondt.str();
@@ -184,13 +185,10 @@ std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOf
 size_t HelperFunctions::codeType(const std::string& code)
 {
 	int result;
-	const std::string forRegex = "\\s*for\\s*\\(\\s*auto | \\s*size_t |\\s*int \\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)";
-	//const std::string foreachRegex = "\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)";
-	const std::string ifRegex = "\\s*if\\s*\\(\\s*[a-z]{1,}\\s*< |\\s*> \\s*[a-z]{1,}\\s*\\)";
-
-	bool checkFor = Parser::regexCheck(code, forRegex);
+	
+	bool checkFor = Parser::regexCheck(code, CONSTANT::FOR_REGEX);
 	//bool checkForeach = Parser::regexCheck(code, foreachRegex);
-	bool checkIf = Parser::regexCheck(code, ifRegex);
+	bool checkIf = Parser::regexCheck(code, CONSTANT::IF_REGEX);
 	if (checkFor)
 	{
 		result = 1;
@@ -233,8 +231,8 @@ std::string HelperFunctions::runCode(const std::string& code)
 std::string HelperFunctions::parseBlock(const std::string& code)
 {
 	std::smatch data;
-	std::regex regexBegin("TODO: regex for all loops");						// TODO:
-	std::regex regexEnd("TODO: regex for {% endfor %} and {% endif %}");	// TODO:
+	std::regex regexBegin("(" + CONSTANT::FOR_REGEX + ")|(" + CONSTANT::IF_REGEX + ")");
+	std::regex regexEnd("(" + CONSTANT::END_FOR_REGEX + ")|(" + CONSTANT::IF_REGEX + ")");
 	std::string result("");
 	size_t end = code.find("{%");
 	if (end == string::npos)
@@ -243,6 +241,8 @@ std::string HelperFunctions::parseBlock(const std::string& code)
 	}
 	else
 	{
+		// TODO: Find all blocks of code.
+
 		for (size_t i = 0; i < end; i++)
 		{
 			result += code[i];
