@@ -240,7 +240,7 @@ std::string HelperFunctions::runCode(const std::string& code)
 	return result;
 }
 
-std::string HelperFunctions::parseBlock(const std::string& code)
+std::string HelperFunctions::parse(const std::string& code)
 {
 	std::smatch data;
 	std::regex regexBegin("(" + CONSTANT::FOR_REGEX + ")|(" + CONSTANT::IF_REGEX + ")");
@@ -266,9 +266,9 @@ std::string HelperFunctions::parseBlock(const std::string& code)
 			{
 				size_t end = data.position(data.size() - 1);
 				std::string completedPart = HelperFunctions::runCode(string(begin, end));
-				result += HelperFunctions::parseBlock(completedPart);
+				result += HelperFunctions::parse(completedPart);
 
-				// TODO: find pos after {% endfor(endif) %} end write it to 'end' variable.
+				end = end + data[data.size() - 1].length();
 
 				for (size_t i = end; i < code.size(); i++)
 				{
@@ -277,7 +277,7 @@ std::string HelperFunctions::parseBlock(const std::string& code)
 			}
 			else
 			{
-				throw std::exception("Invalid code in html page");
+				throw std::exception("Invalid syntax in html page");
 			}
 		}
 	}
@@ -317,7 +317,9 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 
 void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
 {
-	// TODO: main logic
+	std::string templateHTML = HelperFunctions::readTemplate("index.html");
+	std::string completedHTML = HelperFunctions::parse(templateHTML);
+	HelperFunctions::createHTML(completedHTML, "Completed.html");
 }
 
 void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, const int& numberOfIteration, const bool& increment, const bool& fewer)

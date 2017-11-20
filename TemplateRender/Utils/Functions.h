@@ -51,7 +51,7 @@ public:
 
 	static std::string runCode(const std::string& code);
 
-	static std::string parseBlock(const std::string& code);
+	static std::string parse(const std::string& code);
 
 	static std::string readTemplate(const std::string& templateName);
 
