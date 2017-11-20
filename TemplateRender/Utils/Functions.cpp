@@ -148,7 +148,7 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include "Constants.h"
 #include "../Render/Parser.h"
 
-std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
+std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
 {
 	string result = "";
 	std::regex forRegex(CONSTANT::FOR_REGEX);
@@ -161,24 +161,35 @@ std::string HelperFunctions::retrieveBody(const std::string& code, int& numberOf
 	{
 		fewer = true;
 		endCount = stoi(loopCondition.substr(loopCondition.find('<')+1, loopCondition.find(';', loopCondition.find('<'))));
+		if (loopCondition.find("++") != std::string::npos)
+		{
+			numberOfIteration = endCount - startCount;
+			increment = true;
+		}
+		else
+		{
+			throw  std::exception("Incorrect loop condition");
+		}
 	}
-	if(loopCondition.find('>') != std::string::npos)
+	else if(loopCondition.find('>') != std::string::npos)
 	{
 		fewer = false;
 		endCount = stoi(loopCondition.substr(loopCondition.find('>') + 1, loopCondition.find(';', loopCondition.find('>'))));
+		if (loopCondition.find("--") != std::string::npos)
+		{
+			increment = false;
+			numberOfIteration = startCount - endCount;
+		}
+		else
+		{
+			throw  std::exception("Incorrect loop condition");
+		}
 	}
-	
-	if (loopCondition.find("++") != std::string::npos)
+	else
 	{
-		numberOfIteration = endCount - startCount;
-		increment = true;
+		throw  std::exception("Incorrect loop condition");
 	}
-	else if (loopCondition.find("--") != std::string::npos)
-	{
-		increment = false;
-		numberOfIteration = startCount- endCount;
-	}
-	std::copy(code.begin() + loopCondition.length(), code.end(), result);	// TODO: code.end() - 1
+	std::copy(code.begin() + loopCondition.length(), code.end() - 1, result);	
 	return result;
 }
 
@@ -208,12 +219,13 @@ std::string HelperFunctions::runCode(const std::string& code)
 {
 	int numberOfIters = 0;
 	bool increment, fewer;
-	std::string body = HelperFunctions::retrieveBody(code, numberOfIters, increment, fewer);
+	std::string body;
 	std::string result = "";
 	switch (HelperFunctions::codeType(code))
 	{
 	case 1:
-		// TODO: for loop statement (result += ...)
+		body = HelperFunctions::retrieveBodyForLoop(code, numberOfIters, increment, fewer);
+		HelperFunctions::forLoop(body, result, numberOfIters, increment, fewer);
 		break;
 	case 2:
 		// TODO: foreach statement (result += ...)
@@ -306,4 +318,36 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
 {
 	// TODO: main logic
+}
+
+void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, const int& numberOfIteration, const bool& increment, const bool& fewer)
+{
+	if (increment)
+	{
+		if (fewer)
+		{
+			for (int i = 0; i < numberOfIteration; i++)
+			{
+				result += loopBody;
+			}
+		}
+		else
+		{
+			throw  std::exception("Invalid loop condition");
+		}
+	}
+	if (!increment)
+	{
+		if (!fewer)
+		{
+			for (int i = numberOfIteration; i > 0; i--)
+			{
+				result += loopBody;
+			}
+		}
+		else
+		{
+			throw  std::exception("Invalid loop condition");
+		}
+	}
 }

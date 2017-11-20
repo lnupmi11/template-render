@@ -45,7 +45,7 @@ class HelperFunctions
 {
 public:
 
-	static std::string retrieveBody(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer);
+	static std::string retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer);
 
 	static size_t codeType(const std::string& code);
 
@@ -58,5 +58,7 @@ public:
 	static void createHTML(const std::string& html, const std::string& htmlPath);
 
 	static void render(const std::string& templatePath, const std::string& htmlPath);
+
+	static void forLoop(const std::string& loopBody, std::string& result, const int& numberOfIteration,const bool& increment,const bool& fewer);
 
 };
