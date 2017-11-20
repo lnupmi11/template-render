@@ -39,6 +39,7 @@ public:
 
 #pragma once
 #include <string>
+#include <list>
 
 
 class HelperFunctions
@@ -48,6 +49,10 @@ public:
 	static std::string retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer);
 
 	static size_t codeType(const std::string& code);
+
+	static std::string findBlock(int& pos, const std::string& code);
+
+	static void findAllBlocks(std::list<std::string>& blocks, const std::string& code);
 
 	static std::string runCode(const std::string& code);
 

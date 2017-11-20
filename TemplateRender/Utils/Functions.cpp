@@ -144,6 +144,7 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include <fstream>
 #include <regex>
 #include <algorithm>
+#include <stack>
 #include "Functions.h"
 #include "Constants.h"
 #include "../Render/Parser.h"
@@ -253,31 +254,35 @@ std::string HelperFunctions::parse(const std::string& code)
 	}
 	else
 	{
-		// TODO: Find all blocks of code.
-
-		for (size_t i = 0; i < end; i++)
+		std::list<std::string> blocks;
+		HelperFunctions::findAllBlocks(blocks, code);
+		for (std::list<std::string>::iterator i = blocks.begin(); i != blocks.end(); i++)
 		{
-			result += code[i];
-		}
-		if (std::regex_search(code, data, regexBegin))
-		{
-			size_t begin = data.position(0);
-			if (std::regex_search(code, data, regexEnd))
+			end = code.find("{%");
+			for (size_t i = 0; i < end; i++)
 			{
-				size_t end = data.position(data.size() - 1);
-				std::string completedPart = HelperFunctions::runCode(string(begin, end));
-				result += HelperFunctions::parse(completedPart);
-
-				end = end + data[data.size() - 1].length();
-
-				for (size_t i = end; i < code.size(); i++)
-				{
-					result += code[i];
-				}
+				result += code[i];
 			}
-			else
+			if (std::regex_search(code, data, regexBegin))
 			{
-				throw std::exception("Invalid syntax in html page");
+				size_t begin = data.position(0);
+				if (std::regex_search(code, data, regexEnd))
+				{
+					size_t end = data.position(data.size() - 1);
+					std::string completedPart = HelperFunctions::runCode(string(begin, end));
+					result += HelperFunctions::parse(completedPart);
+
+					end = end + data[data.size() - 1].length();
+
+					for (size_t i = end; i < code.size(); i++)
+					{
+						result += code[i];
+					}
+				}
+				else
+				{
+					throw std::exception("Invalid syntax in html page");
+				}
 			}
 		}
 	}
@@ -351,5 +356,52 @@ void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, 
 		{
 			throw  std::exception("Invalid loop condition");
 		}
+	}
+}
+
+string HelperFunctions::findBlock(int& pos, const std::string& code)
+{
+	std::stack<int> beginPositions;
+	std::stack<int> endPositions;
+	size_t foundPos = 0;
+	size_t begin = 0;
+	size_t end = 0;
+	do
+	{
+		// TODO: search for "{% for" or "for %}"
+		//
+		//		 if ("{% for" is found)
+		//		 {
+		//			beginPositions.push(foundPos);
+		//		 }
+		//		 else if ("for %}" is found)
+		//		 {
+		//			endPositions.push(foundPos);
+		//			if (beginPositions.size() < 2)
+		//			{
+		//				begin = beginPositions.top();
+		//				end = endPositions.top();
+		//			}
+		//			beginPositions.pop();
+		//		 }
+		//		 
+	} while (beginPositions.size() == 0 || foundPos == std::string::npos);
+	if (foundPos == std::string::npos || (end + 6) >= code.size())	// 6 -- size of "for %}"
+	{
+		pos = code.size();
+	}
+	else
+	{
+		pos = end + 6;	// 6 -- size of "for %}"
+	}
+	return std::string(code[begin], code[pos]);
+}
+
+void HelperFunctions::findAllBlocks(std::list<std::string>& blocks, const std::string& code)
+{
+	int pos = 0;
+	while (pos <= code.size())
+	{
+		blocks.push_back(HelperFunctions::findBlock(pos, code));
 	}
 }
