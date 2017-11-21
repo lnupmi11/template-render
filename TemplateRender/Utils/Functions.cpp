@@ -169,7 +169,7 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		}
 		else
 		{
-			throw  std::exception("Incorrect loop condition");
+			throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 		}
 	}
 	else if(loopCondition.find('>') != std::string::npos)
@@ -183,12 +183,12 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		}
 		else
 		{
-			throw  std::exception("Incorrect loop condition");
+			throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 		}
 	}
 	else
 	{
-		throw  std::exception("Incorrect loop condition");
+		throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 	}
 	std::copy(code.begin() + loopCondition.length(), code.end() - 1, result);	
 	return result;
@@ -213,6 +213,10 @@ size_t HelperFunctions::codeType(const std::string& code)
 	{
 		result = 3;
 	}
+	else
+	{
+		throw exception("Exception in 'HelperFunctions::codeType()': Invalid code type");
+	}
 	return result;
 }
 
@@ -221,12 +225,12 @@ std::string HelperFunctions::runCode(const std::string& code)
 	int numberOfIters = 0;
 	bool increment, fewer;
 	std::string body;
-	std::string result = "";
+	std::string result("");
 	switch (HelperFunctions::codeType(code))
 	{
 	case 1:
 		body = HelperFunctions::retrieveBodyForLoop(code, numberOfIters, increment, fewer);
-		HelperFunctions::forLoop(body, result, numberOfIters, increment, fewer);
+		result = HelperFunctions::forLoop(body, numberOfIters, increment, fewer);
 		break;
 	case 2:
 		// TODO: foreach statement (result += ...)
@@ -235,7 +239,7 @@ std::string HelperFunctions::runCode(const std::string& code)
 		// TODO: if statement (result += ...)
 		break;
 	default:
-		throw exception("Incorrect type of code");
+		throw exception("Exception in 'HelperFunctions::runCode()': Incorrect type of code");
 		break;
 	}
 	return result;
@@ -243,48 +247,19 @@ std::string HelperFunctions::runCode(const std::string& code)
 
 std::string HelperFunctions::parse(const std::string& code)
 {
-	std::smatch data;
-	std::regex regexBegin("(" + CONSTANT::FOR_REGEX + ")|(" + CONSTANT::IF_REGEX + ")");
-	std::regex regexEnd("(" + CONSTANT::END_FOR_REGEX + ")|(" + CONSTANT::IF_REGEX + ")");
 	std::string result("");
-	size_t end = code.find("{%");
-	if (end == string::npos)
+	std::list<block> blocks;
+	HelperFunctions::findAllBlocks(blocks, code);
+	for (std::list<block>::iterator block = blocks.begin(); block != blocks.end(); block++)
 	{
-		result += code;
-	}
-	else
-	{
-		std::list<std::string> blocks;
-		HelperFunctions::findAllBlocks(blocks, code);
-		for (std::list<std::string>::iterator i = blocks.begin(); i != blocks.end(); i++)
+		if ((*block).before.size() == 0 && (*block).code.size() == 0)
 		{
-			end = code.find("{%");
-			for (size_t i = 0; i < end; i++)
-			{
-				result += code[i];
-			}
-			if (std::regex_search(code, data, regexBegin))
-			{
-				size_t begin = data.position(0);
-				if (std::regex_search(code, data, regexEnd))
-				{
-					size_t end = data.position(data.size() - 1);
-					std::string completedPart = HelperFunctions::runCode(string(begin, end));
-					result += HelperFunctions::parse(completedPart);
-
-					end = end + data[data.size() - 1].length();
-
-					for (size_t i = end; i < code.size(); i++)
-					{
-						result += code[i];
-					}
-				}
-				else
-				{
-					throw std::exception("Invalid syntax in html page");
-				}
-			}
+			result += (*block).after;
+			return result;
 		}
+		result += (*block).before;
+		result += HelperFunctions::parse(HelperFunctions::runCode((*block).code));
+		result += (*block).after;
 	}
 	return result;
 }
@@ -293,7 +268,7 @@ std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
 	ifstream read;
 	read.open(templateName);
-	std::string result="";
+	std::string result("");
 	if (read.is_open())
 	{
 		result.assign((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
@@ -301,7 +276,7 @@ std::string HelperFunctions::readTemplate(const std::string& templateName)
 	}
 	else
 	{
-		throw  std::exception("File not found");
+		throw  std::exception(("Exception in 'HelperFunctions::readTemplate()': File '" + templateName + "' not found").c_str());
 	}
 	return result;
 }
@@ -316,19 +291,27 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 	}
 	else
 	{
-		throw std::exception(("Can not open file '" + htmlPath + "' for writting.").c_str());
+		throw std::exception(("Exception in 'HelperFunctions::createHTML()': Can not open file '" + htmlPath + "' for writting.").c_str());
 	}
 }
 
 void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
 {
-	std::string templateHTML = HelperFunctions::readTemplate("index.html");
-	std::string completedHTML = HelperFunctions::parse(templateHTML);
-	HelperFunctions::createHTML(completedHTML, "Completed.html");
+	try
+	{
+		std::string templateHTML = HelperFunctions::readTemplate(CONSTANT::TEMPLATE_DIR + templatePath);
+		std::string completedHTML = HelperFunctions::parse(templateHTML);
+		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
+	}
+	catch (const std::exception& exc)
+	{
+		std::cerr << exc.what();
+	}
 }
 
-void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, const int& numberOfIteration, const bool& increment, const bool& fewer)
+std::string HelperFunctions::forLoop(const std::string& loopBody, const int& numberOfIteration, const bool& increment, const bool& fewer)
 {
+	std::string result("");
 	if (increment)
 	{
 		if (fewer)
@@ -340,7 +323,7 @@ void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, 
 		}
 		else
 		{
-			throw  std::exception("Invalid loop condition");
+			throw  std::exception("Exception in 'HelperFunctions::forLoop()': Invalid loop condition");
 		}
 	}
 	if (!increment)
@@ -354,54 +337,105 @@ void HelperFunctions::forLoop(const std::string& loopBody, std::string& result, 
 		}
 		else
 		{
-			throw  std::exception("Invalid loop condition");
+			throw  std::exception("Exception in 'HelperFunctions::forLoop()': Invalid loop condition");
 		}
 	}
+	return result;
 }
 
-string HelperFunctions::findBlock(int& pos, const std::string& code)
+block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 {
-	std::stack<int> beginPositions;
-	std::stack<int> endPositions;
 	size_t foundPos = 0;
-	size_t begin = 0;
-	size_t end = 0;
-	do
+	block result;
+
+	foundPos = code.find("{%", pos);
+	if (foundPos == std::string::npos)
 	{
-		// TODO: search for "{% for" or "for %}"
-		//
-		//		 if ("{% for" is found)
-		//		 {
-		//			beginPositions.push(foundPos);
-		//		 }
-		//		 else if ("for %}" is found)
-		//		 {
-		//			endPositions.push(foundPos);
-		//			if (beginPositions.size() < 2)
-		//			{
-		//				begin = beginPositions.top();
-		//				end = endPositions.top();
-		//			}
-		//			beginPositions.pop();
-		//		 }
-		//		 
-	} while (beginPositions.size() == 0 || foundPos == std::string::npos);
-	if (foundPos == std::string::npos || (end + 6) >= code.size())	// 6 -- size of "for %}"
-	{
-		pos = code.size();
+		result.after = code;
 	}
 	else
 	{
-		pos = end + 6;	// 6 -- size of "for %}"
+		for (size_t i = 0; i < foundPos; i++)
+		{
+			result.before += code[i];
+		}
+		std::stack<size_t> beginPositions;
+		std::stack<size_t> endPositions;
+		size_t begin = 0;
+		size_t end = 0;
+		do
+		{
+			// TODO: search for "{% for" or "for %}"
+			//
+			//		 if ("{% for" is found)
+			//		 {
+			//			beginPositions.push(foundPos);
+			//		 }
+			//		 else if ("for %}" is found)
+			//		 {
+			//			endPositions.push(foundPos);
+			//			if (beginPositions.size() < 2)
+			//			{
+			//				begin = beginPositions.top();
+			//				end = endPositions.top();
+			//			}
+			//			beginPositions.pop();
+			//		 }
+			//
+
+			if (HelperFunctions::findTag(code, CONSTANT::BEGIN_TAG_REGEX, foundPos))
+			{
+				beginPositions.push(foundPos);
+			}
+			else if (HelperFunctions::findTag(code, CONSTANT::END_TAG_REGEX, foundPos))
+			{
+				endPositions.push(foundPos);
+				if (beginPositions.size() < 2)
+				{
+					begin = beginPositions.top();
+					end = endPositions.top();
+				}
+				beginPositions.pop();
+			}
+		} while (beginPositions.size() == 0 || foundPos == std::string::npos);
+
+		end += 6;	// 6 -- size of "for %}"
+		result.code += code.substr(begin, end - begin);
+		foundPos = code.find("{%", end);
+		if (foundPos == std::string::npos)
+		{
+			foundPos = code.size();
+		}
+		for (size_t i = end; i < foundPos; i++)
+		{
+			result.after += code[i];
+		}
+		pos = foundPos;
 	}
-	return std::string(code[begin], code[pos]);
+	return result;
 }
 
-void HelperFunctions::findAllBlocks(std::list<std::string>& blocks, const std::string& code)
+void HelperFunctions::findAllBlocks(std::list<block>& blocks, const std::string& code)
 {
-	int pos = 0;
-	while (pos <= code.size())
+	size_t pos = 0;
+	while (pos < code.size())
 	{
 		blocks.push_back(HelperFunctions::findBlock(pos, code));
 	}
+}
+
+bool HelperFunctions::findTag(const std::string& str, const std::string& regexStr, size_t& position)
+{
+	std::regex expression(regexStr);
+	std::smatch data;
+	bool result = std::regex_search(str, data, expression);
+	if (result)
+	{
+		position = data.position(0);
+	}
+	else
+	{
+		position = std::string::npos;
+	}
+	return result;
 }

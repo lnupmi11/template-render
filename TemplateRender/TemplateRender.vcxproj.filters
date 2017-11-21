@@ -48,6 +48,9 @@
     <ClCompile Include="Render\Parser.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Models.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">
@@ -75,6 +78,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Constants.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Models.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

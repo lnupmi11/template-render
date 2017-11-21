@@ -40,6 +40,7 @@ public:
 #pragma once
 #include <string>
 #include <list>
+#include "Models.h"
 
 
 class HelperFunctions
@@ -50,9 +51,9 @@ public:
 
 	static size_t codeType(const std::string& code);
 
-	static std::string findBlock(int& pos, const std::string& code);
+	static block findBlock(size_t& pos, const std::string& code);
 
-	static void findAllBlocks(std::list<std::string>& blocks, const std::string& code);
+	static void findAllBlocks(std::list<block>& blocks, const std::string& code);
 
 	static std::string runCode(const std::string& code);
 
@@ -64,6 +65,8 @@ public:
 
 	static void render(const std::string& templatePath, const std::string& htmlPath);
 
-	static void forLoop(const std::string& loopBody, std::string& result, const int& numberOfIteration,const bool& increment,const bool& fewer);
+	static std::string forLoop(const std::string& loopBody, const int& numberOfIteration,const bool& increment,const bool& fewer);
+
+	static bool findTag(const std::string& str, const std::string& regexStr, size_t& pos);
 
 };

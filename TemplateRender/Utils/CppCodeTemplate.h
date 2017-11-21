@@ -1,3 +1,4 @@
+#include <string>
 static const std::string PROGRAM_BEGIN = "#include <iostream>\n"
 "#include <string>\n"
 "#include <list>\n"

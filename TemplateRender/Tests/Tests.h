@@ -53,4 +53,9 @@ void CREATE_AND_COMPILE_CPP()
 	cout << " OK\n";
 }*/
 
+#include "../Utils/Functions.h"
 
+void TEST_CASE()
+{
+	HelperFunctions::render("index.html", "completed.html");
+}

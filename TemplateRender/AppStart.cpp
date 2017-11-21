@@ -9,7 +9,7 @@ int main()
 //	CREATE_AND_COMPILE_CPP();
 //	testParseToCpp();
 
-
+	TEST_CASE();
 
 	system("pause");
 	return 0;

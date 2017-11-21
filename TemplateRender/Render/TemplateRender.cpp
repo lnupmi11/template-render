@@ -1,5 +1,5 @@
 #pragma once
-#include "TemplateRender.h"
+/*#include "TemplateRender.h"
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
 #include"../Data/Data.h"
@@ -108,4 +108,4 @@ void TemplateRender::render(const string htmlPagePath)
 	{
 		HelperFunctions::run("Rendered_HTML_Page\\index.html");
 	}
-}
+}*/
