@@ -356,6 +356,7 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 	if (foundPos == std::string::npos)
 	{
 		result.after = code;
+		pos = code.size();
 	}
 	else
 	{
