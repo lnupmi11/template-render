@@ -10,6 +10,6 @@ namespace CONSTANT
 	const std::string BEGIN_TAG_REGEX("{ *% *(for|if) *\\(.*\\) *% *}");
 	const std::string END_TAG_REGEX("{% *end(for|if) *%}");
 
-	const std::string TEMPLATE_DIR("/");
-	const std::string ENDPOINT_DIR("/");
+	const std::string TEMPLATE_DIR("Tests/");
+	const std::string ENDPOINT_DIR("");
 }
