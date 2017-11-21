@@ -191,7 +191,7 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 	}
 //	std::copy(code.begin() + loopCondition.length(), code.end() - 1, result);
-	result = string(code.begin() + loopCondition.size(), code.end());
+	result = string(code.begin() + loopCondition.size(), code.end() - 12);
 	return result;
 }
 
@@ -199,7 +199,7 @@ size_t HelperFunctions::codeType(const std::string& code)
 {
 	int result;
 	
-	std::string codeTemp(0, code.find("%}") + 2);
+	std::string codeTemp(code.begin(), code.begin() + code.find("%}") + 2);
 	std::cout << codeTemp << endl << endl;
 
 	bool checkFor = Parser::regexCheck(code, CONSTANT::FOR_REGEX);
@@ -366,7 +366,9 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 		std::stack<size_t> beginPositions;
 		std::stack<size_t> endPositions;
 		size_t begin = 0;
-		size_t end = 0;
+		size_t end = code.size();
+		std::string temp1(code);
+		std::string temp2(code);
 		do
 		{
 			// TODO: search for "{% for" or "for %}"
@@ -387,23 +389,24 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 			//		 }
 			//
 
-			if (HelperFunctions::findTag(code, CONSTANT::BEGIN_TAG_REGEX, foundPos))
+			
+			if (HelperFunctions::findTag(temp1, CONSTANT::BEGIN_TAG_REGEX, foundPos))
 			{
 				beginPositions.push(foundPos);
 			}
-			else if (HelperFunctions::findTag(code, CONSTANT::END_TAG_REGEX, foundPos))
+			else if (HelperFunctions::findTag(temp2, CONSTANT::END_TAG_REGEX, foundPos))
 			{
 				endPositions.push(foundPos);
-				if (beginPositions.size() < 2)
+				if (beginPositions.size() == 1)
 				{
 					begin = beginPositions.top();
 					end = endPositions.top();
 				}
 				beginPositions.pop();
 			}
-		} while (beginPositions.size() == 0 || foundPos == std::string::npos);
+		} while (beginPositions.size() != 0 || foundPos != std::string::npos);
 
-		end += 6;	// 6 -- size of "for %}"
+		end += 12;	// 6 -- size of "{% endfor %}"
 		result.code += code.substr(begin, end - begin);
 		foundPos = code.find("{%", end);
 		if (foundPos == std::string::npos)
@@ -428,7 +431,7 @@ void HelperFunctions::findAllBlocks(std::list<block>& blocks, const std::string&
 	}
 }
 
-bool HelperFunctions::findTag(const std::string& str, const std::string& regexStr, size_t& position)
+bool HelperFunctions::findTag(std::string& str, const std::string& regexStr, size_t& position)
 {
 	std::regex expression(regexStr);
 	std::smatch data;
@@ -436,6 +439,7 @@ bool HelperFunctions::findTag(const std::string& str, const std::string& regexSt
 	if (result)
 	{
 		position = data.position(0);
+		str.erase(str.begin(), str.begin() + position + data[0].str().size());
 	}
 	else
 	{
