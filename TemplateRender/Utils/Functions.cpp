@@ -190,8 +190,8 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 	{
 		throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 	}
-//	std::copy(code.begin() + loopCondition.length(), code.end() - 1, result);
-	result = string(code.begin() + loopCondition.size(), code.end() - 12);
+
+	result = string(code.begin() + loopCondition.size()+5, code.end() - 12);
 	return result;
 }
 
@@ -200,7 +200,6 @@ size_t HelperFunctions::codeType(const std::string& code)
 	int result;
 	
 	std::string codeTemp(code.begin(), code.begin() + code.find("%}") + 2);
-	std::cout << codeTemp << endl << endl;
 
 	bool checkFor = Parser::regexCheck(code, CONSTANT::FOR_REGEX);
 	//bool checkForeach = Parser::regexCheck(code, foreachRegex);
