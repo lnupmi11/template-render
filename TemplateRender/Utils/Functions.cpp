@@ -387,7 +387,7 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 			//		 }
 			//
 
-			if (HelperFunctions::findTag(code, CONSTANT::FOR_REGEX, foundPos))
+			if (HelperFunctions::findTag(code, CONSTANT::BEGIN_TAG_REGEX, foundPos))
 			{
 				beginPositions.push(foundPos);
 			}
