@@ -44,7 +44,7 @@ void TemplateRender::presetVariables()
 	HelperFunctions::setArchitecture();
 	if (is32Bit)
 	{
-		VSWHEREPATH =  "C:\\Program Files\\Microsoft Visual Studio\\Installer\\vswhere.exe";
+		VSWHEREPATH = "C:\\Program Files\\Microsoft Visual Studio\\Installer\\vswhere.exe";
 	}
 }
 
@@ -86,12 +86,32 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 		currentCpp.erase(remove_if(currentCpp.begin(), currentCpp.end(), isspace), currentCpp.end());
 		remove_if(previousCompiledCpp.begin(), previousCompiledCpp.end(), isspace);
 
-		setVSLocation();
+		//		setVSLocation();
 
-		ifstream ifs("log.txt");
+		ifstream ifsProjectSettings("ProjectSettings.txt");
+		ofstream ofsProjectSettings;
+
+		ifstream ifsVsDevCmdPath("VsDevCmdPath.txt");
+		ofstream ofsVsDevCmdPath;
+		//
+
+		if (!ifsProjectSettings.is_open())
+		{
+			ofsProjectSettings.open("ProjectSettings.txt");
+			ofsProjectSettings << 3;
+		}
+
+		if (!ifsVsDevCmdPath.is_open())
+		{
+			ofsVsDevCmdPath.open("VsDevCmdPath.txt");
+			cout << "Before first  launch , at x64/Debug or Debug/ or , if you launch project from vs at TemplateRender/   in file VsDevCmdPath.txt enter a path to VsDevCmd.bat \n";
+			system("pause");
+			exit(0);
+		}
+
 		size_t state;
-		ifs >> state;
-		ifs.close();
+		ifsProjectSettings >> state;
+		ifsProjectSettings.close();
 
 		if (HelperFunctions::isStateModified(previousCompiledCpp, currentCpp) || state == 1 || state == 2)
 		{
@@ -100,7 +120,7 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 				state = 0;
 			}
 			ofstream ofs;
-			ofs.open("log.txt", ios_base::out | ios_base::trunc);
+			ofs.open("ProjectSettings.txt", ios_base::out | ios_base::trunc);
 
 			switch (state)
 			{
@@ -115,8 +135,23 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			{
 				ofs << 2;
 				string tmp = EXEFILEPATH;
+				//ofsVsDevCmdPath.open("VsDevCmdPath.txt", ios_base::out);
+				//ifsVsDevCmdPath >> DEVPROMPTPATH;
+				getline(ifsVsDevCmdPath, DEVPROMPTPATH);
+				//cout << DEVPROMPTPATH << "\n";
+				//system("pause");
+				if (DEVPROMPTPATH == "")
+				{
+					ofs.close();
+			        ofs.open("ProjectSettings.txt",ios_base::out | ios_base::trunc);
+					ofs << 3;
+					cout << " Add path of VsDevCmd.bat  to VsDevCmdPath.txt file at x64/Debug(64-bit) or Debug(32-bit) ";
+					system("pause");
+
+				}
+
 				tmp.resize(tmp.length() - 19);
-				const string command = "%comspec% /k call \"" + DEVPROMPTPATH + "\" && cd /d " + ROOTFOLDERPATH + " && devenv TemplateRender.sln /build && cd /d " + tmp + " && TemplateRender.exe && exit" ;
+				const string command = "%comspec% /k call \"" + DEVPROMPTPATH + "\" && cd /d " + ROOTFOLDERPATH + " && devenv TemplateRender.sln /build && cd /d " + tmp + " && TemplateRender.exe && exit";
 				HelperFunctions::execute(command);
 				exit(0);
 			}
@@ -130,12 +165,13 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			}
 			}
 			ofs.close();
+			ofsVsDevCmdPath.close();
 		}
 
-		cout << "\n" << INDEXHTMLFILEPATH;
+		//cout << "\n" << INDEXHTMLFILEPATH;
 		ShellExecute(0, "open", INDEXHTMLFILEPATH.c_str(),
 			NULL,
-			NULL, SW_NORMAL);
+			NULL, SW_HIDE);
 
 	}
 	catch (const ofstream::failure& e)

@@ -8,6 +8,5 @@ int main()
 {
 	Model data;
 	TemplateRender::render(CPPHTMFILEPATH, data);
-	system("pause");
 	return 0;
 }

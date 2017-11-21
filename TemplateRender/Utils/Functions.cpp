@@ -31,9 +31,10 @@ string HelperFunctions::createCompletedCppCode(const string& ñppCode)
 
 void HelperFunctions::execute(const string& command)
 {
-	ShellExecute(0, "open", "cmd.exe",
+	auto se = ShellExecute(0, "open", "cmd.exe",
 		const_cast<char*>((command).c_str()),
 		0, SW_NORMAL);
+	
 }
 
 string HelperFunctions::getFileContent(const string & path)
@@ -86,7 +87,7 @@ void HelperFunctions::createPaths()
 	COMPILEDCPPFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Render\\Compile.h";
 	INDEXHTMLFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Rendered_HTML_Page\\index.html";
 	CPPHTMFILEPATH = ROOTFOLDERPATH + "\\TemplateRender\\Tests\\TestCppHtmlPage.htm";
-	DEVPROMPTPATH = "C:\\Program Files\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat";
+//	DEVPROMPTPATH = "C:\\Program Files\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat";
 }
 
 void HelperFunctions::setArchitecture()

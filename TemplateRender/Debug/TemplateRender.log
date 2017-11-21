@@ -1,2 +1,8 @@
-﻿  TemplateRender.cpp
+﻿  Functions.cpp
+  Parser.cpp
+  TemplateRender.cpp
+  Model.cpp
+  DataObject.cpp
+  AppStart.cpp
+  Generating Code...
   TemplateRender.vcxproj -> D:\c++\template-render\Debug\TemplateRender.exe

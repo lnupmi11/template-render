@@ -8,7 +8,7 @@ void compile(Model& Model)
 file.open(INDEXHTMLFILEPATH, ios_base::out | ios_base::trunc);
 if (file.is_open())
  {
-file << " <HTML><HEAD>    <META NAME=\"GENERATOR\" Content=\"Microsoft Visual Studio\">    <TITLE></TITLE></HEAD><BODY>     ";  for(auto& elem : Model) file <<  elem;for(auto k =0; k < 10 ; k++){file << " Hello world , this is another computer 222     ";  }file << " </BODY></HTML> ";  }
+file << " <HTML><HEAD>    <META NAME=\"GENERATOR\" Content=\"Microsoft Visual Studio\">    <TITLE></TITLE></HEAD><BODY>     ";  for(auto& elem : Model) file <<  elem;for(auto k =0; k < 10 ; k++){file << " <p>Hello world ,this  is Olya Past......</p>     ";  }file << " </BODY></HTML> ";  }
 else
 {
 	throw ofstream::failure("can not write to file .."); 
