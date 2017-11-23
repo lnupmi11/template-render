@@ -127,7 +127,6 @@
     <ClInclude Include="DTO\DataManager.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Utils\Constants.h" />
-    <ClInclude Include="Utils\CppCodeTemplate.h" />
     <ClInclude Include="Render\Parser.h" />
     <ClInclude Include="Tests\Tests.h" />
     <ClInclude Include="Utils\Functions.h" />

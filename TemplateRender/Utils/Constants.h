@@ -10,6 +10,9 @@ namespace CONSTANT
 	const std::string BEGIN_TAG_REGEX("\\{\\s*%\\s*for\\s*\\(\\s*(auto|size_t|int)\\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*<\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\+\\+\\s*\\)\\s*%\\s*\\}");
 	const std::string END_TAG_REGEX("\\{\\s*%\\s*end(for|if)\\s*%\\s*\\}");
 
+//	const std::string BEGIN_TAG_REGEX("\\{\\s*%\\s*(for|if)\\s*\\(\\s*\\)\\s*%\\s*\\}");
+//	const std::string END_TAG_REGEX("\\{\\s*%\\s*end(for|if)\\s*%\\s*\\}");
+
 	const std::string TEMPLATE_DIR("Tests/");
 	const std::string ENDPOINT_DIR("Tests/");
 }

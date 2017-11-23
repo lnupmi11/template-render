@@ -146,7 +146,6 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include <algorithm>
 #include <stack>
 #include "Functions.h"
-#include "Constants.h"
 #include "../Render/Parser.h"
 
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
@@ -191,19 +190,17 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
 	}
 
-	result = string(code.begin() + loopCondition.size()+5, code.end() - 12);
+	result = string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
 	return result;
 }
 
 size_t HelperFunctions::codeType(const std::string& code)
 {
 	int result;
-	
-	std::string codeTemp(code.begin(), code.begin() + code.find("%}") + 2);
-
-	bool checkFor = Parser::regexCheck(code, CONSTANT::FOR_REGEX);
-	//bool checkForeach = Parser::regexCheck(code, foreachRegex);
-	bool checkIf = Parser::regexCheck(code, CONSTANT::IF_REGEX);
+	std::string statement(code.begin(), code.begin() + code.find("%}") + 2);
+	bool checkFor = Parser::regexCheck(statement, CONSTANT::FOR_REGEX);
+	//bool checkForeach = Parser::regexCheck(statement, foreachRegex);
+	bool checkIf = Parser::regexCheck(statement, CONSTANT::IF_REGEX);
 	if (checkFor)
 	{
 		result = 1;
@@ -298,24 +295,6 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 	}
 }
 
-void HelperFunctions::render(const std::string& templatePath, const std::string& htmlPath)
-{
-	try
-	{
-		std::string templateHTML = HelperFunctions::readTemplate(CONSTANT::TEMPLATE_DIR + templatePath);
-		std::string completedHTML = HelperFunctions::parse(templateHTML);
-		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
-	}
-	catch (const std::exception& exc)
-	{
-		std::cerr << exc.what();
-	}
-	catch (...)
-	{
-		std::cerr << "An unknown error occurred.";
-	}
-}
-
 std::string HelperFunctions::forLoop(const std::string& loopBody, const int& numberOfIteration, const bool& increment, const bool& fewer)
 {
 	std::string result("");
@@ -354,7 +333,6 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 {
 	size_t foundPos = 0;
 	block result;
-
 	foundPos = code.find("{%", pos);
 	if (foundPos == std::string::npos)
 	{
@@ -433,6 +411,10 @@ void HelperFunctions::findTag(const std::string& str, blockParams& params)
 		{
 			params.begin = false;
 			params.end = true;
+		}
+		else
+		{
+			throw exception("Exception in 'HelperFunctions::findTag()': incorrect tag.");
 		}
 		params.foundPos += result->position(0) + params.offset;
 		params.offset = result->str().size();

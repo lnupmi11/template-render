@@ -40,6 +40,7 @@ public:
 #pragma once
 #include <string>
 #include <list>
+#include "Constants.h"
 #include "Models.h"
 
 
@@ -62,8 +63,6 @@ public:
 	static std::string readTemplate(const std::string& templateName);
 
 	static void createHTML(const std::string& html, const std::string& htmlPath);
-
-	static void render(const std::string& templatePath, const std::string& htmlPath);
 
 	static std::string forLoop(const std::string& loopBody, const int& numberOfIteration,const bool& increment,const bool& fewer);
 

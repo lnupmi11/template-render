@@ -53,11 +53,11 @@ void CREATE_AND_COMPILE_CPP()
 	cout << " OK\n";
 }*/
 
-#include "../Utils/Functions.h"
+#include "../Render/TemplateRender.h"
 #include <iostream>
 
 void TEST_CASE()
 {
-	HelperFunctions::render("index.html", "completed.html");
-	std::cout << "Completed!";
+	std::cout << "Rendering...";
+	TemplateRender::render("index.html", "completed.html");
 }
