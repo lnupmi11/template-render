@@ -2,6 +2,7 @@
 #include "TemplateRender.h"
 #include "../Utils/Functions.h"
 #include <iostream>
+#include "../Utils/RenderError.h"
 
 void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath)
 {
@@ -12,7 +13,7 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}
-	catch (const std::exception& exc)
+	catch (const RenderError& exc)
 	{
 		std::cerr << exc.what();
 	}

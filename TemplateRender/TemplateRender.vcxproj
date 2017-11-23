@@ -120,6 +120,7 @@
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
     <ClCompile Include="Utils\Models.cpp" />
+    <ClCompile Include="Utils\RenderError.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\Data.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="Tests\Tests.h" />
     <ClInclude Include="Utils\Functions.h" />
     <ClInclude Include="Utils\Models.h" />
+    <ClInclude Include="Utils\RenderError.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests\index.html" />

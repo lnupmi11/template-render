@@ -147,20 +147,20 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include <stack>
 #include "Functions.h"
 #include "../Render/Parser.h"
+#include "RenderError.h"
 
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
 {
-	string result = "";
 	std::regex forRegex(CONSTANT::FOR_REGEX);
 	std::smatch loopCondt;
 	std::regex_search(code, loopCondt, forRegex);
 	string loopCondition = loopCondt.str();
-	int startCount = stoi(loopCondition.substr(loopCondition.find('=')+1, loopCondition.find(';', loopCondition.find('='))));
+	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
 	{
 		fewer = true;
-		endCount = stoi(loopCondition.substr(loopCondition.find('<')+1, loopCondition.find(';', loopCondition.find('<'))));
+		endCount = stoi(loopCondition.substr(loopCondition.find('<') + 1, loopCondition.find(';', loopCondition.find('<'))));
 		if (loopCondition.find("++") != std::string::npos)
 		{
 			numberOfIteration = endCount - startCount;
@@ -168,10 +168,10 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		}
 		else
 		{
-			throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
+			throw RenderError("HelperFunctions::retrieveBodyForLoop(): incorrect loop condition.", __FILE__, __LINE__);
 		}
 	}
-	else if(loopCondition.find('>') != std::string::npos)
+	else if (loopCondition.find('>') != std::string::npos)
 	{
 		fewer = false;
 		endCount = stoi(loopCondition.substr(loopCondition.find('>') + 1, loopCondition.find(';', loopCondition.find('>'))));
@@ -182,16 +182,14 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 		}
 		else
 		{
-			throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
+			throw  RenderError("HelperFunctions::retrieveBodyForLoop(): incorrect loop condition.", __FILE__, __LINE__);
 		}
 	}
 	else
 	{
-		throw  std::exception("Exception in 'HelperFunctions::retrieveBodyForLoop()': Incorrect loop condition");
+		throw  RenderError("HelperFunctions::retrieveBodyForLoop(): incorrect loop condition.", __FILE__, __LINE__);
 	}
-
-	result = string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
-	return result;
+	return string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
 }
 
 size_t HelperFunctions::codeType(const std::string& code)
@@ -215,7 +213,7 @@ size_t HelperFunctions::codeType(const std::string& code)
 	}
 	else
 	{
-		throw exception("Exception in 'HelperFunctions::codeType()': Invalid code type");
+		throw RenderError("HelperFunctions::codeType(): invalid code type.", __FILE__, __LINE__);
 	}
 	return result;
 }
@@ -224,8 +222,7 @@ std::string HelperFunctions::runCode(const std::string& code)
 {
 	int numberOfIters = 0;
 	bool increment, fewer;
-	std::string body;
-	std::string result("");
+	std::string body(""), result("");
 	switch (HelperFunctions::codeType(code))
 	{
 	case 1:
@@ -233,13 +230,13 @@ std::string HelperFunctions::runCode(const std::string& code)
 		result = HelperFunctions::forLoop(body, numberOfIters, increment, fewer);
 		break;
 	case 2:
-		// TODO: foreach statement (result += ...)
+		// TODO: foreach statement
 		break;
 	case 3:
-		// TODO: if statement (result += ...)
+		// TODO: if statement
 		break;
 	default:
-		throw exception("Exception in 'HelperFunctions::runCode()': Incorrect type of code");
+		throw RenderError("HelperFunctions::runCode(): incorrect type of code.", __FILE__, __LINE__);
 		break;
 	}
 	return result;
@@ -266,8 +263,7 @@ std::string HelperFunctions::parse(const std::string& code)
 
 std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
-	ifstream read;
-	read.open(templateName);
+	ifstream read(templateName);
 	std::string result("");
 	if (read.is_open())
 	{
@@ -276,7 +272,7 @@ std::string HelperFunctions::readTemplate(const std::string& templateName)
 	}
 	else
 	{
-		throw  std::exception(("Exception in 'HelperFunctions::readTemplate()': File '" + templateName + "' not found").c_str());
+		throw RenderError("HelperFunctions::readTemplate(): template '" + templateName + "' does not exist.", __FILE__, __LINE__);
 	}
 	return result;
 }
@@ -291,7 +287,7 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 	}
 	else
 	{
-		throw std::exception(("Exception in 'HelperFunctions::createHTML()': Can not open file '" + htmlPath + "' for writting.").c_str());
+		throw RenderError("HelperFunctions::createHTML(): can not open file '" + htmlPath + "' for writting.", __FILE__, __LINE__);
 	}
 }
 
@@ -309,7 +305,7 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const int& num
 		}
 		else
 		{
-			throw  std::exception("Exception in 'HelperFunctions::forLoop()': Invalid loop condition");
+			throw RenderError("HelperFunctions::forLoop(): invalid loop condition.", __FILE__, __LINE__);
 		}
 	}
 	if (!increment)
@@ -323,7 +319,7 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const int& num
 		}
 		else
 		{
-			throw  std::exception("Exception in 'HelperFunctions::forLoop()': Invalid loop condition");
+			throw RenderError("HelperFunctions::forLoop(): invalid loop condition.", __FILE__, __LINE__);
 		}
 	}
 	return result;
@@ -414,7 +410,7 @@ void HelperFunctions::findTag(const std::string& str, blockParams& params)
 		}
 		else
 		{
-			throw exception("Exception in 'HelperFunctions::findTag()': incorrect tag.");
+			throw RenderError("HelperFunctions::findTag(): incorrect tag.", __FILE__, __LINE__);
 		}
 		params.foundPos += result->position(0) + params.offset;
 		params.offset = result->str().size();
