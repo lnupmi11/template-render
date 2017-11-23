@@ -5,10 +5,40 @@
 </HEAD>
 <BODY>
 
-    {% for (int i = 0; i < 10; i++) %}
-        <p>Some text 3</p>
-    {% endfor %}
-
+    <ol>
+        {% for (int i = 0; i < 3; i++) %}
+             <li>First
+                <ol>
+                    {% for (int i = 0; i < 5; i++) %}
+                        <li>first`</li>
+                    {% endfor %}
+                </ol>
+             </li>
+            <li>Second
+                <ol>
+                    {% for (int i = 0; i < 3; i++) %}
+                        <li>second`</li>
+                    {% endfor %}
+                </ol>
+            </li>
+        {% endfor %}
+    </ol>
+    <hr>
+    <ol>
+        {% for (int i = 0; i < 2; i++) %}
+            <li>Third
+                {% for (int i = 0; i < 2; i++) %}
+                    <ol>
+                        <li>third`
+                            {% for (int i = 0; i < 1; i++) %}
+                                <li>third``</li>
+                            {% endfor %}
+                        </li>
+                    </ol>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ol>
 
 </BODY>
 </HTML>

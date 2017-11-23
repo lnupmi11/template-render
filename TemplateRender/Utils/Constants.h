@@ -11,5 +11,5 @@ namespace CONSTANT
 	const std::string END_TAG_REGEX("\\{\\s*%\\s*end(for|if)\\s*%\\s*\\}");
 
 	const std::string TEMPLATE_DIR("Tests/");
-	const std::string ENDPOINT_DIR("");
+	const std::string ENDPOINT_DIR("Tests/");
 }

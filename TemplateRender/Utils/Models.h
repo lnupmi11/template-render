@@ -10,3 +10,13 @@ struct block
 	block();
 	block(const std::string& code, const std::string& before, const std::string& after);
 };
+
+struct blockParams
+{
+	size_t foundPos;
+	size_t offset;
+	bool begin;
+	bool end;
+
+	blockParams(size_t foundPos, size_t offset, bool begin, bool end);
+};

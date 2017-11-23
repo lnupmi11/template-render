@@ -67,6 +67,6 @@ public:
 
 	static std::string forLoop(const std::string& loopBody, const int& numberOfIteration,const bool& increment,const bool& fewer);
 
-	static bool findTag(std::string& str, const std::string& regexStr, size_t& pos);
+	static void findTag(const std::string& str, blockParams& params);
 
 };

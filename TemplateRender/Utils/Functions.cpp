@@ -310,6 +310,10 @@ void HelperFunctions::render(const std::string& templatePath, const std::string&
 	{
 		std::cerr << exc.what();
 	}
+	catch (...)
+	{
+		std::cerr << "An unknown error occurred.";
+	}
 }
 
 std::string HelperFunctions::forLoop(const std::string& loopBody, const int& numberOfIteration, const bool& increment, const bool& fewer)
@@ -359,7 +363,7 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 	}
 	else
 	{
-		for (size_t i = 0; i < foundPos; i++)
+		for (size_t i = pos; i < foundPos; i++)
 		{
 			result.before += code[i];
 		}
@@ -367,46 +371,29 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 		std::stack<size_t> endPositions;
 		size_t begin = 0;
 		size_t end = code.size();
-		std::string temp1(code);
-		std::string temp2(code);
+		blockParams blockParameters(foundPos, 0, false, false);
 		do
 		{
-			// TODO: search for "{% for" or "for %}"
-			//
-			//		 if ("{% for" is found)
-			//		 {
-			//			beginPositions.push(foundPos);
-			//		 }
-			//		 else if ("for %}" is found)
-			//		 {
-			//			endPositions.push(foundPos);
-			//			if (beginPositions.size() < 2)
-			//			{
-			//				begin = beginPositions.top();
-			//				end = endPositions.top();
-			//			}
-			//			beginPositions.pop();
-			//		 }
-			//
-
-			
-			if (HelperFunctions::findTag(temp1, CONSTANT::BEGIN_TAG_REGEX, foundPos))
+			HelperFunctions::findTag(code, blockParameters);
+			if (blockParameters.begin)
 			{
-				beginPositions.push(foundPos);
+				beginPositions.push(blockParameters.foundPos);
 			}
-			else if (HelperFunctions::findTag(temp2, CONSTANT::END_TAG_REGEX, foundPos))
+			else if (blockParameters.end)
 			{
-				endPositions.push(foundPos);
-				if (beginPositions.size() == 1)
+				endPositions.push(blockParameters.foundPos + blockParameters.offset);
+			}
+			if (beginPositions.size() == endPositions.size())
+			{
+				while (beginPositions.size() > 1)
 				{
-					begin = beginPositions.top();
-					end = endPositions.top();
+					beginPositions.pop();
 				}
+				begin = beginPositions.top();
 				beginPositions.pop();
+				end = endPositions.top();
 			}
-		} while (beginPositions.size() != 0 || foundPos != std::string::npos);
-
-		end += 12;	// 6 -- size of "{% endfor %}"
+		} while (beginPositions.size() != 0);
 		result.code += code.substr(begin, end - begin);
 		foundPos = code.find("{%", end);
 		if (foundPos == std::string::npos)
@@ -431,19 +418,23 @@ void HelperFunctions::findAllBlocks(std::list<block>& blocks, const std::string&
 	}
 }
 
-bool HelperFunctions::findTag(std::string& str, const std::string& regexStr, size_t& position)
+void HelperFunctions::findTag(const std::string& str, blockParams& params)
 {
-	std::regex expression(regexStr);
-	std::smatch data;
-	bool result = std::regex_search(str, data, expression);
-	if (result)
+	std::regex expression("(" + CONSTANT::BEGIN_TAG_REGEX + ")|(" + CONSTANT::END_TAG_REGEX + ")");
+	std::sregex_iterator result(str.begin() + params.foundPos + params.offset, str.end(), expression);
+	if (result != std::sregex_iterator())
 	{
-		position = data.position(0);
-		str.erase(str.begin(), str.begin() + position + data[0].str().size());
+		if (Parser::regexCheck(result->str(), CONSTANT::BEGIN_TAG_REGEX))
+		{
+			params.begin = true;
+			params.end = false;
+		}
+		else if (Parser::regexCheck(result->str(), CONSTANT::END_TAG_REGEX))
+		{
+			params.begin = false;
+			params.end = true;
+		}
+		params.foundPos += result->position(0) + params.offset;
+		params.offset = result->str().size();
 	}
-	else
-	{
-		position = std::string::npos;
-	}
-	return result;
 }

@@ -11,6 +11,6 @@ int main()
 
 	TEST_CASE();
 
-	system("pause");
+	std::cin.get();
 	return 0;
 }

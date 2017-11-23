@@ -54,8 +54,10 @@ void CREATE_AND_COMPILE_CPP()
 }*/
 
 #include "../Utils/Functions.h"
+#include <iostream>
 
 void TEST_CASE()
 {
 	HelperFunctions::render("index.html", "completed.html");
+	std::cout << "Completed!";
 }
