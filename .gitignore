@@ -37,14 +37,8 @@ TemplateRender/.vs/
 
 #Debug
 TemplateRender/Debug/
-TemplateRender/_cpptemp_/
-TemplateRender/Rendered_HTML_Page/
+TemplateRender/Tests/*.html
+!TemplateRender/Tests/index.html
 #Debug/
 TemplateRender/x64/Debug/
 x64/Debug/
-
-!TemplateRender/MinGW/7za.exe
-!TemplateRender/MinGW/wget.exe
-
-TemplateRender/MinGW/_downloaded/
-TemplateRender/MinGW/_downloaded2/

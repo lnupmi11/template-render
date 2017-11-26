@@ -20,3 +20,12 @@ struct blockParams
 
 	blockParams(size_t foundPos, size_t offset, bool begin, bool end);
 };
+
+struct forLoopParams
+{
+	int numberOfIteration;
+	bool increment;
+	bool fewer;
+
+	forLoopParams();
+};

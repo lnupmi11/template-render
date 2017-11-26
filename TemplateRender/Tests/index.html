@@ -8,11 +8,13 @@
     <ol>
         {% for (int i = 0; i < 3; i++) %}
              <li>First
+                <hr>
                 <ol>
-                    {% for (int i = 0; i < 5; i++) %}
+                    {% for (int i = 10; i > 0; i--) %}
                         <li>first`</li>
                     {% endfor %}
                 </ol>
+                <hr>
              </li>
             <li>Second
                 <ol>
@@ -23,6 +25,10 @@
             </li>
         {% endfor %}
     </ol>
+    <hr>
+    {% comment "Comment explanation" %}
+        <h1>Some content to comment on</h1>
+    {% endcomment %}
     <hr>
     <ol>
         {% for (int i = 0; i < 2; i++) %}

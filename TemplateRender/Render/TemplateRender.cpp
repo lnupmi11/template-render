@@ -17,8 +17,12 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 	{
 		std::cerr << exc.what();
 	}
+	catch (const std::exception& exc)
+	{
+		std::cerr << "\nException occurred: " << exc.what() << '.';
+	}
 	catch (...)
 	{
-		std::cerr << "An unknown error occurred.";
+		std::cerr << "\nException occurred: unknown.";
 	}
 }

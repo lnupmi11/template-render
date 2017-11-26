@@ -6,3 +6,5 @@ block::block(const std::string& code, const std::string& before, const std::stri
 
 blockParams::blockParams(size_t foundPos, size_t offset, bool begin, bool end) :
 	foundPos(foundPos), offset(offset), begin(begin), end(end) {};
+
+forLoopParams::forLoopParams() : numberOfIteration(0), increment(false), fewer(false) {};

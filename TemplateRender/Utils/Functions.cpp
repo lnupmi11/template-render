@@ -30,65 +30,9 @@ std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
 	return result;
 }
 
-bool HelperFunctions::createHtmlPage(const std::string & htmlCode, const std::string& fileName)
-{
-	std::ofstream file(fileName);
-	if (file.is_open())
-	{
-		file << htmlCode;
-		file.close();
-		return true;
-	}
-	std::cerr << "Error occurred in 'HelperFunctions::createHtmlPage()' function: can not write data to file '" << fileName << "'\n";
-	return false;
-}
-
-bool HelperFunctions::createCpp(const std::string& cppCode, const std::string& fileName)
-{
-	if (!HelperFunctions::directoryExists(CONSTANT::TEMP_DIR))
-	{
-		if (!HelperFunctions::run("mkdir " + CONSTANT::TEMP_DIR))
-		{
-			std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: can not create folder.\n";
-			return false;
-		}
-	}
-	std::ofstream file(CONSTANT::TEMP_DIR + "\\" + fileName);
-	if (file.is_open())
-	{
-		file << cppCode + '\n';
-		file.close();
-		return true;
-	}
-	std::cerr << "Error occurred in 'HelperFunctions::createCpp()' function: file was not opened for writting.\n";
-	return false;
-}
-
 std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartOfCppCode)
 {
 	return std::string(PROGRAM_BEGIN + mainPartOfCppCode + PROGRAM_END);
-}
-
-bool HelperFunctions::compile(const std::string& cppFilePath)
-{
-	if (cppFilePath.size() != 0)
-	{
-		std::string command(CONSTANT::MINGW_PATH + "\\g++ " + CONSTANT::TEMP_DIR + "\\" + cppFilePath +
-			" -o " + CONSTANT::TEMP_DIR + "\\" + cppFilePath.substr(0, cppFilePath.size() - 4));
-		if (HelperFunctions::run(command))
-		{
-			return true;
-		}
-		else
-		{
-			std::cerr << "Error occurred in 'HelperFunctions::compile()' function: compilation error.\n";
-		}
-	}
-	else
-	{
-		std::cerr << "Error occurred in 'HelperFunctions::compile()' function: path to cpp file is none.\n";
-	}
-	return false;
 }
 
 bool HelperFunctions::run(const std::string& command)
@@ -149,7 +93,7 @@ bool HelperFunctions::directoryExists(const std::string& directory)
 #include "../Render/Parser.h"
 #include "RenderError.h"
 
-std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& numberOfIteration, bool& increment, bool& fewer)
+std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoopParams& parameters)
 {
 	std::regex forRegex(CONSTANT::FOR_REGEX);
 	std::smatch loopCondt;
@@ -159,12 +103,12 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
 	{
-		fewer = true;
+		parameters.fewer = true;
 		endCount = stoi(loopCondition.substr(loopCondition.find('<') + 1, loopCondition.find(';', loopCondition.find('<'))));
 		if (loopCondition.find("++") != std::string::npos)
 		{
-			numberOfIteration = endCount - startCount;
-			increment = true;
+			parameters.numberOfIteration = endCount - startCount;
+			parameters.increment = true;
 		}
 		else
 		{
@@ -173,12 +117,12 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, int& n
 	}
 	else if (loopCondition.find('>') != std::string::npos)
 	{
-		fewer = false;
+		parameters.fewer = false;
 		endCount = stoi(loopCondition.substr(loopCondition.find('>') + 1, loopCondition.find(';', loopCondition.find('>'))));
 		if (loopCondition.find("--") != std::string::npos)
 		{
-			increment = false;
-			numberOfIteration = startCount - endCount;
+			parameters.increment = false;
+			parameters.numberOfIteration = startCount - endCount;
 		}
 		else
 		{
@@ -199,6 +143,7 @@ size_t HelperFunctions::codeType(const std::string& code)
 	bool checkFor = Parser::regexCheck(statement, CONSTANT::FOR_REGEX);
 	//bool checkForeach = Parser::regexCheck(statement, foreachRegex);
 	bool checkIf = Parser::regexCheck(statement, CONSTANT::IF_REGEX);
+	bool checkComment = Parser::regexCheck(statement, CONSTANT::BEGIN_COMMENT_REGEX);
 	if (checkFor)
 	{
 		result = 1;
@@ -211,6 +156,10 @@ size_t HelperFunctions::codeType(const std::string& code)
 	{
 		result = 3;
 	}
+	else if (checkComment)
+	{
+		result = 4;
+	}
 	else
 	{
 		throw RenderError("HelperFunctions::codeType(): invalid code type.", __FILE__, __LINE__);
@@ -220,14 +169,13 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 std::string HelperFunctions::runCode(const std::string& code)
 {
-	int numberOfIters = 0;
-	bool increment, fewer;
+	forLoopParams parameters;
 	std::string body(""), result("");
 	switch (HelperFunctions::codeType(code))
 	{
 	case 1:
-		body = HelperFunctions::retrieveBodyForLoop(code, numberOfIters, increment, fewer);
-		result = HelperFunctions::forLoop(body, numberOfIters, increment, fewer);
+		body = HelperFunctions::retrieveBodyForLoop(code, parameters);
+		result = HelperFunctions::forLoop(body, parameters);
 		break;
 	case 2:
 		// TODO: foreach statement
@@ -235,9 +183,11 @@ std::string HelperFunctions::runCode(const std::string& code)
 	case 3:
 		// TODO: if statement
 		break;
+	case 4:
+		result = "";
+		break;
 	default:
 		throw RenderError("HelperFunctions::runCode(): incorrect type of code.", __FILE__, __LINE__);
-		break;
 	}
 	return result;
 }
@@ -291,14 +241,14 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 	}
 }
 
-std::string HelperFunctions::forLoop(const std::string& loopBody, const int& numberOfIteration, const bool& increment, const bool& fewer)
+std::string HelperFunctions::forLoop(const std::string& loopBody, forLoopParams& parameters)
 {
 	std::string result("");
-	if (increment)
+	if (parameters.increment)
 	{
-		if (fewer)
+		if (parameters.fewer)
 		{
-			for (int i = 0; i < numberOfIteration; i++)
+			for (int i = 0; i < parameters.numberOfIteration; i++)
 			{
 				result += loopBody;
 			}
@@ -308,11 +258,11 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const int& num
 			throw RenderError("HelperFunctions::forLoop(): invalid loop condition.", __FILE__, __LINE__);
 		}
 	}
-	if (!increment)
+	if (!parameters.increment)
 	{
-		if (!fewer)
+		if (!parameters.fewer)
 		{
-			for (int i = numberOfIteration; i > 0; i--)
+			for (int i = parameters.numberOfIteration; i > 0; i--)
 			{
 				result += loopBody;
 			}
