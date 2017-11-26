@@ -25,9 +25,6 @@
     <Filter Include="Render">
       <UniqueIdentifier>{ae14127f-3eb2-4fd2-b368-c3c15cc2a1b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{c85f46f6-7c3a-4320-aab5-6ec4f1b39a10}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp">
@@ -71,9 +68,6 @@
     <ClInclude Include="Render\TemplateRender.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Data.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Parser.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -86,11 +80,11 @@
     <ClInclude Include="Utils\RenderError.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="DTO\Context.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tests\TestCppHtmlPage.htm">
-      <Filter>Tests</Filter>
-    </None>
     <None Include="Tests\index.html">
       <Filter>Tests</Filter>
     </None>

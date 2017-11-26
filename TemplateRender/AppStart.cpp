@@ -1,6 +1,4 @@
 #include "Tests/Tests.h"
-#include "DTO\DataManager.h"
-using namespace std;
 
 int main()
 {

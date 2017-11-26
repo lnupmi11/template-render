@@ -123,7 +123,7 @@
     <ClCompile Include="Utils\RenderError.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Data\Data.h" />
+    <ClInclude Include="DTO\Context.h" />
     <ClInclude Include="DTO\DataObject.h" />
     <ClInclude Include="DTO\DataManager.h" />
     <ClInclude Include="Render\TemplateRender.h" />
@@ -136,9 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests\index.html" />
-    <None Include="Tests\TestCppHtmlPage.htm">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
