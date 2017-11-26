@@ -241,7 +241,7 @@ void HelperFunctions::createHTML(const std::string& html, const std::string& htm
 	}
 }
 
-std::string HelperFunctions::forLoop(const std::string& loopBody, forLoopParams& parameters)
+std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopParams& parameters)
 {
 	std::string result("");
 	if (parameters.increment)
@@ -306,6 +306,10 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 			else if (blockParameters.end)
 			{
 				endPositions.push(blockParameters.foundPos + blockParameters.offset);
+			}
+			if (beginPositions.size() < endPositions.size())
+			{
+				throw RenderError("HelperFunctions::findBlock(): invalid template.", __FILE__, __LINE__);
 			}
 			if (beginPositions.size() == endPositions.size())
 			{

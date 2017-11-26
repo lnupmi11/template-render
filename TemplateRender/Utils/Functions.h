@@ -25,7 +25,7 @@ public:
 
 	static void createHTML(const std::string& html, const std::string& htmlPath);
 
-	static std::string forLoop(const std::string& loopBody, forLoopParams& parameters);
+	static std::string forLoop(const std::string& loopBody, const forLoopParams& parameters);
 
 	static void findTag(const std::string& str, blockParams& params);
 
