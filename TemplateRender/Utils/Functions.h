@@ -11,6 +11,10 @@ public:
 
 	static std::string retrieveBodyForLoop(const std::string& code, forLoopParams& parameters);
 
+	static std::string retrieveBodyIf(const std::string& code);
+
+	static int getTypeOfIFCondition(const std::string& condition);
+
 	static size_t codeType(const std::string& code);
 
 	static block findBlock(size_t& pos, const std::string& code);

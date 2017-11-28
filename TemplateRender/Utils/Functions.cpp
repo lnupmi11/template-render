@@ -148,21 +148,81 @@ size_t HelperFunctions::codeType(const std::string& code)
 	{
 		result = 1;
 	}
-	/*else if (checkForeach)
-	{
-		result = 2;
-	}*/
 	else if (checkIf)
 	{
-		result = 3;
+		result = 2;
 	}
 	else if (checkComment)
 	{
-		result = 4;
+		result = 3;
 	}
 	else
 	{
 		throw RenderError("HelperFunctions::codeType(): invalid code type.", __FILE__, __LINE__);
+	}
+	return result;
+}
+
+std::string HelperFunctions:: retrieveBodyIf(const std::string& code)
+{
+	string firstVar;
+	string secondVar;
+	std::regex ifRegex(CONSTANT::IF_REGEX);
+	std::smatch ifCondt;
+	std::regex_search(code, ifCondt, ifRegex);
+	string ifCondition = ifCondt.str();
+	int type = HelperFunctions::getTypeOfIFCondition(ifCondition);
+	if (type < 7)
+	{
+		firstVar = string(ifCondition.find("(") + 1, ifCondition.find(" ", ifCondition.find("(") + 1));
+		secondVar = string(ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1, ifCondition.find(")"));
+	}
+	switch (type)
+	{
+	case 1: break;
+	case 2: break;
+	case 3: break;
+	case 4: break;
+	case 5: break;
+	case 6: break;
+	case 7: break;
+	default:
+		break;
+	}
+	
+}
+
+
+int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
+{
+	int result;
+	if (condition.find("<") != std::string::npos)
+	{
+		result = 1;
+	}
+	else if (condition.find(">") != std::string::npos)
+	{
+		result = 2;
+	}
+	else if (condition.find("<=") != std::string::npos)
+	{
+		result = 3;
+	}
+	else if (condition.find(">=") != std::string::npos)
+	{
+		result = 4;
+	}
+	else if (condition.find("==") != std::string::npos)
+	{
+		result = 5;
+	}
+	else if (condition.find("!=") != std::string::npos)
+	{
+		result = 6;
+	}
+	else
+	{
+		result = 7;
 	}
 	return result;
 }
@@ -178,12 +238,9 @@ std::string HelperFunctions::runCode(const std::string& code)
 		result = HelperFunctions::forLoop(body, parameters);
 		break;
 	case 2:
-		// TODO: foreach statement
+		
 		break;
 	case 3:
-		// TODO: if statement
-		break;
-	case 4:
 		result = "";
 		break;
 	default:
