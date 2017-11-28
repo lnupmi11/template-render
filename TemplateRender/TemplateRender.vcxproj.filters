@@ -33,9 +33,6 @@
     <ClCompile Include="Utils\Functions.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Render\TemplateRender.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Render\Parser.cpp">
       <Filter>Render</Filter>
     </ClCompile>

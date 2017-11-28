@@ -29,3 +29,12 @@ struct forLoopParams
 
 	forLoopParams();
 };
+
+struct ifParams
+{
+	int type;
+	std::string firstVar;
+	std::string secondVar;
+
+	ifParams();
+};

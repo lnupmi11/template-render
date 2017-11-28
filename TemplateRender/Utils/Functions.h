@@ -11,7 +11,7 @@ public:
 
 	static std::string retrieveBodyForLoop(const std::string& code, forLoopParams& parameters);
 
-	static std::string retrieveBodyIf(const std::string& code);
+	static std::string retrieveBodyIf(const std::string& code, ifParams& parameters);
 
 	static int getTypeOfIFCondition(const std::string& condition);
 
@@ -30,6 +30,8 @@ public:
 	static void createHTML(const std::string& html, const std::string& htmlPath);
 
 	static std::string forLoop(const std::string& loopBody, const forLoopParams& parameters);
+
+	static std::string ifStatement(const std::string& body, const ifParams& parameters);
 
 	static void findTag(const std::string& str, blockParams& params);
 

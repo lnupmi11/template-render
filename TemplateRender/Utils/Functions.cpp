@@ -1,89 +1,3 @@
-/*
-#define _CRT_SECURE_NO_WARNINGS
-#include "Functions.h"
-#include <fstream>
-#include <iostream>
-#include <Windows.h>
-
-std::string HelperFunctions::getCppHtmlCode(const std::string& fileName)
-{
-	std::string result("");
-	if (fileName.size() != 0)
-	{
-		std::ifstream file;
-		file.open(fileName);
-
-		if (file.is_open())
-		{
-			result.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-			file.close();
-		}
-		else
-		{
-			std::cerr << "Error occurred in 'HelperFunctions::getCppHtmlCode()' function: can not open file " << fileName << '\n';
-		}
-	}
-	else
-	{
-		std::cerr << "Error occurred in 'HelperFunctions::getCppHtmlCode()' function: incorrect path to html file.\n";
-	}
-	return result;
-}
-
-std::string HelperFunctions::createCompletedCppCode(const std::string& mainPartOfCppCode)
-{
-	return std::string(PROGRAM_BEGIN + mainPartOfCppCode + PROGRAM_END);
-}
-
-bool HelperFunctions::run(const std::string& command)
-{
-	if (command.size() != 0 || command.find_first_not_of(' ') != std::string::npos)
-	{
-		STARTUPINFO startupInfo;
-		PROCESS_INFORMATION processInfo;
-		ZeroMemory(&startupInfo, sizeof(startupInfo));
-		startupInfo.cb = sizeof(startupInfo);
-		ZeroMemory(&processInfo, sizeof(processInfo));
-		if (CreateProcess(NULL, const_cast<char*>(("cmd /c " + command).c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &startupInfo, &processInfo))
-		{
-			WaitForSingleObject(processInfo.hProcess, INFINITE);
-			if (CloseHandle(processInfo.hProcess))
-			{
-				if (CloseHandle(processInfo.hThread))
-				{
-					return true;
-				}
-				else
-				{
-					std::cerr << "Error occurred in 'HelperFunctions::run()' function: thread of process '" << command << 
-						"' was not closed properly. Error: #" + GetLastError() + '\n';
-				}
-			}
-			else
-			{
-				std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command <<
-					"' was not closed properly. Error: #" + GetLastError() + '\n';
-			}
-		}
-		else
-		{
-			std::cerr << "Error occurred in 'HelperFunctions::run()' function: process '" << command <<
-				"' was not executed. Error: #" << GetLastError() << '\n';
-		}
-	}
-	else
-	{
-		std::cerr << "Error occurred in 'HelperFunctions::run()' function: incorrect command.\n";
-	}
-	return false;
-}
-
-bool HelperFunctions::directoryExists(const std::string& directory)
-{
-	DWORD dirAttributes = GetFileAttributesA(directory.c_str());
-	return dirAttributes != INVALID_FILE_ATTRIBUTES && dirAttributes & FILE_ATTRIBUTE_DIRECTORY;
-}*/
-
 #include <iostream>
 #include <fstream>
 #include <regex>
@@ -141,7 +55,6 @@ size_t HelperFunctions::codeType(const std::string& code)
 	int result;
 	std::string statement(code.begin(), code.begin() + code.find("%}") + 2);
 	bool checkFor = Parser::regexCheck(statement, CONSTANT::FOR_REGEX);
-	//bool checkForeach = Parser::regexCheck(statement, foreachRegex);
 	bool checkIf = Parser::regexCheck(statement, CONSTANT::IF_REGEX);
 	bool checkComment = Parser::regexCheck(statement, CONSTANT::BEGIN_COMMENT_REGEX);
 	if (checkFor)
@@ -163,7 +76,7 @@ size_t HelperFunctions::codeType(const std::string& code)
 	return result;
 }
 
-std::string HelperFunctions:: retrieveBodyIf(const std::string& code)
+std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& parameters)
 {
 	string firstVar;
 	string secondVar;
@@ -171,27 +84,21 @@ std::string HelperFunctions:: retrieveBodyIf(const std::string& code)
 	std::smatch ifCondt;
 	std::regex_search(code, ifCondt, ifRegex);
 	string ifCondition = ifCondt.str();
-	int type = HelperFunctions::getTypeOfIFCondition(ifCondition);
-	if (type < 7)
+	parameters.type = HelperFunctions::getTypeOfIFCondition(ifCondition);
+	if (parameters.type < 7)
 	{
-		firstVar = string(ifCondition.find("(") + 1, ifCondition.find(" ", ifCondition.find("(") + 1));
-		secondVar = string(ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1, ifCondition.find(")"));
+		size_t offset = ifCondition.find("(") + 1;
+		parameters.firstVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(" ", offset));
+		offset = ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1;
+		parameters.secondVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(")"));
 	}
-	switch (type)
+	else
 	{
-	case 1: break;
-	case 2: break;
-	case 3: break;
-	case 4: break;
-	case 5: break;
-	case 6: break;
-	case 7: break;
-	default:
-		break;
+		std::string firstVar(std::string(ifCondition.begin() + ifCondition.find("("), ifCondition.begin() + ifCondition.find(")")));
+		parameters.firstVar = std::regex_replace(firstVar, std::regex("\\s+|\\(|\\)"), "");
 	}
-	
+	return string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
 }
-
 
 int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
 {
@@ -229,16 +136,18 @@ int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
 
 std::string HelperFunctions::runCode(const std::string& code)
 {
-	forLoopParams parameters;
+	forLoopParams forParameters;
+	ifParams ifParameters;
 	std::string body(""), result("");
 	switch (HelperFunctions::codeType(code))
 	{
 	case 1:
-		body = HelperFunctions::retrieveBodyForLoop(code, parameters);
-		result = HelperFunctions::forLoop(body, parameters);
+		body = HelperFunctions::retrieveBodyForLoop(code, forParameters);
+		result = HelperFunctions::forLoop(body, forParameters);
 		break;
 	case 2:
-		
+		body = HelperFunctions::retrieveBodyIf(code, ifParameters);
+		result = HelperFunctions::ifStatement(body, ifParameters);
 		break;
 	case 3:
 		result = "";
@@ -329,6 +238,15 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopP
 			throw RenderError("HelperFunctions::forLoop(): invalid loop condition.", __FILE__, __LINE__);
 		}
 	}
+	return result;
+}
+
+std::string HelperFunctions::ifStatement(const std::string& body, const ifParams& parameters)
+{
+	std::string result("");
+	
+	// TODO: process if statement according to parameters.
+
 	return result;
 }
 

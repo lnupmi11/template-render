@@ -114,7 +114,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
-    <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
     <ClCompile Include="Utils\Models.cpp" />

@@ -8,3 +8,5 @@ blockParams::blockParams(size_t foundPos, size_t offset, bool begin, bool end) :
 	foundPos(foundPos), offset(offset), begin(begin), end(end) {};
 
 forLoopParams::forLoopParams() : numberOfIteration(0), increment(false), fewer(false) {};
+
+ifParams::ifParams() : type(7), firstVar(""), secondVar("") {};
