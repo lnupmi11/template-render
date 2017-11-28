@@ -1,12 +1,19 @@
-<HTML>
-<HEAD>
-<META NAME="GENERATOR" Content="Microsoft Visual Studio">
-<TITLE></TITLE>
-</HEAD>
-<BODY>
-
-    <h2>Authors: {{ first_author }} and {{ second_author }}</h2>
-
+<html>
+<head>
+    <meta name="GENERATOR" Content="Microsoft Visual Studio">
+    <title>{{ title }}</title>
+    <style>
+        .title {
+            text-align: center;
+            color: green;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    {% if (first_author != second_author) %}
+        <h2 class="title">Authors: {{ first_author }} and {{ second_author }}</h2>
+    {% endif %}
     <ol>
         {% for (int i = 0; i < 3; i++) %}
              <li>First
@@ -50,8 +57,24 @@
             </li>
         {% endfor %}
     </ol>
+    <hr>
     {% if (4 > 3) %}
-        <h1>Hi Hitler 0/ !</h1>
+        <h4>4 is greater than 3</h4>
     {% endif %}
-</BODY>
-</HTML>
+    {% if (4 >= 3) %}
+        <h4>4 is greater and equal to 3</h4>
+    {% endif %}
+    {% if (4 != 3) %}
+        <h4>4 is not equal to 3</h4>
+    {% endif %}
+    {% if (3 < 4) %}
+        <h4>3 is lesser than 4</h4>
+    {% endif %}
+    {% if (3 <= 4) %}
+        <h4>3 is lesser and equal to 4</h4>
+    {% endif %}
+    {% if (4 == 4) %}
+        <h4>4 is equal to 4</h4>
+    {% endif %}
+</body>
+</html>

@@ -1,20 +1,17 @@
-#include <iostream>
 #include <fstream>
 #include <regex>
 #include <algorithm>
 #include <stack>
 #include "Functions.h"
 #include "../Render/Parser.h"
-#include "RenderError.h"
-
-#include "../DTO/Context.h"
+#include "Constants.h"
 
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoopParams& parameters)
 {
 	std::regex forRegex(CONSTANT::FOR_REGEX);
 	std::smatch loopCondt;
 	std::regex_search(code, loopCondt, forRegex);
-	string loopCondition = loopCondt.str();
+	std::string loopCondition = loopCondt.str();
 	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
@@ -49,7 +46,7 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoo
 	{
 		throw  RenderError("HelperFunctions::retrieveBodyForLoop(): incorrect loop condition.", __FILE__, __LINE__);
 	}
-	return string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
+	return std::string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
 }
 
 size_t HelperFunctions::codeType(const std::string& code)
@@ -80,27 +77,21 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& parameters)
 {
-	string firstVar;
-	string secondVar;
-	std::regex ifRegex(CONSTANT::IF_REGEX);
-	std::smatch ifCondt;
-	std::regex_search(code, ifCondt, ifRegex);
-	string ifCondition = ifCondt.str();
+	std::string firstVar;
+	std::string secondVar;
+	std::smatch conditionData;
+	std::regex_search(code, conditionData, std::regex(CONSTANT::IF_REGEX));
+	std::string ifCondition = conditionData.str();
 	parameters.type = HelperFunctions::getTypeOfIFCondition(ifCondition);
-	if (parameters.type < 7)
+	if (parameters.type != 0)
 	{
 		size_t offset = ifCondition.find("(") + 1;
 		parameters.firstVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(" ", offset));
 		offset = ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1;
 		parameters.secondVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(")"));
-		parameters.secondVar=std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>"), "");
+		parameters.secondVar=std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>|=|!"), "");
 	}
-	else
-	{
-		std::string firstVar(std::string(ifCondition.begin() + ifCondition.find("("), ifCondition.begin() + ifCondition.find(")")));
-		parameters.firstVar = std::regex_replace(firstVar, std::regex("\\s+|\\(|\\)"), "");
-	}
-	return string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
+	return std::string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
 }
 
 int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
@@ -132,7 +123,7 @@ int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
 	}
 	else
 	{
-		result = 7;
+		result = 0;
 	}
 	return result;
 }
@@ -182,7 +173,7 @@ std::string HelperFunctions::parse(const std::string& code, ContextBase* context
 
 std::string HelperFunctions::readTemplate(const std::string& templateName)
 {
-	ifstream read(templateName);
+	std::ifstream read(templateName);
 	std::string result("");
 	if (read.is_open())
 	{
@@ -248,47 +239,17 @@ std::string HelperFunctions::ifStatement(const std::string& body, const ifParams
 {
 	std::string result("");
 	bool check = false;
-	if (context != nullptr)
+	if (context)
 	{
-		try 
+		try
 		{
-			double firstV = stof(parameters.firstVar);
-			double secondV =stof(parameters.secondVar);
-			switch (parameters.type)
-			{
-			case 1: check = (firstV < secondV); break;
-			case 2: check = (firstV > secondV); break;
-			case 3: check = (firstV <= secondV); break;
-			case 4: check = (firstV >= secondV); break;
-			case 5: check = (firstV == secondV); break;
-			case 6: check = (firstV != secondV); break;
-			case 7:	check = true; break;
-			default: break;
-			}
+			double firstV = stod(parameters.firstVar);
+			double secondV = stod(parameters.secondVar);
+			check = HelperFunctions::condition<double>(firstV, secondV, parameters);
 		}
 		catch (...)
 		{
-			try {
-				switch (parameters.type)
-				{
-				case 1: check = (context->getByKey(parameters.firstVar) < context->getByKey(parameters.secondVar)); break;
-				case 2: check = (context->getByKey(parameters.firstVar) > context->getByKey(parameters.secondVar)); break;
-				case 3: check = (context->getByKey(parameters.firstVar) <= context->getByKey(parameters.secondVar)); break;
-				case 4: check = (context->getByKey(parameters.firstVar) >= context->getByKey(parameters.secondVar)); break;
-				case 5: check = (context->getByKey(parameters.firstVar) == context->getByKey(parameters.secondVar)); break;
-				case 6: check = (context->getByKey(parameters.firstVar) != context->getByKey(parameters.secondVar)); break;
-				case 7:	check = true; break;
-				default: break;
-				}
-			}
-			catch (const std::exception& exc)
-			{
-				std::cout << exc.what()<<std::endl;
-			}
-			catch (...)
-			{
-				std::cout << "Unknown Exception \n";
-			}
+			check = HelperFunctions::condition<std::string>(context->getByKey(parameters.firstVar), context->getByKey(parameters.secondVar), parameters);
 		}
 		if (check)
 		{
