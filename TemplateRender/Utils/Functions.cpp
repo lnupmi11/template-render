@@ -8,10 +8,9 @@
 
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoopParams& parameters)
 {
-	std::regex forRegex(CONSTANT::FOR_REGEX);
-	std::smatch loopCondt;
-	std::regex_search(code, loopCondt, forRegex);
-	std::string loopCondition = loopCondt.str();
+	std::smatch loopData;
+	std::regex_search(code, loopData, std::regex(CONSTANT::FOR_REGEX));
+	std::string loopCondition = loopData.str();
 	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
@@ -77,8 +76,6 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& parameters)
 {
-	std::string firstVar;
-	std::string secondVar;
 	std::smatch conditionData;
 	std::regex_search(code, conditionData, std::regex(CONSTANT::IF_REGEX));
 	std::string ifCondition = conditionData.str();
@@ -243,9 +240,7 @@ std::string HelperFunctions::ifStatement(const std::string& body, const ifParams
 	{
 		try
 		{
-			double firstV = stod(parameters.firstVar);
-			double secondV = stod(parameters.secondVar);
-			check = HelperFunctions::condition<double>(firstV, secondV, parameters);
+			check = HelperFunctions::condition<double>(stod(parameters.firstVar), stod(parameters.secondVar), parameters);
 		}
 		catch (...)
 		{
