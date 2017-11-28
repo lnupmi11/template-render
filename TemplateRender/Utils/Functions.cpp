@@ -93,6 +93,7 @@ std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& p
 		parameters.firstVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(" ", offset));
 		offset = ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1;
 		parameters.secondVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(")"));
+		parameters.secondVar=std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>"), "");
 	}
 	else
 	{
@@ -247,19 +248,53 @@ std::string HelperFunctions::ifStatement(const std::string& body, const ifParams
 {
 	std::string result("");
 	bool check = false;
-	switch (parameters.type)
+	if (context != nullptr)
 	{
-	case 1: check = (parameters.firstVar < parameters.secondVar); break;
-	case 2: check = (parameters.firstVar > parameters.secondVar); break;
-	case 3: check = (parameters.firstVar <= parameters.secondVar); break;
-	case 4: check = (parameters.firstVar >= parameters.secondVar); break;
-	case 5: check = (parameters.firstVar == parameters.secondVar); break;
-	case 6: check = (parameters.firstVar != parameters.secondVar); break;
-	//case 7: check = (parameters.firstVar); break;
-	default: break;
+		try 
+		{
+			double firstV = stof(parameters.firstVar);
+			double secondV =stof(parameters.secondVar);
+			switch (parameters.type)
+			{
+			case 1: check = (firstV < secondV); break;
+			case 2: check = (firstV > secondV); break;
+			case 3: check = (firstV <= secondV); break;
+			case 4: check = (firstV >= secondV); break;
+			case 5: check = (firstV == secondV); break;
+			case 6: check = (firstV != secondV); break;
+			case 7:	check = true; break;
+			default: break;
+			}
+		}
+		catch (...)
+		{
+			try {
+				switch (parameters.type)
+				{
+				case 1: check = (context->getByKey(parameters.firstVar) < context->getByKey(parameters.secondVar)); break;
+				case 2: check = (context->getByKey(parameters.firstVar) > context->getByKey(parameters.secondVar)); break;
+				case 3: check = (context->getByKey(parameters.firstVar) <= context->getByKey(parameters.secondVar)); break;
+				case 4: check = (context->getByKey(parameters.firstVar) >= context->getByKey(parameters.secondVar)); break;
+				case 5: check = (context->getByKey(parameters.firstVar) == context->getByKey(parameters.secondVar)); break;
+				case 6: check = (context->getByKey(parameters.firstVar) != context->getByKey(parameters.secondVar)); break;
+				case 7:	check = true; break;
+				default: break;
+				}
+			}
+			catch (const std::exception& exc)
+			{
+				std::cout << exc.what()<<std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "Unknown Exception \n";
+			}
+		}
+		if (check)
+		{
+			result += body;
+		}
 	}
-	
-
 	return result;
 }
 

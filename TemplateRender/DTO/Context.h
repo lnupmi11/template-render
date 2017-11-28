@@ -38,4 +38,5 @@ public:
 		}
 		return result;
 	}
+
 };
