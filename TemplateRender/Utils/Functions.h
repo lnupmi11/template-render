@@ -3,6 +3,7 @@
 #include <list>
 #include "Constants.h"
 #include "Models.h"
+#include "../DTO/Context.h"
 
 
 class HelperFunctions
@@ -21,9 +22,9 @@ public:
 
 	static void findAllBlocks(std::list<block>& blocks, const std::string& code);
 
-	static std::string runCode(const std::string& code);
+	static std::string runCode(const std::string& code, ContextBase* context);
 
-	static std::string parse(const std::string& code);
+	static std::string parse(const std::string& code, ContextBase* context);
 
 	static std::string readTemplate(const std::string& templateName);
 
@@ -31,7 +32,7 @@ public:
 
 	static std::string forLoop(const std::string& loopBody, const forLoopParams& parameters);
 
-	static std::string ifStatement(const std::string& body, const ifParams& parameters);
+	static std::string ifStatement(const std::string& body, const ifParams& parameters, ContextBase* context);
 
 	static void findTag(const std::string& str, blockParams& params);
 

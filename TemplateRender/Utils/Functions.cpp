@@ -7,6 +7,8 @@
 #include "../Render/Parser.h"
 #include "RenderError.h"
 
+#include "../DTO/Context.h"
+
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoopParams& parameters)
 {
 	std::regex forRegex(CONSTANT::FOR_REGEX);
@@ -134,7 +136,7 @@ int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
 	return result;
 }
 
-std::string HelperFunctions::runCode(const std::string& code)
+std::string HelperFunctions::runCode(const std::string& code, ContextBase* context)
 {
 	forLoopParams forParameters;
 	ifParams ifParameters;
@@ -147,7 +149,7 @@ std::string HelperFunctions::runCode(const std::string& code)
 		break;
 	case 2:
 		body = HelperFunctions::retrieveBodyIf(code, ifParameters);
-		result = HelperFunctions::ifStatement(body, ifParameters);
+		result = HelperFunctions::ifStatement(body, ifParameters, context);
 		break;
 	case 3:
 		result = "";
@@ -158,7 +160,7 @@ std::string HelperFunctions::runCode(const std::string& code)
 	return result;
 }
 
-std::string HelperFunctions::parse(const std::string& code)
+std::string HelperFunctions::parse(const std::string& code, ContextBase* context)
 {
 	std::string result("");
 	std::list<block> blocks;
@@ -171,7 +173,7 @@ std::string HelperFunctions::parse(const std::string& code)
 			return result;
 		}
 		result += (*block).before;
-		result += HelperFunctions::parse(HelperFunctions::runCode((*block).code));
+		result += HelperFunctions::parse(HelperFunctions::runCode((*block).code, context), context);
 		result += (*block).after;
 	}
 	return result;
@@ -241,7 +243,7 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopP
 	return result;
 }
 
-std::string HelperFunctions::ifStatement(const std::string& body, const ifParams& parameters)
+std::string HelperFunctions::ifStatement(const std::string& body, const ifParams& parameters, ContextBase* context)
 {
 	std::string result("");
 	bool check = false;

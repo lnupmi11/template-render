@@ -18,7 +18,7 @@ void TEST_CASE()
 	clock_t start, finish;
 	start = clock();
 
-	TemplateRender::render<std::string>("index.html", "completed.html", new Context<std::string>(keys, values));
+	TemplateRender::render("index.html", "completed.html", new Context<std::string>(keys, values));
 
 	finish = clock();
 	float difference((float)finish - (float)start);

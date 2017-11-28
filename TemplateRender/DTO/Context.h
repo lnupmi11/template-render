@@ -3,8 +3,14 @@
 #include <map>
 #include <vector>
 
+class ContextBase
+{
+public:
+	virtual std::string getByKey(const std::string key) = 0;
+};
+
 template <class dataType>
-class Context
+class Context : public ContextBase
 {
 private:
 	std::map<std::string, dataType> list;

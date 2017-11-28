@@ -10,8 +10,7 @@
 class TemplateRender
 {
 public:
-	template <typename dataType = size_t>
-	static void render(const std::string& templatePath, const std::string& htmlPath, Context<dataType>* data = nullptr)
+	static void render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data = nullptr)
 	{
 		try
 		{
@@ -20,7 +19,7 @@ public:
 			{
 				templateHTML = TemplateRender::parseVariables(templateHTML, data);
 			}
-			std::string completedHTML = HelperFunctions::parse(templateHTML);
+			std::string completedHTML = HelperFunctions::parse(templateHTML, data);
 			HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 			std::cout << "\nCompleted!";
 		}
@@ -38,8 +37,7 @@ public:
 		}
 	}
 
-	template <typename dataType>
-	static std::string parseVariables(const std::string& code, Context<dataType>* data)
+	static std::string parseVariables(const std::string& code, ContextBase* data)
 	{
 		std::string result("");
 		if (code.find("{{") == std::string::npos)
