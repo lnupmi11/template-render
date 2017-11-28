@@ -244,8 +244,19 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopP
 std::string HelperFunctions::ifStatement(const std::string& body, const ifParams& parameters)
 {
 	std::string result("");
+	bool check = false;
+	switch (parameters.type)
+	{
+	case 1: check = (parameters.firstVar < parameters.secondVar); break;
+	case 2: check = (parameters.firstVar > parameters.secondVar); break;
+	case 3: check = (parameters.firstVar <= parameters.secondVar); break;
+	case 4: check = (parameters.firstVar >= parameters.secondVar); break;
+	case 5: check = (parameters.firstVar == parameters.secondVar); break;
+	case 6: check = (parameters.firstVar != parameters.secondVar); break;
+	//case 7: check = (parameters.firstVar); break;
+	default: break;
+	}
 	
-	// TODO: process if statement according to parameters.
 
 	return result;
 }
