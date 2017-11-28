@@ -5,6 +5,8 @@
 </HEAD>
 <BODY>
 
+    <h2>Authors: {{ first_author }} and {{ second_author }}</h2>
+
     <ol>
         {% for (int i = 0; i < 3; i++) %}
              <li>First
@@ -38,7 +40,7 @@
                         <li>third`
                             <ol>
                                 {% for (int i = 0; i < 1; i++) %}
-                                    <li>third``</li>
+                                    <li>[{{ third_variable }}]</li>
                                 {% endfor %}
                             </ol>
                         </li>

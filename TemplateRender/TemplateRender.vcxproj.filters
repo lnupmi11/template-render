@@ -33,12 +33,6 @@
     <ClCompile Include="Utils\Functions.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="DTO\DataObject.cpp">
-      <Filter>DTO</Filter>
-    </ClCompile>
-    <ClCompile Include="DTO\DataManager.cpp">
-      <Filter>DTO</Filter>
-    </ClCompile>
     <ClCompile Include="Render\TemplateRender.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -58,12 +52,6 @@
     </ClInclude>
     <ClInclude Include="Tests\Tests.h">
       <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="DTO\DataObject.h">
-      <Filter>DTO</Filter>
-    </ClInclude>
-    <ClInclude Include="DTO\DataManager.h">
-      <Filter>DTO</Filter>
     </ClInclude>
     <ClInclude Include="Render\TemplateRender.h">
       <Filter>Render</Filter>

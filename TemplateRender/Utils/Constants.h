@@ -7,6 +7,8 @@ namespace CONSTANT
 	//const std::string FOREACH_REGEX = "\\s*for\\s*\\(\\s*auto\\s*[a-z]{1,}\\s*\\:\\s*[a-z]{1,}\\s*\\)";
 	const std::string IF_REGEX("\\s*if\\s*\\(\\s*[a-z]{1,}\\s*< |\\s*> \\s*[a-z]{1,}\\s*\\)");
 
+	const std::string VAR_REGEX("\\{\\{\\s*\\w*\\s*\\}\\}");
+
 	const std::string BEGIN_FOR_REGEX("\\{\\s*%" + FOR_REGEX + "\\s*%\\s*\\}");
 	const std::string BEGIN_COMMENT_REGEX("\\{\\s*%\\s*comment\\s*\".*\"\\s*%\\s*\\}");
 

@@ -114,8 +114,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
-    <ClCompile Include="DTO\DataObject.cpp" />
-    <ClCompile Include="DTO\DataManager.cpp" />
     <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
@@ -124,8 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DTO\Context.h" />
-    <ClInclude Include="DTO\DataObject.h" />
-    <ClInclude Include="DTO\DataManager.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Utils\Constants.h" />
     <ClInclude Include="Render\Parser.h" />

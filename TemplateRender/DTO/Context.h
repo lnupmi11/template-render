@@ -25,13 +25,11 @@ public:
 	}
 	std::string getByKey(const std::string key)
 	{
+		std::string result("");
 		if (this->list.find(key) != this->list.end())
 		{
-			return std::to_string(this->list[key]);
+			result = this->list[key];
 		}
-		else
-		{
-			throw RenderError("Context::getByKey(): invalid key.", __FILE__, __LINE__);
-		}
+		return result;
 	}
 };

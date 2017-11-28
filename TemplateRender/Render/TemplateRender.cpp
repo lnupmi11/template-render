@@ -1,15 +1,17 @@
 #pragma once
+/*
 #include "TemplateRender.h"
 #include "../Utils/Functions.h"
 #include <iostream>
 #include "../Utils/RenderError.h"
 
-void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath)
+template <typename dataType>
+void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, Context<dataType>* data)
 {
 	try
 	{
 		std::string templateHTML = HelperFunctions::readTemplate(CONSTANT::TEMPLATE_DIR + templatePath);
-		std::string completedHTML = HelperFunctions::parse(templateHTML);
+		std::string completedHTML = HelperFunctions::parse<dataType>(templateHTML, data);
 		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}
@@ -25,4 +27,4 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 	{
 		std::cerr << "\nException occurred: unknown.";
 	}
-}
+}*/
