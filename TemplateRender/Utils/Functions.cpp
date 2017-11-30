@@ -1,5 +1,4 @@
 #include <fstream>
-#include <regex>
 #include <algorithm>
 #include <stack>
 #include "Functions.h"
@@ -76,19 +75,61 @@ size_t HelperFunctions::codeType(const std::string& code)
 
 std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& parameters)
 {
-	std::smatch conditionData;
-	std::regex_search(code, conditionData, std::regex(CONSTANT::IF_REGEX));
-	std::string ifCondition = conditionData.str();
-	parameters.type = HelperFunctions::getTypeOfIFCondition(ifCondition);
-	if (parameters.type != 0)
+	std::smatch data;
+	std::regex_search(code, data, std::regex(CONSTANT::IF_REGEX));
+	std::string condition = data.str();
+	parameters.type = HelperFunctions::getTypeOfIFCondition(condition);
+	if (parameters.type < CONSTANT::MAX_IF_TYPE)
 	{
-		size_t offset = ifCondition.find("(") + 1;
-		parameters.firstVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(" ", offset));
-		offset = ifCondition.find(" ", ifCondition.find(" ", ifCondition.find("(") + 1)) + 1;
-		parameters.secondVar = std::string(ifCondition.begin() + offset, ifCondition.begin() + ifCondition.find(")"));
-		parameters.secondVar=std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>|=|!"), "");
+		size_t offset = condition.find("(") + 1;
+		parameters.firstVar = std::string(condition.begin() + offset, condition.begin() + condition.find(" ", offset));
+		offset = condition.find(" ", condition.find(" ", condition.find("(") + 1)) + 1;
+		parameters.secondVar = std::string(condition.begin() + offset, condition.begin() + condition.find(")"));
+		parameters.secondVar = std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>|=|!"), "");
 	}
-	return std::string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
+	else
+	{
+		parameters.firstVar = std::string(condition.begin() + condition.find("(") + 1, condition.begin() + condition.find(")"));
+		parameters.firstVar = std::regex_replace(parameters.firstVar, std::regex("\\W+"), "");
+	}
+	size_t elsePos = code.rfind("{%");
+	if (std::regex_search(code, data, std::regex(CONSTANT::ELSE_REGEX)))
+	{
+		std::stack<std::pair<size_t, size_t>> elsePositions;
+		std::stack<size_t> ifPositions;
+		blockParams params(0, 0, false, false, CONSTANT::BEGIN_IF_REGEX, CONSTANT::ELSE_REGEX);
+		do
+		{
+			HelperFunctions::findTag(code, params);
+			if (params.first)
+			{
+				ifPositions.push(params.foundPos);
+			}
+			else if (params.second)
+			{
+				elsePositions.push(std::pair<size_t, size_t>(params.foundPos, params.offset));
+			}
+			if (ifPositions.size() < elsePositions.size())
+			{
+				throw RenderError("HelperFunctions::retrieveBodyIf(): invalid template.", __FILE__, __LINE__);
+			}
+			if (ifPositions.size() == elsePositions.size())
+			{
+				elsePos = elsePositions.top().first;
+				parameters.elseString = std::string(code.begin() + elsePos + elsePositions.top().second, code.begin() + code.rfind("{%"));
+				while (!ifPositions.empty())
+				{
+					ifPositions.pop();
+				}
+			}
+			else if (params.foundPos == std::string::npos)
+			{
+				break;
+			}
+		} while (ifPositions.size() != 0);
+	}
+
+	return std::string(code.begin() + code.find("%}") + 2, code.begin() + elsePos);
 }
 
 int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
@@ -120,7 +161,7 @@ int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
 	}
 	else
 	{
-		result = 0;
+		result = 7;
 	}
 	return result;
 }
@@ -240,15 +281,19 @@ std::string HelperFunctions::ifStatement(const std::string& body, const ifParams
 	{
 		try
 		{
-			check = HelperFunctions::condition<double>(stod(parameters.firstVar), stod(parameters.secondVar), parameters);
+			check = HelperFunctions::condition<double>(stod(parameters.firstVar), stod(parameters.secondVar), parameters, context);
 		}
 		catch (...)
 		{
-			check = HelperFunctions::condition<std::string>(context->getByKey(parameters.firstVar), context->getByKey(parameters.secondVar), parameters);
+			check = HelperFunctions::condition<std::string>(context->getByKey(parameters.firstVar), context->getByKey(parameters.secondVar), parameters, context);
 		}
 		if (check)
 		{
 			result += body;
+		}
+		else
+		{
+			result += parameters.elseString;
 		}
 	}
 	return result;
@@ -274,15 +319,15 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 		std::stack<size_t> endPositions;
 		size_t begin = 0;
 		size_t end = code.size();
-		blockParams blockParameters(foundPos, 0, false, false);
+		blockParams blockParameters(foundPos, 0, false, false, CONSTANT::BEGIN_TAG_REGEX, CONSTANT::END_TAG_REGEX);
 		do
 		{
 			HelperFunctions::findTag(code, blockParameters);
-			if (blockParameters.begin)
+			if (blockParameters.first)
 			{
 				beginPositions.push(blockParameters.foundPos);
 			}
-			else if (blockParameters.end)
+			else if (blockParameters.second)
 			{
 				endPositions.push(blockParameters.foundPos + blockParameters.offset);
 			}
@@ -327,19 +372,19 @@ void HelperFunctions::findAllBlocks(std::list<block>& blocks, const std::string&
 
 void HelperFunctions::findTag(const std::string& str, blockParams& params)
 {
-	std::regex expression("(" + CONSTANT::BEGIN_TAG_REGEX + ")|(" + CONSTANT::END_TAG_REGEX + ")");
+	std::regex expression("(" + params.regexFirst + ")|(" + params.regexSecond + ")");
 	std::sregex_iterator result(str.begin() + params.foundPos + params.offset, str.end(), expression);
 	if (result != std::sregex_iterator())
 	{
-		if (Parser::regexCheck(result->str(), CONSTANT::BEGIN_TAG_REGEX))
+		if (Parser::regexCheck(result->str(), params.regexFirst))
 		{
-			params.begin = true;
-			params.end = false;
+			params.first = true;
+			params.second = false;
 		}
-		else if (Parser::regexCheck(result->str(), CONSTANT::END_TAG_REGEX))
+		else if (Parser::regexCheck(result->str(), params.regexSecond))
 		{
-			params.begin = false;
-			params.end = true;
+			params.first = false;
+			params.second = true;
 		}
 		else
 		{

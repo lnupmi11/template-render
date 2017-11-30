@@ -15,10 +15,12 @@ struct blockParams
 {
 	size_t foundPos;
 	size_t offset;
-	bool begin;
-	bool end;
+	bool first;
+	bool second;
+	std::string regexFirst;
+	std::string regexSecond;
 
-	blockParams(size_t foundPos, size_t offset, bool begin, bool end);
+	blockParams(size_t foundPos, size_t offset, bool first, bool second, std::string regexFirst, std::string regexSecond);
 };
 
 struct forLoopParams
@@ -35,6 +37,7 @@ struct ifParams
 	int type;
 	std::string firstVar;
 	std::string secondVar;
+	std::string elseString;
 
 	ifParams();
 };

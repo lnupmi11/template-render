@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <list>
+#include <regex>
 #include "Parameters.h"
 #include "../DTO/Context.h"
 
@@ -62,7 +63,7 @@ public:
 	static void findTag(const std::string& str, blockParams& params);
 
 	template<typename dataType>
-	static bool condition(const dataType& left, const dataType& right, const ifParams& parameters)
+	static bool condition(const dataType& left, const dataType& right, const ifParams& parameters, ContextBase* context)
 	{
 		bool result = false;
 		switch (parameters.type)
@@ -84,6 +85,12 @@ public:
 			break;
 		case 6:
 			result = (left != right);
+			break;
+		case 7:
+			if (std::regex_replace(context->getByKey(parameters.firstVar), std::regex("\\s+"), "") != "")
+			{
+				result = true;
+			}
 			break;
 		default:
 			throw RenderError("HelperFunctions::condition(): incorrect condition.", __FILE__, __LINE__);

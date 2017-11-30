@@ -5,14 +5,24 @@
     <style>
         .title {
             text-align: center;
-            color: green;
+            color: darkorange;
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    {% if (first_author != second_author) %}
-        <h2 class="title">{{ first_author }} and {{ second_author }} Present</h2>
+    {% if (first_author) %}
+        {% if (second_author) %}
+            <h2 class="title">{{ first_author }} and {{ second_author }} Present</h2>
+        {% else %}
+            <h2 class="title">{{ first_author }} Presents</h2>
+        {% endif %}
+    {% else %}
+        {% if (second_author) %}
+            <h2 class="title">{{ second_author }} Presents</h2>
+        {% else %}
+            <h3 style="text-align:center;">undefined</h3>
+        {% endif %}
     {% endif %}
     <ol>
         {% for (int i = 0; i < 3; i++) %}
@@ -35,8 +45,8 @@
             </li>
         {% endfor %}
     </ol>
-    <hr>
     {% comment "Comment explanation" %}
+        <hr>
         <h1>Some content to comment on</h1>
     {% endcomment %}
     <hr>
@@ -58,11 +68,13 @@
         {% endfor %}
     </ol>
     <hr>
-    {% if (4 > 3) %}
-        <h4>4 is greater than 3</h4>
+    {% if (3 > 4) %}
+        <h4>3 is greater than 4</h4>
+    {% else %}
+        <h4>3 is not greater than 4</h4>
     {% endif %}
     {% if (4 >= 3) %}
-        <h4>4 is greater and equal to 3</h4>
+        <h4>4 is greater than and equal to 3</h4>
     {% endif %}
     {% if (4 != 3) %}
         <h4>4 is not equal to 3</h4>
@@ -71,7 +83,7 @@
         <h4>3 is lesser than 4</h4>
     {% endif %}
     {% if (3 <= 4) %}
-        <h4>3 is lesser and equal to 4</h4>
+        <h4>3 is lesser than and equal to 4</h4>
     {% endif %}
     {% if (4 == 4) %}
         <h4>4 is equal to 4</h4>

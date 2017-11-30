@@ -12,7 +12,7 @@ bool Parser::regexCheck(const std::string& str, const std::string& regexStr)
 std::string Parser::parseVariables(const std::string& code, ContextBase* data)
 {
 	std::string result("");
-	if (code.find("{{") == std::string::npos)
+	if (!std::regex_search(code, std::smatch(), std::regex("\\{\\s*\\{")))
 	{
 		result = code;
 	}
