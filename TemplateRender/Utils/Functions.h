@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <list>
 #include <regex>
 #include "Parameters.h"
@@ -62,6 +61,8 @@ public:
 	// Looks for beginning or ending tag and writes it to block parameters.
 	static void findTag(const std::string& str, blockParams& params);
 
+	// Info:
+	// Checks the condition and returns its result.
 	template<typename dataType>
 	static bool condition(const dataType& left, const dataType& right, const ifParams& parameters, ContextBase* context)
 	{
@@ -97,5 +98,9 @@ public:
 		}
 		return result;
 	}
+
+	// Info:
+	// Finds substring position using regular expression.
+	static size_t findSubstringPosition(const std::string& str, const std::string& regex, bool reverse = false);
 
 };

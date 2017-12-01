@@ -7,9 +7,9 @@
 
 std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoopParams& parameters)
 {
-	std::smatch loopData;
-	std::regex_search(code, loopData, std::regex(CONSTANT::FOR_REGEX));
-	std::string loopCondition = loopData.str();
+	std::smatch data;
+	std::regex_search(code, data, std::regex(CONSTANT::FOR_REGEX));
+	std::string loopCondition = data.str();
 	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
@@ -44,13 +44,32 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoo
 	{
 		throw  RenderError("HelperFunctions::retrieveBodyForLoop(): incorrect loop condition.", __FILE__, __LINE__);
 	}
-	return std::string(code.begin() + code.find("%}") + 2, code.begin() + code.rfind("{%"));
+	size_t beginPos = 0, endPos = 0;
+	try
+	{
+		beginPos = HelperFunctions::findSubstringPosition(code, "%\\s*\\}");
+		endPos = HelperFunctions::findSubstringPosition(std::string(code.rbegin(), code.rend()), "%\\s*\\{", true);
+	}
+	catch (const std::exception&)
+	{
+		throw RenderError("HelperFunctions::retrieveBodyForLoop(): invalid template syntax.", __FILE__, __LINE__);
+	}
+	return std::string(code.begin() + beginPos, code.begin() + endPos);
 }
 
 size_t HelperFunctions::codeType(const std::string& code)
 {
 	int result;
-	std::string statement(code.begin(), code.begin() + code.find("%}") + 2);
+	size_t endPos = 0;
+	try
+	{
+		endPos = HelperFunctions::findSubstringPosition(code, "%\\s*\\}");
+	}
+	catch (const std::exception&)
+	{
+		throw RenderError("HelperFunctions::codeType(): invalid template syntax.", __FILE__, __LINE__);
+	}
+	std::string statement(code.begin(), code.begin() + endPos);
 	bool checkFor = Parser::regexCheck(statement, CONSTANT::FOR_REGEX);
 	bool checkIf = Parser::regexCheck(statement, CONSTANT::IF_REGEX);
 	bool checkComment = Parser::regexCheck(statement, CONSTANT::BEGIN_COMMENT_REGEX);
@@ -92,7 +111,15 @@ std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& p
 		parameters.firstVar = std::string(condition.begin() + condition.find("(") + 1, condition.begin() + condition.find(")"));
 		parameters.firstVar = std::regex_replace(parameters.firstVar, std::regex("\\W+"), "");
 	}
-	size_t elsePos = code.rfind("{%");
+	size_t elsePos = 0;
+	try
+	{
+		elsePos = HelperFunctions::findSubstringPosition(std::string(code.rbegin(), code.rend()), "%\\s*\\{", true);
+	}
+	catch (const std::exception&)
+	{
+		throw RenderError("HelperFunctions::retrieveBodyIf(): invalid template syntax.", __FILE__, __LINE__);
+	}
 	if (std::regex_search(code, data, std::regex(CONSTANT::ELSE_REGEX)))
 	{
 		std::stack<std::pair<size_t, size_t>> elsePositions;
@@ -111,7 +138,7 @@ std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& p
 			}
 			if (ifPositions.size() < elsePositions.size())
 			{
-				throw RenderError("HelperFunctions::retrieveBodyIf(): invalid template.", __FILE__, __LINE__);
+				throw RenderError("HelperFunctions::retrieveBodyIf(): invalid template syntax.", __FILE__, __LINE__);
 			}
 			if (ifPositions.size() == elsePositions.size())
 			{
@@ -128,8 +155,16 @@ std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& p
 			}
 		} while (ifPositions.size() != 0);
 	}
-
-	return std::string(code.begin() + code.find("%}") + 2, code.begin() + elsePos);
+	size_t beginPos = 0;
+	try
+	{
+		beginPos = HelperFunctions::findSubstringPosition(code, "%\\s*\\}");
+	}
+	catch (const std::exception&)
+	{
+		throw RenderError("HelperFunctions::retrieveBodyIf(): invalid template syntax.", __FILE__, __LINE__);
+	}
+	return std::string(code.begin() + beginPos, code.begin() + elsePos);
 }
 
 int HelperFunctions::getTypeOfIFCondition(const std::string& condition)
@@ -333,7 +368,7 @@ block HelperFunctions::findBlock(size_t& pos, const std::string& code)
 			}
 			if (beginPositions.size() < endPositions.size())
 			{
-				throw RenderError("HelperFunctions::findBlock(): invalid template.", __FILE__, __LINE__);
+				throw RenderError("HelperFunctions::findBlock(): invalid template syntax.", __FILE__, __LINE__);
 			}
 			if (beginPositions.size() == endPositions.size())
 			{
@@ -393,4 +428,26 @@ void HelperFunctions::findTag(const std::string& str, blockParams& params)
 		params.foundPos += result->position(0) + params.offset;
 		params.offset = result->str().size();
 	}
+}
+
+size_t HelperFunctions::findSubstringPosition(const std::string& str, const std::string& regex, bool reverse)
+{
+	size_t result = 0;
+	std::smatch data;
+	if (std::regex_search(str, data, std::regex(regex)))
+	{
+		if (reverse)
+		{
+			result = std::abs((int)(data.position() - str.size())) - data.str().size();
+		}
+		else
+		{
+			result = data.position() + data.str().size();
+		}
+	}
+	else
+	{
+		throw std::exception();
+	}
+	return result;
 }

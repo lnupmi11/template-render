@@ -114,7 +114,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppStart.cpp" />
+    <ClCompile Include="DTO\Context.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
+    <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Utils\Functions.cpp" />
     <ClCompile Include="Utils\Parameters.cpp" />
     <ClCompile Include="Utils\RenderError.cpp" />

@@ -42,6 +42,12 @@
     <ClCompile Include="Utils\Parameters.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="DTO\Context.cpp">
+      <Filter>DTO</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TemplateRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Functions.h">

@@ -1,5 +1,6 @@
 #include "../Render/TemplateRender.h"
 #include <time.h>
+#include <iostream>
 
 void TEST_CASE()
 {

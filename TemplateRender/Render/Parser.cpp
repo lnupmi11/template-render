@@ -6,7 +6,7 @@
 
 bool Parser::regexCheck(const std::string& str, const std::string& regexStr)
 {
-	return regex_search(str.begin(), str.end(), std::regex(regexStr));
+	return std::regex_search(str.begin(), str.end(), std::regex(regexStr));
 }
 
 std::string Parser::parseVariables(const std::string& code, ContextBase* data)
@@ -28,7 +28,14 @@ std::string Parser::parseVariables(const std::string& code, ContextBase* data)
 				result += code[i];
 			}
 			pos = it->position() + it->str().size();
-			result += data->getByKey(std::regex_replace(it->str(), std::regex("\\s+|\\{|\\}"), ""));
+			if (data)
+			{
+				result += data->getByKey(std::regex_replace(it->str(), std::regex("\\s+|\\{|\\}"), ""));
+			}
+			else
+			{
+				result += "";
+			}
 		}
 		for (size_t i = pos; i < code.size(); i++)
 		{
