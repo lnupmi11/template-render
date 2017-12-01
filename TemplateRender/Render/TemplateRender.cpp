@@ -7,8 +7,8 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 	try
 	{
 		std::string templateHTML = HelperFunctions::readTemplate(CONSTANT::TEMPLATE_DIR + templatePath);
-		templateHTML = Parser::parseVariables(templateHTML, data);
 		std::string completedHTML = HelperFunctions::parse(templateHTML, data);
+		completedHTML = Parser::parseVariables(completedHTML, data);
 		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}

@@ -12,13 +12,13 @@ bool Parser::regexCheck(const std::string& str, const std::string& regexStr)
 std::string Parser::parseVariables(const std::string& code, ContextBase* data)
 {
 	std::string result("");
-	if (!std::regex_search(code, std::smatch(), std::regex("\\{\\s*\\{")))
+	std::regex expression(CONSTANT::VAR_REGEX);
+	if (!std::regex_search(code, std::smatch(), expression))
 	{
 		result = code;
 	}
 	else
 	{
-		std::regex expression(CONSTANT::VAR_REGEX);
 		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
 		size_t pos = 0;
 		for (auto it = begin; it != end; it++)
@@ -30,7 +30,7 @@ std::string Parser::parseVariables(const std::string& code, ContextBase* data)
 			pos = it->position() + it->str().size();
 			if (data)
 			{
-				result += data->getByKey(std::regex_replace(it->str(), std::regex("\\s+|\\{|\\}"), ""));
+				result += data->getByKey(std::regex_replace(it->str(), std::regex("\\W+"), ""));
 			}
 			else
 			{

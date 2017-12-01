@@ -28,6 +28,7 @@ struct forLoopParams
 	int numberOfIteration;
 	bool increment;
 	bool fewer;
+	std::string iteratorName;
 
 	forLoopParams();
 };

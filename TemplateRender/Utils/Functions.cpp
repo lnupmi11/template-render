@@ -10,6 +10,8 @@ std::string HelperFunctions::retrieveBodyForLoop(const std::string& code, forLoo
 	std::smatch data;
 	std::regex_search(code, data, std::regex(CONSTANT::FOR_REGEX));
 	std::string loopCondition = data.str();
+	std::regex_search(code, data, std::regex("\\w+(\\+\\+|\\-\\-)"));
+	parameters.iteratorName = std::regex_replace(data.str(), std::regex("\\W+"), "");
 	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
 	if (loopCondition.find('<') != std::string::npos)
@@ -104,7 +106,7 @@ std::string HelperFunctions::retrieveBodyIf(const std::string& code, ifParams& p
 		parameters.firstVar = std::string(condition.begin() + offset, condition.begin() + condition.find(" ", offset));
 		offset = condition.find(" ", condition.find(" ", condition.find("(") + 1)) + 1;
 		parameters.secondVar = std::string(condition.begin() + offset, condition.begin() + condition.find(")"));
-		parameters.secondVar = std::regex_replace(parameters.secondVar, std::regex("\\s+|<|>|=|!"), "");
+		parameters.secondVar = std::regex_replace(parameters.secondVar, std::regex("\\W+"), "");
 	}
 	else
 	{
@@ -283,7 +285,7 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopP
 		{
 			for (int i = 0; i < parameters.numberOfIteration; i++)
 			{
-				result += loopBody;
+				result += std::regex_replace(loopBody, std::regex("\\{\\{\\s*" + parameters.iteratorName + "\\s*\\}\\}"), std::to_string(i));
 			}
 		}
 		else
@@ -297,7 +299,7 @@ std::string HelperFunctions::forLoop(const std::string& loopBody, const forLoopP
 		{
 			for (int i = parameters.numberOfIteration; i > 0; i--)
 			{
-				result += loopBody;
+				result += std::regex_replace(loopBody, std::regex("\\{\\{\\s*" + parameters.iteratorName + "\\s*\\}\\}"), std::to_string(i));
 			}
 		}
 		else
@@ -408,15 +410,15 @@ void HelperFunctions::findAllBlocks(std::list<block>& blocks, const std::string&
 void HelperFunctions::findTag(const std::string& str, blockParams& params)
 {
 	std::regex expression("(" + params.regexFirst + ")|(" + params.regexSecond + ")");
-	std::sregex_iterator result(str.begin() + params.foundPos + params.offset, str.end(), expression);
-	if (result != std::sregex_iterator())
+	std::smatch data;
+	if (std::regex_search(str.begin() + params.foundPos + params.offset, str.end(), data, expression))
 	{
-		if (Parser::regexCheck(result->str(), params.regexFirst))
+		if (Parser::regexCheck(data.str(), params.regexFirst))
 		{
 			params.first = true;
 			params.second = false;
 		}
-		else if (Parser::regexCheck(result->str(), params.regexSecond))
+		else if (Parser::regexCheck(data.str(), params.regexSecond))
 		{
 			params.first = false;
 			params.second = true;
@@ -425,8 +427,8 @@ void HelperFunctions::findTag(const std::string& str, blockParams& params)
 		{
 			throw RenderError("HelperFunctions::findTag(): incorrect tag.", __FILE__, __LINE__);
 		}
-		params.foundPos += result->position(0) + params.offset;
-		params.offset = result->str().size();
+		params.foundPos += data.position() + params.offset;
+		params.offset = data.str().size();
 	}
 }
 
