@@ -2,39 +2,35 @@
 #include "../Utils/RenderError.h"
 #include <map>
 #include <vector>
+#include <sstream>
 
 class ContextBase
 {
 public:
-	virtual std::string getByKey(const std::string key) = 0;
+	virtual std::string getByKey(const std::string& key) = 0;
 };
 
-template <class dataType>
+template <class dataType = std::string>
 class Context : public ContextBase
 {
 private:
 	std::map<std::string, dataType> list;
 public:
-	Context(const std::vector<std::string>& keys, const std::vector<dataType>& values)
+	Context(const std::vector<std::pair<std::string, dataType>>& data)
 	{
-		if (keys.size() == values.size())
+		for (size_t i = 0; i < data.size(); i++)
 		{
-			for (size_t i = 0; i < keys.size(); i++)
-			{
-				this->list[keys[i]] = values[i];
-			}
-		}
-		else
-		{
-			throw RenderError("Context::Context(): invalid context data.", __FILE__, __LINE__);
+			this->list[data[i].first] = data[i].second;
 		}
 	}
-	std::string getByKey(const std::string key)
+	std::string getByKey(const std::string& key)
 	{
 		std::string result("");
 		if (this->list.find(key) != this->list.end())
 		{
-			result = this->list[key];
+			std::ostringstream stream;
+			stream << this->list[key];
+			result = stream.str();
 		}
 		return result;
 	}

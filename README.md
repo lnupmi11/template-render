@@ -15,13 +15,14 @@ the project in Microsoft Visual Studio.
 1. Comment on `TEST_CASE()` line in `AppStart.cpp`.
 2. Specify the path `TEMPLATE_DIR` for template search and `ENDPOINT_DIR` for rendered HTML document in `Constants.h` file.
 (Default: `TEMPLATE_DIR = "Tests/"`, `ENDPOINT_DIR = "Tests/"` )
-3. In `AppStart.cpp` create context object using vectors of keys and values (or do not create if you do not want to use it).
+3. Create context object using vector of pairs of keys and values (or do not create if you do not use it).
+    > \* For custom classes and structures it is necessary to overload `std::ostringstream` operator.
 4. Design your template.
-5. Call `TemplateRender::render()` function and pass parameters:
+5. In `AppStart.cpp` call `TemplateRender::render()` function and pass arguments:
 the first is template name, the second is rendered HTML document name, the third is your context
-(if you do not use context ignore this parameter, default is `nullptr`).
+(if you do not use context ignore this argument, default is `nullptr`).
 6. Build and run the project using Microsoft Visual Studio tools.
-7. Find rendered HTML document in the directory that you specified.
+7. Find rendered HTML document in the directory that you specified.  
 
 ### Authors
 
