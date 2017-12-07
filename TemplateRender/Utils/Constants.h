@@ -13,6 +13,7 @@ namespace CONSTANT
 	const std::string BEGIN_TAG_REGEX("(" + BEGIN_FOR_REGEX + ")|(" + BEGIN_COMMENT_REGEX + ")|(" + BEGIN_IF_REGEX + ")");
 	const std::string END_TAG_REGEX("\\{\\s*%\\s*end(for|if|comment)\\s*%\\s*\\}");
 	const std::string COMPARISON_SYMBOL_REGEX("\\s*(<|>|==|!=|<=|>=)\\s*");
+	const std::string INCLUDE_TAG_REGEX("\\{\\s*%\\s*#include\\s*\"\\w+\\.(html|htm)\"\\s*%\\s*\\}");
 
 	// Info:
 	// Location of template.

@@ -33,6 +33,7 @@
                         <li>first` - [{{ i }}][{{ j }}]</li>
                     {% endfor %}
                 </ol>
+                 {% #include "snippet.html" %}
                 <hr>
              </li>
             <li>Second
@@ -45,6 +46,7 @@
             </li>
         {% endfor %}
     </ol>
+    {% #include "snippet.html" %}
     {% comment "Comment explanation" %}
         <hr>
         <h1>Some content to comment on</h1>
@@ -88,5 +90,6 @@
     {% if (4 == 4) %}
         <h4>4 is equal to 4</h4>
     {% endif %}
+    {% #include "snippet.html" %}
 </body>
 </html>

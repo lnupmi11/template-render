@@ -12,7 +12,9 @@ void TEST_CASE()
 		{ "first_author", "Yuriy Lisovskiy" },
 		{ "second_author", "Yuriy Vasko" },
 		{ "third_variable", "third``" },
-		{ "title", "Index Page" }
+		{ "title", "Index Page" },
+		{ "text_in_snippet_", "Some text for testing '#include' tag." },
+		{ "text_in_snippet_2", "Second text for testing '#include' tag." }
 	};
 	
 	TemplateRender::render("index.html", "completed.html", new Context<std::string>(context));

@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests\index.html" />
+    <None Include="Tests\snippet.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

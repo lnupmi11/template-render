@@ -2,6 +2,7 @@
 #include "../Utils/Constants.h"
 #include "../Utils/LoopStatement.h"
 #include "../Utils/IfStatement.h"
+#include "../Utils/HTML.h"
 #include <regex>
 #include <algorithm>
 #include <stack>
@@ -240,5 +241,38 @@ std::string Parser::executeCode(const std::string& code, ContextBase* context)
 	default:
 		throw RenderError("Parser::executeCode(): incorrect type of code.", __FILE__, __LINE__);
 	}
+	return result;
+}
+
+std::string Parser::parseInline(const std::string& code)
+{
+	std::string result("");
+	std::regex expression(CONSTANT::INCLUDE_TAG_REGEX);
+	if (!std::regex_search(code, std::smatch(), expression))
+	{
+		result = code;
+	}
+	else
+	{
+		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
+		size_t pos = 0;
+		for (auto it = begin; it != end; it++)
+		{
+			for (size_t i = pos; i < (size_t)it->position(); i++)
+			{
+				result += code[i];
+			}
+			pos = it->position() + it->str().size();
+			std::string inlineTag(it->str());
+			size_t startOffset = inlineTag.find("\"") + 1;
+			size_t endOffset = inlineTag.find("\"", startOffset);
+			result += HTML::read(CONSTANT::TEMPLATE_DIR + std::string(inlineTag.begin() + startOffset, inlineTag.begin() + endOffset));
+		}
+		for (size_t i = pos; i < code.size(); i++)
+		{
+			result += code[i];
+		}
+	}
+
 	return result;
 }

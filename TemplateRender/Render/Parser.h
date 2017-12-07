@@ -42,5 +42,9 @@ public:
 	// Info:
 	// According to code type executes body of specific statement.
 	static std::string executeCode(const std::string& code, ContextBase* context);
+
+	// Info:
+	// Parses inline code.
+	static std::string parseInline(const std::string& code);
 };
 

@@ -91,5 +91,8 @@
     <None Include="Tests\index.html">
       <Filter>Tests</Filter>
     </None>
+    <None Include="Tests\snippet.html">
+      <Filter>Tests</Filter>
+    </None>
   </ItemGroup>
 </Project>
