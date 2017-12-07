@@ -33,9 +33,20 @@ struct forLoopParams
 	forLoopParams();
 };
 
+enum conditionType
+{
+	less,
+	greater,
+	equals,
+	notEquals,
+	lessAndEquals,
+	greaterAndEquals,
+	none
+};
+
 struct ifParams
 {
-	int type;
+	conditionType type;
 	std::string firstVar;
 	std::string secondVar;
 	std::string elseString;

@@ -1,6 +1,6 @@
 #pragma once
-#include "../Utils/Functions.h"
 #include "../Utils/Constants.h"
+#include "Parser.h"
 
 class TemplateRender
 {

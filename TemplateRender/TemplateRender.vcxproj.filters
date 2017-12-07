@@ -30,9 +30,6 @@
     <ClCompile Include="AppStart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\Functions.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Render\Parser.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -48,11 +45,17 @@
     <ClCompile Include="Render\TemplateRender.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\LoopStatement.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\IfStatement.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\HTML.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utils\Functions.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Tests\Tests.h">
       <Filter>Tests</Filter>
     </ClInclude>
@@ -72,6 +75,15 @@
       <Filter>DTO</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Parameters.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LoopStatement.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\IfStatement.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\HTML.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

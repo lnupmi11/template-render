@@ -117,7 +117,9 @@
     <ClCompile Include="DTO\Context.cpp" />
     <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Render\TemplateRender.cpp" />
-    <ClCompile Include="Utils\Functions.cpp" />
+    <ClCompile Include="Utils\HTML.cpp" />
+    <ClCompile Include="Utils\IfStatement.cpp" />
+    <ClCompile Include="Utils\LoopStatement.cpp" />
     <ClCompile Include="Utils\Parameters.cpp" />
     <ClCompile Include="Utils\RenderError.cpp" />
   </ItemGroup>
@@ -127,7 +129,9 @@
     <ClInclude Include="Utils\Constants.h" />
     <ClInclude Include="Render\Parser.h" />
     <ClInclude Include="Tests\Tests.h" />
-    <ClInclude Include="Utils\Functions.h" />
+    <ClInclude Include="Utils\HTML.h" />
+    <ClInclude Include="Utils\IfStatement.h" />
+    <ClInclude Include="Utils\LoopStatement.h" />
     <ClInclude Include="Utils\Parameters.h" />
     <ClInclude Include="Utils\RenderError.h" />
   </ItemGroup>

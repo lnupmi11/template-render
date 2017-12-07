@@ -1,15 +1,16 @@
 #include "TemplateRender.h"
 #include "Parser.h"
+#include "../Utils/HTML.h"
 #include <iostream>
 
 void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data)
 {
 	try
 	{
-		std::string templateHTML = HelperFunctions::readTemplate(CONSTANT::TEMPLATE_DIR + templatePath);
-		std::string completedHTML = HelperFunctions::parse(templateHTML, data);
+		std::string templateHTML = HTML::read(CONSTANT::TEMPLATE_DIR + templatePath);
+		std::string completedHTML = Parser::parseTemplate(templateHTML, data);
 		completedHTML = Parser::parseVariables(completedHTML, data);
-		HelperFunctions::createHTML(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
+		HTML::write(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}
 	catch (const RenderError& exc)

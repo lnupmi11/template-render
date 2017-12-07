@@ -9,4 +9,4 @@ blockParams::blockParams(size_t foundPos, size_t offset, bool first, bool second
 
 forLoopParams::forLoopParams() : numberOfIteration(0), increment(false), fewer(false), iteratorName("") {};
 
-ifParams::ifParams() : type(0), firstVar(""), secondVar(""), elseString("") {};
+ifParams::ifParams() : type(conditionType::none), firstVar(""), secondVar(""), elseString("") {};
