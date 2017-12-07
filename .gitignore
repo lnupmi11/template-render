@@ -37,9 +37,9 @@ TemplateRender/.vs/
 
 #Debug
 TemplateRender/Debug/
-TemplateRender/Tests/*.html
-!TemplateRender/Tests/index.html
-!TemplateRender/Tests/snippet.html
+TemplateRender/Tests/Templates/*.html
+!TemplateRender/Tests/Templates/index.html
+!TemplateRender/Tests/Templates/snippet.html
 #Debug/
 TemplateRender/x64/Debug/
 x64/Debug/

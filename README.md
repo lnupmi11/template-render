@@ -14,7 +14,7 @@ the project in Microsoft Visual Studio.
 
 1. Comment on `TEST_CASE()` line in `AppStart.cpp`.
 2. Specify the path `TEMPLATE_DIR` for template search and `ENDPOINT_DIR` for rendered HTML document in `Constants.h` file.
-(Default: `TEMPLATE_DIR = "Tests/"`, `ENDPOINT_DIR = "Tests/"` )
+(Default: `TEMPLATE_DIR = "Tests/Templates/"`, `ENDPOINT_DIR = "Tests/"` )
 3. Create context object using vector of pairs of keys and values (or do not create if you do not use it).
     > \* For custom classes and structures it is necessary to overload `std::ostringstream` operator.
 4. Design your template.
@@ -23,6 +23,24 @@ the first is template name, the second is rendered HTML document name, the third
 (if you do not use context ignore this argument, default is `nullptr`).
 6. Build and run the project using Microsoft Visual Studio tools.
 7. Find rendered HTML document in the directory that you specified.  
+
+### Available syntax
+1. 'For' loop statement tag, example:
+    
+    `{% for (size_t i = 0; i < 5; i++) %} /*loop_body*/ {% endfor %}`
+2. 'If' statement tag, example:
+
+    `{% if (some_var) %} /*condition_body*/ {% else %} /*else_body*/ {% endif %}`
+3. Tag for including another html documents, example:
+
+    `{% #include "some_snippet.html" %}`
+4. Tag for commenting code in templates, example:
+
+    `{% comment "Comment explanation" %} /*Some content to comment on*/ {% endcomment %}`
+    
+5. Variables, example:
+
+    `{{ some_var_added_in_context }}` and `{{ loop_var }}`
 
 ### Authors
 

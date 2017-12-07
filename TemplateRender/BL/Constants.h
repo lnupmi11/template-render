@@ -17,7 +17,7 @@ namespace CONSTANT
 
 	// Info:
 	// Location of template.
-	const std::string TEMPLATE_DIR("Tests/");
+	const std::string TEMPLATE_DIR("Tests/Templates/");
 
 	// Info:
 	// Location of rendered HTML document.
