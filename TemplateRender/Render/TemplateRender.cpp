@@ -1,6 +1,6 @@
 #include "TemplateRender.h"
 #include "Parser.h"
-#include "../Utils/HTML.h"
+#include "../BL/HTML.h"
 #include <iostream>
 
 void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data)

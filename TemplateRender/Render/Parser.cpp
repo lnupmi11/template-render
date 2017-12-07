@@ -1,8 +1,8 @@
 #include "Parser.h"
-#include "../Utils/Constants.h"
-#include "../Utils/LoopStatement.h"
-#include "../Utils/IfStatement.h"
-#include "../Utils/HTML.h"
+#include "../BL/Constants.h"
+#include "../BL/LoopStatement.h"
+#include "../BL/IfStatement.h"
+#include "../BL/HTML.h"
 #include <regex>
 #include <algorithm>
 #include <stack>

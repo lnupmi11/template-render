@@ -1,6 +1,6 @@
 #pragma once
 #include "../DTO/Context.h"
-#include "../Utils/Parameters.h"
+#include "../BL/Parameters.h"
 #include <list>
 
 class Parser

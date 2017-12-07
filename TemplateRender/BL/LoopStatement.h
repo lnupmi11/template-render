@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utils/Parameters.h"
+#include "../BL/Parameters.h"
 
 class LoopStatement
 {
