@@ -71,13 +71,20 @@
     <ClInclude Include="DTO\Context.h">
       <Filter>DTO</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Tests\index.html">
-      <Filter>Tests</Filter>
-    </None>
-    <None Include="Tests\snippet.html">
-      <Filter>Tests</Filter>
-    </None>
+    <ClInclude Include="BL\Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BL\HTML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BL\IfStatement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BL\LoopStatement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BL\Parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
