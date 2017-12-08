@@ -8,9 +8,8 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 	try
 	{
 		std::string templateHTML = HTML::read(CONSTANT::TEMPLATE_DIR + templatePath);
-		templateHTML = Parser::parseInline(templateHTML);
+		templateHTML = Parser::parseVariables(templateHTML, data);
 		std::string completedHTML = Parser::parseTemplate(templateHTML, data);
-		completedHTML = Parser::parseVariables(completedHTML, data);
 		HTML::write(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}

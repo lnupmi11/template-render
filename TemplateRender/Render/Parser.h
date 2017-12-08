@@ -13,7 +13,7 @@ public:
 
 	// Info:
 	// Finds declared variables and replace them with context data.
-	static std::string parseVariables(const std::string& code, ContextBase* data);
+	static std::string parseVariables(const std::string& code, ContextBase* context);
 
 	// Info:
 	// Finds substring position using regular expression.
@@ -42,9 +42,5 @@ public:
 	// Info:
 	// According to code type executes body of specific statement.
 	static std::string executeCode(const std::string& code, ContextBase* context);
-
-	// Info:
-	// Parses inline code.
-	static std::string parseInline(const std::string& code);
 };
 

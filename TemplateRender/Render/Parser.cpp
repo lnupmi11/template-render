@@ -12,38 +12,46 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 	return std::regex_search(str.begin(), str.end(), std::regex(regexStr));
 }
 
-std::string Parser::parseVariables(const std::string& code, ContextBase* data)
+std::string Parser::parseVariables(const std::string& code, ContextBase* context)
 {
 	std::string result("");
-	if (!Parser::matchString(code, CONSTANT::VAR_REGEX))
+	if (!Parser::matchString(code, "(" + CONSTANT::VAR_REGEX + ")|(" + CONSTANT::INCLUDE_TAG_REGEX + ")"))
 	{
 		result = code;
 	}
 	else
 	{
-		std::regex expression(CONSTANT::VAR_REGEX);
+		std::regex expression("(" + CONSTANT::VAR_REGEX + ")|(" + CONSTANT::INCLUDE_TAG_REGEX + ")");
 		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
 		size_t pos = 0;
 		for (auto it = begin; it != end; it++)
 		{
-			for (size_t i = pos; i < (size_t)it->position(); i++)
+			std::string currentLine(it->str());
+			result += std::string(code.begin() + pos, code.begin() + (size_t)it->position());
+			pos = it->position() + currentLine.size();
+			if (Parser::matchString(currentLine, CONSTANT::VAR_REGEX))
 			{
-				result += code[i];
+				if (context)
+				{
+					std::string contextValue(context->getByKey(std::regex_replace(currentLine, std::regex("\\W+"), "")));
+					if (contextValue.size() > 0)
+					{
+						result += contextValue;
+					}
+					else
+					{
+						pos -= currentLine.size();
+					}
+				}
 			}
-			pos = it->position() + it->str().size();
-			if (data)
+			else if (Parser::matchString(currentLine, CONSTANT::INCLUDE_TAG_REGEX))
 			{
-				result += data->getByKey(std::regex_replace(it->str(), std::regex("\\W+"), ""));
-			}
-			else
-			{
-				result += "";
+				size_t startOffset = currentLine.find("\"") + 1, endOffset = currentLine.find("\"", startOffset);
+				std::string snippet = HTML::read(CONSTANT::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
+				result += Parser::parseVariables(Parser::parseTemplate(snippet, context), context);
 			}
 		}
-		for (size_t i = pos; i < code.size(); i++)
-		{
-			result += code[i];
-		}
+		result += std::string(code.begin() + pos, code.begin() + code.size());
 	}
 	return result;
 }
@@ -111,8 +119,11 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 			}
 		} while (beginPositions.size() != 0);
 		result.code += std::string(code.begin() + begin, code.begin() + end);
-		foundPos = code.find("{%", end);
-		if (foundPos == std::string::npos)
+		if (std::regex_search(code.begin() + end, code.end(), data, expression))
+		{
+			foundPos = data.position() + end;
+		}
+		else
 		{
 			foundPos = code.size();
 		}
@@ -158,6 +169,11 @@ void Parser::findTag(const std::string& str, blockParams& params)
 		}
 		params.foundPos += data.position() + params.offset;
 		params.offset = data.str().size();
+	}
+	else
+	{
+		params.first = false;
+		params.second = false;
 	}
 }
 
@@ -233,38 +249,5 @@ std::string Parser::executeCode(const std::string& code, ContextBase* context)
 	default:
 		throw RenderError("Parser::executeCode(): incorrect type of code.", __FILE__, __LINE__);
 	}
-	return result;
-}
-
-std::string Parser::parseInline(const std::string& code)
-{
-	std::string result("");
-	std::regex expression(CONSTANT::INCLUDE_TAG_REGEX);
-	if (!std::regex_search(code, std::smatch(), expression))
-	{
-		result = code;
-	}
-	else
-	{
-		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
-		size_t pos = 0;
-		for (auto it = begin; it != end; it++)
-		{
-			for (size_t i = pos; i < (size_t)it->position(); i++)
-			{
-				result += code[i];
-			}
-			pos = it->position() + it->str().size();
-			std::string inlineTag(it->str());
-			size_t startOffset = inlineTag.find("\"") + 1;
-			size_t endOffset = inlineTag.find("\"", startOffset);
-			result += HTML::read(CONSTANT::TEMPLATE_DIR + std::string(inlineTag.begin() + startOffset, inlineTag.begin() + endOffset));
-		}
-		for (size_t i = pos; i < code.size(); i++)
-		{
-			result += code[i];
-		}
-	}
-
 	return result;
 }

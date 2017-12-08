@@ -57,7 +57,8 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 			if (ifPositions.size() == elsePositions.size())
 			{
 				elsePos = elsePositions.top().first;
-				parameters.elseString = std::string(code.begin() + elsePos + elsePositions.top().second, code.begin() + code.rfind("{%"));
+				size_t end = Parser::findSubstringPosition(std::string(code.rbegin(), code.rend()), "%\\s*\\{", true);
+				parameters.elseString = std::string(code.begin() + elsePos + elsePositions.top().second, code.begin() + end);
 				while (!ifPositions.empty())
 				{
 					ifPositions.pop();
