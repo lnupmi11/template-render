@@ -25,7 +25,7 @@ public:
 
 	// Info:
 	// Calls findBlock(size_t, string) method while position is not equal to the end of code string.
-	static void findAllBlocks(std::list<block>& blocks, const std::string& code);
+	static void findAllBlocks(std::vector<block>& blocks, const std::string& code);
 
 	// Info:
 	// Looks for beginning or ending tag and writes it to block parameters.
@@ -33,7 +33,7 @@ public:
 
 	// Info:
 	// Analyzes block of code and returns its type.
-	static size_t codeType(const std::string& code);
+	static codeType getCodeType(const std::string& code);
 
 	// Info:
 	// Parses HTML code, using recursion.

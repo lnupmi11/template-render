@@ -1,6 +1,7 @@
 #include "../Render/TemplateRender.h"
 #include <time.h>
 #include <iostream>
+#include <fstream>
 
 void TEST_CASE()
 {
@@ -20,5 +21,13 @@ void TEST_CASE()
 	TemplateRender::render("index.html", "completed.html", new Context<std::string>(context));
 
 	finish = clock();
-	std::cout << "\nRendering time: " << ((float)finish - (float)start) / CLOCKS_PER_SEC << " sec. ";
+	float renderingTime = (float)(finish - start) / CLOCKS_PER_SEC;
+	std::cout << "\nRendering time: " << renderingTime << " sec. ";
+
+	time_t t = time(nullptr);
+	struct tm now;
+	localtime_s(&now, &t);
+	std::ofstream logFile(CONSTANT::ENDPOINT_DIR + "log.txt", std::ios::app);
+	logFile << "[" << now.tm_hour << ':' << now.tm_min << ':' << now.tm_sec << "] Rendering time: " << renderingTime << " sec.\n";
+	logFile.close();
 }

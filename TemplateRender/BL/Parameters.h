@@ -53,3 +53,10 @@ struct ifParams
 
 	ifParams();
 };
+
+enum codeType
+{
+	forLoop,
+	ifStatament,
+	comment
+};

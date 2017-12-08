@@ -15,13 +15,13 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 std::string Parser::parseVariables(const std::string& code, ContextBase* data)
 {
 	std::string result("");
-	std::regex expression(CONSTANT::VAR_REGEX);
-	if (!std::regex_search(code, std::smatch(), expression))
+	if (!Parser::matchString(code, CONSTANT::VAR_REGEX))
 	{
 		result = code;
 	}
 	else
 	{
+		std::regex expression(CONSTANT::VAR_REGEX);
 		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
 		size_t pos = 0;
 		for (auto it = begin; it != end; it++)
@@ -74,22 +74,14 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 {
 	size_t foundPos = 0;
 	block result;
-	foundPos = code.find("{%", pos);
-	if (foundPos == std::string::npos)
+	std::regex expression(CONSTANT::TAG_REGEX);
+	std::smatch data;
+	if (std::regex_search(code.begin() + pos, code.end(), data, expression))
 	{
-		result.after = code;
-		pos = code.size();
-	}
-	else
-	{
-		for (size_t i = pos; i < foundPos; i++)
-		{
-			result.before += code[i];
-		}
-		std::stack<size_t> beginPositions;
-		std::stack<size_t> endPositions;
-		size_t begin = 0;
-		size_t end = code.size();
+		foundPos = data.position() + pos;
+		result.before = std::string(code.begin() + pos, code.begin() + foundPos);
+		std::stack<size_t> beginPositions, endPositions;
+		size_t begin = 0, end = code.size();
 		blockParams blockParameters(foundPos, 0, false, false, CONSTANT::BEGIN_TAG_REGEX, CONSTANT::END_TAG_REGEX);
 		do
 		{
@@ -115,24 +107,27 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 				begin = beginPositions.top();
 				beginPositions.pop();
 				end = endPositions.top();
+				
 			}
 		} while (beginPositions.size() != 0);
-		result.code += code.substr(begin, end - begin);
+		result.code += std::string(code.begin() + begin, code.begin() + end);
 		foundPos = code.find("{%", end);
 		if (foundPos == std::string::npos)
 		{
 			foundPos = code.size();
 		}
-		for (size_t i = end; i < foundPos; i++)
-		{
-			result.after += code[i];
-		}
+		result.after += std::string(code.begin() + end, code.begin() + foundPos);
 		pos = foundPos;
+	}
+	else
+	{
+		result.after = code;
+		pos = code.size();
 	}
 	return result;
 }
 
-void Parser::findAllBlocks(std::list<block>& blocks, const std::string& code)
+void Parser::findAllBlocks(std::vector<block>& blocks, const std::string& code)
 {
 	size_t pos = 0;
 	while (pos < code.size())
@@ -166,9 +161,9 @@ void Parser::findTag(const std::string& str, blockParams& params)
 	}
 }
 
-size_t Parser::codeType(const std::string& code)
+codeType Parser::getCodeType(const std::string& code)
 {
-	int result;
+	codeType result;
 	size_t endPos = 0;
 	try
 	{
@@ -179,20 +174,17 @@ size_t Parser::codeType(const std::string& code)
 		throw RenderError("Parser::codeType(): invalid template syntax.", __FILE__, __LINE__);
 	}
 	std::string statement(code.begin(), code.begin() + endPos);
-	bool checkFor = Parser::matchString(statement, CONSTANT::FOR_REGEX);
-	bool checkIf = Parser::matchString(statement, CONSTANT::IF_REGEX);
-	bool checkComment = Parser::matchString(statement, CONSTANT::BEGIN_COMMENT_REGEX);
-	if (checkFor)
+	if (Parser::matchString(statement, CONSTANT::FOR_REGEX))
 	{
-		result = 1;
+		result = codeType::forLoop;
 	}
-	else if (checkIf)
+	else if (Parser::matchString(statement, CONSTANT::IF_REGEX))
 	{
-		result = 2;
+		result = codeType::ifStatament;
 	}
-	else if (checkComment)
+	else if (Parser::matchString(statement, CONSTANT::BEGIN_COMMENT_REGEX))
 	{
-		result = 3;
+		result = codeType::comment;
 	}
 	else
 	{
@@ -204,9 +196,9 @@ size_t Parser::codeType(const std::string& code)
 std::string Parser::parseTemplate(const std::string& code, ContextBase* context)
 {
 	std::string result("");
-	std::list<block> blocks;
+	std::vector<block> blocks;
 	Parser::findAllBlocks(blocks, code);
-	for (std::list<block>::iterator block = blocks.begin(); block != blocks.end(); block++)
+	for (std::vector<block>::iterator block = blocks.begin(); block != blocks.end(); block++)
 	{
 		if ((*block).before.size() == 0 && (*block).code.size() == 0)
 		{
@@ -225,17 +217,17 @@ std::string Parser::executeCode(const std::string& code, ContextBase* context)
 	forLoopParams forParameters;
 	ifParams ifParameters;
 	std::string body(""), result("");
-	switch (Parser::codeType(code))
+	switch (Parser::getCodeType(code))
 	{
-	case 1:
+	case codeType::forLoop:
 		body = LoopStatement::parse(code, forParameters);
 		result = LoopStatement::execute(body, forParameters);
 		break;
-	case 2:
+	case codeType::ifStatament:
 		body = IfStatement::parse(code, ifParameters);
 		result = IfStatement::execute(body, ifParameters, context);
 		break;
-	case 3:
+	case codeType::comment:
 		result = "";
 		break;
 	default:
