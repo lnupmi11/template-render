@@ -27,20 +27,45 @@ the first is template name, the second is rendered HTML document name, the third
 ### Available syntax
 1. 'For' loop statement tag, example:
     
-    `{% for (size_t i = 0; i < 5; i++) %} /*loop_body*/ {% endfor %}`
+    ```
+        {% for (size_t i = 0; i < 5; i++) %}
+            /*loop_body*/
+            {{ i }}
+            /*loop_body*/
+        {% endfor %}
+    ```
 2. 'If' statement tag, example:
 
-    `{% if (some_var) %} /*condition_body*/ {% else %} /*else_body*/ {% endif %}`
+    ```
+        {% if (some_var_from_context) %}
+            /*condition_body*/
+        {% else %}
+            /*else_body*/
+        {% endif %}
+    ```
+    ```
+        {% if (first_var_from_context <= second_var_from_context) %}
+            /*condition_body*/
+        {% endif %}
+    ```
 3. Tag for including another html documents, example:
 
-    `{% #include "some_snippet.html" %}`
+    ```
+        {% #include "some_snippet.html" %}
+    ```
 4. Tag for commenting code in templates, example:
 
-    `{% comment "Comment explanation" %} /*Some content to comment on*/ {% endcomment %}`
+    ```
+        {% comment "Comment explanation" %}
+            /*Some content to comment on*/
+        {% endcomment %}
+    ```
     
 5. Variables, example:
 
-    `{{ some_var_added_in_context }}` and `{{ loop_var }}`
+    ```
+        {{ some_var_from_context }}
+    ```
 
 ### Authors
 
