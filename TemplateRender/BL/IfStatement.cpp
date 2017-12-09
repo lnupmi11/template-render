@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include <regex>
 #include <stack>
+#include <queue>
 
 std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 {
@@ -36,7 +37,7 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 	}
 	if (std::regex_search(code, data, std::regex(CONSTANT::ELSE_REGEX)))
 	{
-		std::stack<std::pair<size_t, size_t>> elsePositions;
+		std::queue<std::pair<size_t, size_t>> elsePositions;
 		std::stack<size_t> ifPositions;
 		blockParams params(0, 0, false, false, CONSTANT::BEGIN_IF_REGEX, CONSTANT::ELSE_REGEX);
 		do
@@ -52,23 +53,20 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 			}
 			if (ifPositions.size() < elsePositions.size())
 			{
-				throw RenderError("IfStatement::parse(): invalid template syntax.", __FILE__, __LINE__);
+				std::string err(code.begin() + elsePositions.back().first, code.begin() + elsePositions.back().second);
+				throw RenderError("IfStatement::parse(): invalid template syntax.", __FILE__, __LINE__, err);
 			}
 			if (ifPositions.size() == elsePositions.size())
 			{
-				elsePos = elsePositions.top().first;
+				elsePos = elsePositions.back().first;
 				size_t end = Parser::findSubstringPosition(std::string(code.rbegin(), code.rend()), "%\\s*\\{", true);
-				parameters.elseString = std::string(code.begin() + elsePos + elsePositions.top().second, code.begin() + end);
-				while (!ifPositions.empty())
-				{
-					ifPositions.pop();
-				}
+				parameters.elseString = std::string(code.begin() + elsePos + elsePositions.back().second, code.begin() + end);
 			}
 			else if (params.foundPos == std::string::npos)
 			{
 				break;
 			}
-		} while (ifPositions.size() != 0);
+		} while (ifPositions.size() != elsePositions.size());
 	}
 	size_t beginPos = 0;
 	try
@@ -137,7 +135,8 @@ conditionType IfStatement::type(const std::string& condition)
 	}
 	else
 	{
-		throw RenderError("IfStatement::type(): invalid template syntax.", __FILE__, __LINE__);
+		std::string err("'" + condition + "' is invalid symbol.");
+		throw RenderError("IfStatement::type(): invalid template syntax.", __FILE__, __LINE__, err);
 	}
 	return result;
 }

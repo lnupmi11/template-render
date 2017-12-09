@@ -12,7 +12,7 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 	return std::regex_search(str.begin(), str.end(), std::regex(regexStr));
 }
 
-std::string Parser::parseVariables(const std::string& code, ContextBase* context)
+std::string Parser::parseInline(const std::string& code, ContextBase* context)
 {
 	std::string result("");
 	if (!Parser::matchString(code, "(" + CONSTANT::VAR_REGEX + ")|(" + CONSTANT::INCLUDE_TAG_REGEX + ")"))
@@ -48,7 +48,7 @@ std::string Parser::parseVariables(const std::string& code, ContextBase* context
 			{
 				size_t startOffset = currentLine.find("\"") + 1, endOffset = currentLine.find("\"", startOffset);
 				std::string snippet = HTML::read(CONSTANT::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
-				result += Parser::parseVariables(Parser::parseTemplate(snippet, context), context);
+				result += Parser::parseInline(Parser::parseTemplate(snippet, context), context);
 			}
 		}
 		result += std::string(code.begin() + pos, code.begin() + code.size());
@@ -104,7 +104,10 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 			}
 			if (beginPositions.size() < endPositions.size())
 			{
-				throw RenderError("Parser::findBlock(): invalid template syntax.", __FILE__, __LINE__);
+				size_t endPos = endPositions.top();
+				std::string err(code.begin() + code.rfind("{", endPos), code.begin() + endPos);
+				std::string errorLine = "'" + err + "' has invalid opening tag or it is missed.";
+				throw RenderError("Parser::findBlock(): invalid template syntax.", __FILE__, __LINE__, errorLine);
 			}
 			if (beginPositions.size() == endPositions.size())
 			{
@@ -115,7 +118,6 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 				begin = beginPositions.top();
 				beginPositions.pop();
 				end = endPositions.top();
-				
 			}
 		} while (beginPositions.size() != 0);
 		result.code += std::string(code.begin() + begin, code.begin() + end);
@@ -163,17 +165,14 @@ void Parser::findTag(const std::string& str, blockParams& params)
 			params.first = false;
 			params.second = true;
 		}
-		else
-		{
-			throw RenderError("Parser::findTag(): incorrect tag.", __FILE__, __LINE__);
-		}
 		params.foundPos += data.position() + params.offset;
 		params.offset = data.str().size();
 	}
 	else
 	{
-		params.first = false;
-		params.second = false;
+		size_t begin = params.foundPos + params.offset;
+		std::string errorLine(str.begin() + begin, str.begin() + str.find("}", begin) + 1);
+		throw RenderError("Parser::findTag(): incorrect tag.", __FILE__, __LINE__, errorLine);
 	}
 }
 
