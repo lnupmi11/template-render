@@ -7,7 +7,10 @@ private:
 	std::string message;
 	std::string codeSnippet;
 public:
-	RenderError(const std::string& message, const std::string& file, const int line, const std::string& codeSnippet = "");
+	RenderError(const std::string& message, const std::string& file, const int line, const std::string& errorLine = "");
 	~RenderError() = default;
 	const char* what() const;
+	static std::string TEMPLATE;
+private:
+	std::string getError(const std::string& errorLine);
 };

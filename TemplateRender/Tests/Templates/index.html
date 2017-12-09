@@ -8,6 +8,11 @@
             color: darkorange;
             text-decoration: underline;
         }
+        img {
+            width: 300px;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +29,7 @@
             <h3 style="text-align:center;">undefined</h3>
         {% endif %}
     {% endif %}
+    <img src="{% #image 'test_image' %}" alt="test image" />
     <ol>
         {% for (int i = 0; i < 3; i++) %}
              <li>First
@@ -64,6 +70,8 @@
             </li>
         {% endfor %}
     </ol>
+    <hr>
+    <img src="{% #image 'test.png' %}" alt="test image" />
     <hr>
     {% if (3 > 4) %}
         <h4>3 is greater than 4</h4>

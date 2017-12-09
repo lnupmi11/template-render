@@ -1,5 +1,4 @@
 #pragma once
-#include "../BL/Constants.h"
 #include "Parser.h"
 
 class TemplateRender

@@ -4,8 +4,6 @@
 #include "../Render/Parser.h"
 #include <regex>
 
-std::string LoopStatement::TEMPLATE = "";
-
 std::string LoopStatement::parse(const std::string& code, forLoopParams& parameters)
 {
 	std::smatch data;
@@ -26,8 +24,7 @@ std::string LoopStatement::parse(const std::string& code, forLoopParams& paramet
 		}
 		else
 		{
-			std::string err(LoopStatement::getError(loopCondition));
-			throw RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__, err);
+			throw RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__, loopCondition);
 		}
 	}
 	else if (loopCondition.find('>') != std::string::npos)
@@ -41,13 +38,12 @@ std::string LoopStatement::parse(const std::string& code, forLoopParams& paramet
 		}
 		else
 		{
-			std::string err(LoopStatement::getError(loopCondition));
-			throw  RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__, err);
+			throw  RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__, loopCondition);
 		}
 	}
 	else
 	{
-		throw  RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__);
+		throw  RenderError("LoopStatement::parse(): incorrect loop condition.", __FILE__, __LINE__, loopCondition);
 	}
 	size_t beginPos = 0, endPos = 0;
 	try
@@ -91,29 +87,6 @@ std::string LoopStatement::execute(const std::string& loopBody, const forLoopPar
 		else
 		{
 			throw RenderError("LoopStatement::execute(): invalid loop condition.", __FILE__, __LINE__);
-		}
-	}
-	return result;
-}
-
-std::string LoopStatement::getError(const std::string loop)
-{
-	std::string result("");
-	if (LoopStatement::TEMPLATE.size() > 0)
-	{
-		size_t errPos = LoopStatement::TEMPLATE.find(loop);
-		if (errPos != std::string::npos)
-		{
-			size_t errLine = 0;
-			std::string::iterator begin = LoopStatement::TEMPLATE.begin(), end = LoopStatement::TEMPLATE.begin() + errPos;
-			for (std::string::iterator it = begin; it != end; it++)
-			{
-				if (*it == '\n')
-				{
-					errLine++;
-				}
-			}
-			result = "loop '" + loop + "' is invalid, line " + std::to_string(errLine + 1);
 		}
 	}
 	return result;

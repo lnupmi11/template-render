@@ -38,10 +38,15 @@ TemplateRender/.vs/
 #Debug
 TemplateRender/Debug/
 TemplateRender/Tests/Templates/*.html
-TemplateRender/Tests/*.html
-TemplateRender/Tests/*.txt
+*.html
+*.txt
+*.png
+*.jbg
+*.jpeg
+*.bmp
 !TemplateRender/Tests/Templates/index.html
 !TemplateRender/Tests/Templates/snippet.html
+!TemplateRender/Tests/Media/test.png
 #Debug/
 TemplateRender/x64/Debug/
 x64/Debug/

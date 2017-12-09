@@ -3,7 +3,6 @@
 #include "../Render/Parser.h"
 #include "Constants.h"
 #include <regex>
-#include <stack>
 #include <queue>
 
 std::string IfStatement::parse(const std::string& code, ifParams& parameters)
@@ -38,7 +37,7 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 	if (std::regex_search(code, data, std::regex(CONSTANT::ELSE_REGEX)))
 	{
 		std::queue<std::pair<size_t, size_t>> elsePositions;
-		std::stack<size_t> ifPositions;
+		std::queue<size_t> ifPositions;
 		blockParams params(0, 0, false, false, CONSTANT::BEGIN_IF_REGEX, CONSTANT::ELSE_REGEX);
 		do
 		{

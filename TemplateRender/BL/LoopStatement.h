@@ -11,9 +11,4 @@ public:
 	// Info:
 	// Executes 'for' loop statement.
 	static std::string execute(const std::string& loopBody, const forLoopParams& parameters);
-
-	static std::string TEMPLATE;
-
-private:
-	static std::string getError(const std::string loop);
 };

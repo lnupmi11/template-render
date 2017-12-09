@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include "../BL/HTML.h"
 #include "../BL/LoopStatement.h"
+#include "../BL/Constants.h"
 #include <iostream>
 
 void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data)
@@ -9,7 +10,7 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 	try
 	{
 		std::string templateHTML = HTML::read(CONSTANT::TEMPLATE_DIR + templatePath);
-		LoopStatement::TEMPLATE = templateHTML;
+		RenderError::TEMPLATE = templateHTML;
 		std::string completedHTML = Parser::parseInline(templateHTML, data);
 		completedHTML = Parser::parseTemplate(completedHTML, data);
 		HTML::write(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);

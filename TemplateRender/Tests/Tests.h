@@ -1,4 +1,5 @@
 #include "../Render/TemplateRender.h"
+#include "../BL/Constants.h"
 #include <time.h>
 #include <iostream>
 #include <fstream>
@@ -15,7 +16,8 @@ void TEST_CASE()
 		{ "third_variable", "third``" },
 		{ "title", "Index Page" },
 		{ "text_in_snippet_1", "'If' text for testing '#include' tag." },
-		{ "text_in_snippet_2", "'Else' text for testing '#include' tag." }
+		{ "text_in_snippet_2", "'Else' text for testing '#include' tag." },
+		{ "test_image", "test.png" }
 	};
 	
 	TemplateRender::render("index.html", "completed.html", new Context<std::string>(context));

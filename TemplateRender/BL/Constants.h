@@ -3,7 +3,7 @@
 
 namespace CONSTANT
 {
-	const std::string FOR_REGEX("for\\s*\\(\\s*(auto|size_t|int)\\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*(<|>|==|!=)\\s*\\d{1,}\\s*;\\s*[a-z]{1,}((\\+\\+)|(\\-\\-))\\s*\\)");
+	const std::string FOR_REGEX("for\\s*\\(\\s*(auto|size_t|int)\\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*(<|>|==|!=)?\\s*\\d{1,}\\s*;\\s*[a-z]{1,}((\\+\\+)?|(\\-\\-)?)\\s*\\)");
 	const std::string IF_REGEX("if\\s*\\(\\s*((\\w+)|(\\w+\\s*(<|>|==|!=|<=|>=)\\s*\\w+))\\s*\\)");
 	const std::string VAR_REGEX("\\{\\{\\s*\\w*\\s*\\}\\}");
 	const std::string ELSE_REGEX("\\{\\s*%\\s*\\else\\s*%\\s*\\}");
@@ -14,7 +14,9 @@ namespace CONSTANT
 	const std::string END_TAG_REGEX("\\{\\s*%\\s*end(for|if|comment)\\s*%\\s*\\}");
 	const std::string COMPARISON_SYMBOL_REGEX("\\s*(<|>|==|!=|<=|>=)\\s*");
 	const std::string INCLUDE_TAG_REGEX("\\{\\s*%\\s*#include\\s*\"\\w+\\.(html|htm)\"\\s*%\\s*\\}");
-	const std::string TAG_REGEX("(" + BEGIN_TAG_REGEX + ")|(" + END_TAG_REGEX + ")");
+	const std::string BLOCK_TAG_REGEX("(" + BEGIN_TAG_REGEX + ")|(" + END_TAG_REGEX + ")");
+	const std::string IMAGE_TAG_REGEX("\\{\\s*%\\s*#image\\s*'?\\w+(\\.\\w+)?'?\\s*%\\s*\\}");
+	const std::string INLINE_TAG_REGEX("(" + VAR_REGEX + ")|(" + INCLUDE_TAG_REGEX + ")|(" + IMAGE_TAG_REGEX + ")");
 
 	// Info:
 	// Location of template.
@@ -23,4 +25,8 @@ namespace CONSTANT
 	// Info:
 	// Location of rendered HTML document.
 	const std::string ENDPOINT_DIR("Tests/");
+
+	// Info:
+	// Location of all media files.
+	const std::string MEDIA_DIR("Media/");
 }

@@ -5,7 +5,7 @@
 #include "../BL/HTML.h"
 #include <regex>
 #include <algorithm>
-#include <stack>
+#include <queue>
 
 bool Parser::matchString(const std::string& str, const std::string& regexStr)
 {
@@ -15,13 +15,13 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 std::string Parser::parseInline(const std::string& code, ContextBase* context)
 {
 	std::string result("");
-	if (!Parser::matchString(code, "(" + CONSTANT::VAR_REGEX + ")|(" + CONSTANT::INCLUDE_TAG_REGEX + ")"))
+	if (!Parser::matchString(code, CONSTANT::INLINE_TAG_REGEX))
 	{
 		result = code;
 	}
 	else
 	{
-		std::regex expression("(" + CONSTANT::VAR_REGEX + ")|(" + CONSTANT::INCLUDE_TAG_REGEX + ")");
+		std::regex expression(CONSTANT::INLINE_TAG_REGEX);
 		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
 		size_t pos = 0;
 		for (auto it = begin; it != end; it++)
@@ -49,6 +49,33 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 				size_t startOffset = currentLine.find("\"") + 1, endOffset = currentLine.find("\"", startOffset);
 				std::string snippet = HTML::read(CONSTANT::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
 				result += Parser::parseInline(Parser::parseTemplate(snippet, context), context);
+			}
+			else if (Parser::matchString(currentLine, CONSTANT::IMAGE_TAG_REGEX))
+			{
+				size_t k = 0;
+				size_t startOffset = currentLine.find("'"), endOffset;
+				if (startOffset != std::string::npos)
+				{
+					endOffset = currentLine.find("'", ++startOffset);
+					if (endOffset == std::string::npos)
+					{
+						throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
+					}
+				}
+				else
+				{
+					throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
+				}
+				std::string imageName(currentLine.begin() + startOffset, currentLine.begin() + endOffset);
+				result += CONSTANT::MEDIA_DIR;
+				if (imageName.find('.') == std::string::npos)
+				{
+					result += context->getByKey(std::regex_replace(imageName, std::regex("\\W+"), ""));
+				}
+				else
+				{
+					result += imageName;
+				}
 			}
 		}
 		result += std::string(code.begin() + pos, code.begin() + code.size());
@@ -82,13 +109,13 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 {
 	size_t foundPos = 0;
 	block result;
-	std::regex expression(CONSTANT::TAG_REGEX);
+	std::regex expression(CONSTANT::BLOCK_TAG_REGEX);
 	std::smatch data;
 	if (std::regex_search(code.begin() + pos, code.end(), data, expression))
 	{
 		foundPos = data.position() + pos;
 		result.before = std::string(code.begin() + pos, code.begin() + foundPos);
-		std::stack<size_t> beginPositions, endPositions;
+		std::queue<size_t> endPositions, beginPositions;
 		size_t begin = 0, end = code.size();
 		blockParams blockParameters(foundPos, 0, false, false, CONSTANT::BEGIN_TAG_REGEX, CONSTANT::END_TAG_REGEX);
 		do
@@ -104,20 +131,16 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 			}
 			if (beginPositions.size() < endPositions.size())
 			{
-				size_t endPos = endPositions.top();
+				size_t endPos = endPositions.back();
 				std::string err(code.begin() + code.rfind("{", endPos), code.begin() + endPos);
-				std::string errorLine = "'" + err + "' has invalid opening tag or it is missed.";
+				std::string errorLine = "tag '" + err + "' has invalid opening tag or it is missed.";
 				throw RenderError("Parser::findBlock(): invalid template syntax.", __FILE__, __LINE__, errorLine);
 			}
 			if (beginPositions.size() == endPositions.size())
 			{
-				while (beginPositions.size() > 1)
-				{
-					beginPositions.pop();
-				}
-				begin = beginPositions.top();
-				beginPositions.pop();
-				end = endPositions.top();
+				begin = beginPositions.front();
+				end = endPositions.back();
+				break;
 			}
 		} while (beginPositions.size() != 0);
 		result.code += std::string(code.begin() + begin, code.begin() + end);
