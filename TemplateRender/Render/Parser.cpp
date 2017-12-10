@@ -1,8 +1,9 @@
 #include "Parser.h"
-#include "../BL/Constants.h"
+#include "../BL/Regex.h"
 #include "../BL/LoopStatement.h"
 #include "../BL/IfStatement.h"
 #include "../BL/HTML.h"
+#include "../Config/Config.h"
 #include <regex>
 #include <algorithm>
 #include <queue>
@@ -15,13 +16,13 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 std::string Parser::parseInline(const std::string& code, ContextBase* context)
 {
 	std::string result("");
-	if (!Parser::matchString(code, CONSTANT::INLINE_TAG_REGEX))
+	if (!Parser::matchString(code, REGEX::INLINE_TAG_REGEX))
 	{
 		result = code;
 	}
 	else
 	{
-		std::regex expression(CONSTANT::INLINE_TAG_REGEX);
+		std::regex expression(REGEX::INLINE_TAG_REGEX);
 		std::sregex_iterator begin(code.begin(), code.end(), expression), end;
 		size_t pos = 0;
 		for (auto it = begin; it != end; it++)
@@ -29,7 +30,7 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 			std::string currentLine(it->str());
 			result += std::string(code.begin() + pos, code.begin() + (size_t)it->position());
 			pos = it->position() + currentLine.size();
-			if (Parser::matchString(currentLine, CONSTANT::VAR_REGEX))
+			if (Parser::matchString(currentLine, REGEX::VAR_REGEX))
 			{
 				if (context)
 				{
@@ -48,13 +49,13 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 					pos -= currentLine.size();
 				}
 			}
-			else if (Parser::matchString(currentLine, CONSTANT::INCLUDE_TAG_REGEX))
+			else if (Parser::matchString(currentLine, REGEX::INCLUDE_TAG_REGEX))
 			{
 				size_t startOffset = currentLine.find("\"") + 1, endOffset = currentLine.find("\"", startOffset);
 				std::string snippet = HTML::read(CONFIG::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
 				result += Parser::parseInline(Parser::parseTemplate(snippet, context), context);
 			}
-			else if (Parser::matchString(currentLine, CONSTANT::IMAGE_TAG_REGEX))
+			else if (Parser::matchString(currentLine, REGEX::IMAGE_TAG_REGEX))
 			{
 				size_t k = 0;
 				size_t startOffset = currentLine.find("'"), endOffset;
@@ -116,7 +117,7 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 {
 	size_t foundPos = 0;
 	block result;
-	std::regex expression(CONSTANT::BLOCK_TAG_REGEX);
+	std::regex expression(REGEX::BLOCK_TAG_REGEX);
 	std::smatch data;
 	if (std::regex_search(code.begin() + pos, code.end(), data, expression))
 	{
@@ -124,7 +125,7 @@ block Parser::findBlock(size_t& pos, const std::string& code)
 		result.before = std::string(code.begin() + pos, code.begin() + foundPos);
 		std::queue<size_t> endPositions, beginPositions;
 		size_t begin = 0, end = code.size();
-		blockParams blockParameters(foundPos, 0, false, false, CONSTANT::BEGIN_TAG_REGEX, CONSTANT::END_TAG_REGEX);
+		blockParams blockParameters(foundPos, 0, false, false, REGEX::BEGIN_TAG_REGEX, REGEX::END_TAG_REGEX);
 		do
 		{
 			Parser::findTag(code, blockParameters);
@@ -219,15 +220,15 @@ codeType Parser::getCodeType(const std::string& code)
 		throw RenderError("Parser::codeType(): invalid template syntax.", __FILE__, __LINE__);
 	}
 	std::string statement(code.begin(), code.begin() + endPos);
-	if (Parser::matchString(statement, CONSTANT::FOR_REGEX))
+	if (Parser::matchString(statement, REGEX::FOR_REGEX))
 	{
 		result = codeType::forLoop;
 	}
-	else if (Parser::matchString(statement, CONSTANT::IF_REGEX))
+	else if (Parser::matchString(statement, REGEX::IF_REGEX))
 	{
 		result = codeType::ifStatament;
 	}
-	else if (Parser::matchString(statement, CONSTANT::BEGIN_COMMENT_REGEX))
+	else if (Parser::matchString(statement, REGEX::BEGIN_COMMENT_REGEX))
 	{
 		result = codeType::comment;
 	}

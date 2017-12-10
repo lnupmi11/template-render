@@ -1,5 +1,5 @@
 #include "RenderError.h"
-#include "../BL/Constants.h"
+#include "../BL/Regex.h"
 #include <iostream>
 
 std::string RenderError::TEMPLATE = "";

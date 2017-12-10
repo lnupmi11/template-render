@@ -2,7 +2,8 @@
 #include "Parser.h"
 #include "../BL/HTML.h"
 #include "../BL/LoopStatement.h"
-#include "../BL/Constants.h"
+#include "../BL/Regex.h"
+#include "../Config/Config.h"
 #include <iostream>
 
 void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data)

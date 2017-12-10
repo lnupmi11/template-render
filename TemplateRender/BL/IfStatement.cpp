@@ -1,16 +1,16 @@
 #include "IfStatement.h"
 #include "../Utils/RenderError.h"
 #include "../Render/Parser.h"
-#include "Constants.h"
+#include "Regex.h"
 #include <regex>
 #include <queue>
 
 std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 {
 	std::smatch data;
-	std::regex_search(code, data, std::regex(CONSTANT::IF_REGEX));
+	std::regex_search(code, data, std::regex(REGEX::IF_REGEX));
 	std::string condition = data.str();
-	if (std::regex_search(condition, data, std::regex(CONSTANT::COMPARISON_SYMBOL_REGEX)))
+	if (std::regex_search(condition, data, std::regex(REGEX::COMPARISON_SYMBOL_REGEX)))
 	{
 		parameters.type = IfStatement::type(std::regex_replace(data.str(), std::regex("\\s+"), ""));
 		size_t offset = condition.find("(") + 1;
@@ -34,11 +34,11 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 	{
 		throw RenderError("IfStatement::parse(): invalid template syntax.", __FILE__, __LINE__);
 	}
-	if (std::regex_search(code, data, std::regex(CONSTANT::ELSE_REGEX)))
+	if (std::regex_search(code, data, std::regex(REGEX::ELSE_REGEX)))
 	{
 		std::queue<std::pair<size_t, size_t>> elsePositions;
 		std::queue<size_t> ifPositions;
-		blockParams params(0, 0, false, false, CONSTANT::BEGIN_IF_REGEX, CONSTANT::ELSE_REGEX);
+		blockParams params(0, 0, false, false, REGEX::BEGIN_IF_REGEX, REGEX::ELSE_REGEX);
 		do
 		{
 			Parser::findTag(code, params);

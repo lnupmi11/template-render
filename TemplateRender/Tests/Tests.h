@@ -1,5 +1,4 @@
-#include "../Render/TemplateRender.h"
-#include "../BL/Constants.h"
+#include "../Utils/Header.h"
 #include <time.h>
 #include <iostream>
 #include <fstream>

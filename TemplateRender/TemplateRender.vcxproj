@@ -124,15 +124,17 @@
     <ClCompile Include="Utils\RenderError.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BL\Constants.h" />
+    <ClInclude Include="BL\Regex.h" />
     <ClInclude Include="BL\HTML.h" />
     <ClInclude Include="BL\IfStatement.h" />
     <ClInclude Include="BL\LoopStatement.h" />
     <ClInclude Include="BL\Parameters.h" />
+    <ClInclude Include="Config\Config.h" />
     <ClInclude Include="DTO\Context.h" />
     <ClInclude Include="Render\TemplateRender.h" />
     <ClInclude Include="Render\Parser.h" />
     <ClInclude Include="Tests\Tests.h" />
+    <ClInclude Include="Utils\Header.h" />
     <ClInclude Include="Utils\RenderError.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

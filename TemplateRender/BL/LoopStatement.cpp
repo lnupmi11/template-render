@@ -1,5 +1,5 @@
 #include "LoopStatement.h"
-#include "Constants.h"
+#include "Regex.h"
 #include "../Utils/RenderError.h"
 #include "../Render/Parser.h"
 #include <regex>
@@ -7,7 +7,7 @@
 std::string LoopStatement::parse(const std::string& code, forLoopParams& parameters)
 {
 	std::smatch data;
-	std::regex_search(code, data, std::regex(CONSTANT::FOR_REGEX));
+	std::regex_search(code, data, std::regex(REGEX::FOR_REGEX));
 	std::string loopCondition = data.str();
 	std::regex_search(code, data, std::regex("\\w+(\\+\\+|\\-\\-)"));
 	parameters.iteratorName = std::regex_replace(data.str(), std::regex("\\W+"), "");

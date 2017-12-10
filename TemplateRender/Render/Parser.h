@@ -1,7 +1,7 @@
 #pragma once
 #include "../DTO/Context.h"
 #include "../BL/Parameters.h"
-#include <list>
+#include <vector>
 
 class Parser
 {

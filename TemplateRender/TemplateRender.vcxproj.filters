@@ -71,9 +71,6 @@
     <ClInclude Include="DTO\Context.h">
       <Filter>DTO</Filter>
     </ClInclude>
-    <ClInclude Include="BL\Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BL\HTML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,6 +81,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BL\Parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BL\Regex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
