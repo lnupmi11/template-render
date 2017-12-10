@@ -13,11 +13,12 @@ the project in Microsoft Visual Studio.
 ### Usage
 
 1. Comment on `TEST_CASE()` line in `AppStart.cpp`.
-2. Specify the path `TEMPLATE_DIR` for template search and `ENDPOINT_DIR` for rendered HTML document in `Constants.h` file.
-(Default: `TEMPLATE_DIR = "Tests/Templates/"`, `ENDPOINT_DIR = "Tests/"` )
+2. In `Constants.h` file specify the paths `TEMPLATE_DIR` for template search, `ENDPOINT_DIR` for rendered HTML document 
+and `MEDIA_DIR` for media files search.
+(Default: `TEMPLATE_DIR = "Tests/Templates/"`, `ENDPOINT_DIR = "Tests/"`, `MEDIA_DIR = "Media/"`)
 3. Create context object using vector of pairs of keys and values (or do not create if you do not use it).
-    > \* For custom classes and structures it is necessary to overload `std::ostringstream` operator.
-4. Design your template.
+    > \* Operator `std::ostringstream` is required for custom classes and structures.
+4. Design your template (check for 'Available syntax' section).
 5. In `AppStart.cpp` call `TemplateRender::render()` function and pass arguments:
 the first is template name, the second is rendered HTML document name, the third is your context
 (if you do not use context ignore this argument, default is `nullptr`).
@@ -25,7 +26,9 @@ the first is template name, the second is rendered HTML document name, the third
 7. Find rendered HTML document in the directory that you specified.  
 
 ### Available syntax
-1. 'For' loop statement tag, example:
+1. 'For' loop statement tag.
+
+    Example:
     
     ```
         {% for (size_t i = 0; i < 5; i++) %}
@@ -34,7 +37,9 @@ the first is template name, the second is rendered HTML document name, the third
             /*loop_body*/
         {% endfor %}
     ```
-2. 'If' statement tag, example:
+2. 'If' statement tag.
+
+    Example:
 
     ```
         {% if (some_var_from_context) %}
@@ -48,12 +53,17 @@ the first is template name, the second is rendered HTML document name, the third
             /*condition_body*/
         {% endif %}
     ```
-3. Tag for including another html documents, example:
+    > \* Only a comparison of two strings or two numbers is available.
+3. Tag for including another html documents.
+
+    Example:
 
     ```
         {% #include "some_snippet.html" %}
     ```
-4. Tag for commenting code in templates, example:
+4. Tag for commenting code in templates.
+
+    Example:
 
     ```
         {% comment "Comment explanation" %}
@@ -61,10 +71,22 @@ the first is template name, the second is rendered HTML document name, the third
         {% endcomment %}
     ```
     
-5. Variables, example:
+5. Variables.
+
+    Example:
 
     ```
         {{ some_var_from_context }}
+    ```
+6. Images.
+
+    Example:
+
+    ```
+        <img src="{% #image 'some_image_from_context' %}" />
+    ```
+    ```
+        <img src="{% #image 'some_image.png' %}" />
     ```
 
 ### Authors

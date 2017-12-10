@@ -29,7 +29,7 @@ void TEST_CASE()
 	time_t t = time(nullptr);
 	struct tm now;
 	localtime_s(&now, &t);
-	std::ofstream logFile(CONSTANT::ENDPOINT_DIR + "log.txt", std::ios::app);
+	std::ofstream logFile(CONFIG::ENDPOINT_DIR + "log.txt", std::ios::app);
 	logFile << "[" << now.tm_hour << ':' << now.tm_min << ':' << now.tm_sec << "] Rendering time: " << renderingTime << " sec.\n";
 	logFile.close();
 }

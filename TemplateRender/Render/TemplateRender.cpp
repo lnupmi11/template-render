@@ -9,11 +9,11 @@ void TemplateRender::render(const std::string& templatePath, const std::string& 
 {
 	try
 	{
-		std::string templateHTML = HTML::read(CONSTANT::TEMPLATE_DIR + templatePath);
+		std::string templateHTML = HTML::read(CONFIG::TEMPLATE_DIR + templatePath);
 		RenderError::TEMPLATE = templateHTML;
 		std::string completedHTML = Parser::parseInline(templateHTML, data);
 		completedHTML = Parser::parseTemplate(completedHTML, data);
-		HTML::write(completedHTML, CONSTANT::ENDPOINT_DIR + htmlPath);
+		HTML::write(completedHTML, CONFIG::ENDPOINT_DIR + htmlPath);
 		std::cout << "\nCompleted!";
 	}
 	catch (RenderError& exc)

@@ -17,7 +17,10 @@ namespace CONSTANT
 	const std::string BLOCK_TAG_REGEX("(" + BEGIN_TAG_REGEX + ")|(" + END_TAG_REGEX + ")");
 	const std::string IMAGE_TAG_REGEX("\\{\\s*%\\s*#image\\s*'?\\w+(\\.\\w+)?'?\\s*%\\s*\\}");
 	const std::string INLINE_TAG_REGEX("(" + VAR_REGEX + ")|(" + INCLUDE_TAG_REGEX + ")|(" + IMAGE_TAG_REGEX + ")");
+}
 
+namespace CONFIG
+{
 	// Info:
 	// Location of template.
 	const std::string TEMPLATE_DIR("Tests/Templates/");

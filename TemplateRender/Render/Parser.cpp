@@ -43,11 +43,15 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 						pos -= currentLine.size();
 					}
 				}
+				else
+				{
+					pos -= currentLine.size();
+				}
 			}
 			else if (Parser::matchString(currentLine, CONSTANT::INCLUDE_TAG_REGEX))
 			{
 				size_t startOffset = currentLine.find("\"") + 1, endOffset = currentLine.find("\"", startOffset);
-				std::string snippet = HTML::read(CONSTANT::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
+				std::string snippet = HTML::read(CONFIG::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
 				result += Parser::parseInline(Parser::parseTemplate(snippet, context), context);
 			}
 			else if (Parser::matchString(currentLine, CONSTANT::IMAGE_TAG_REGEX))
@@ -67,10 +71,13 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 					throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
 				}
 				std::string imageName(currentLine.begin() + startOffset, currentLine.begin() + endOffset);
-				result += CONSTANT::MEDIA_DIR;
+				result += CONFIG::MEDIA_DIR;
 				if (imageName.find('.') == std::string::npos)
 				{
-					result += context->getByKey(std::regex_replace(imageName, std::regex("\\W+"), ""));
+					if (context)
+					{
+						result += context->getByKey(std::regex_replace(imageName, std::regex("\\W+"), ""));
+					}
 				}
 				else
 				{
