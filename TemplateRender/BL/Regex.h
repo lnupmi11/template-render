@@ -3,7 +3,7 @@
 
 namespace REGEX
 {
-	static const std::string FOR_REGEX("for\\s*\\(\\s*(auto|size_t|int)\\s*[a-z]{1,}\\s*=\\s*\\d{1,}\\s*;\\s*[a-z]{1,}\\s*(<|>|==|!=)?\\s*\\d{1,}\\s*;\\s*[a-z]{1,}((\\+\\+)?|(\\-\\-)?)\\s*\\)");
+	static const std::string FOR_REGEX("for\\s*\\(\\s*(auto|size_t|int)\\s*\\w+\\s*=\\s*\\d+\\s*;\\s*\\w+\\s*(<|>|==|\\!=)?\\s*\\d+\\s*;\\s*\\w*(\\+{0,2}|\\-{0,2})\\s*\\)");
 	static const std::string IF_REGEX("if\\s*\\(\\s*((\\w+)|(\\w+\\s*(<|>|==|!=|<=|>=)\\s*\\w+))\\s*\\)");
 	static const std::string VAR_REGEX("\\{\\{\\s*\\w*\\s*\\}\\}");
 	static const std::string ELSE_REGEX("\\{\\s*%\\s*\\else\\s*%\\s*\\}");

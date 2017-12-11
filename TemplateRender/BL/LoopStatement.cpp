@@ -9,7 +9,10 @@ std::string LoopStatement::parse(const std::string& code, forLoopParams& paramet
 	std::smatch data;
 	std::regex_search(code, data, std::regex(REGEX::FOR_REGEX));
 	std::string loopCondition = data.str();
-	std::regex_search(code, data, std::regex("\\w+(\\+\\+|\\-\\-)"));
+	if (!std::regex_search(loopCondition, data, std::regex("\\w+(\\+\\+|\\-\\-?)")))
+	{
+		throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, loopCondition);
+	}
 	parameters.iteratorName = std::regex_replace(data.str(), std::regex("\\W+"), "");
 	int startCount = stoi(loopCondition.substr(loopCondition.find('=') + 1, loopCondition.find(';', loopCondition.find('='))));
 	int endCount;
@@ -55,7 +58,16 @@ std::string LoopStatement::parse(const std::string& code, forLoopParams& paramet
 	{
 		throw RenderError("LoopStatement::parse(): invalid template syntax.", __FILE__, __LINE__);
 	}
-	return std::string(code.begin() + beginPos, code.begin() + endPos);
+	std::string result;
+	try
+	{
+		result = std::string(code.begin() + beginPos, code.begin() + endPos);
+	}
+	catch (...)
+	{
+		throw RenderError("LoopStatement::parse(): invalid template syntax, end tag was missed of incorrect.", __FILE__, __LINE__);
+	}
+	return result;
 }
 
 std::string LoopStatement::execute(const std::string& loopBody, const forLoopParams& parameters)

@@ -34,14 +34,22 @@ std::string Parser::parseInline(const std::string& code, Context* context)
 			{
 				if (context)
 				{
-					std::string contextValue(context->getByKey(std::regex_replace(currentLine, std::regex("\\W+"), "")));
-					if (contextValue.size() > 0)
+					std::string contextValue(std::regex_replace(currentLine, std::regex("\\W+"), ""));
+					if (contextValue != "")
 					{
-						result += contextValue;
+						contextValue = context->getByKey(contextValue);
+						if (contextValue.size() > 0)
+						{
+							result += contextValue;
+						}
+						else
+						{
+							pos -= currentLine.size();
+						}
 					}
 					else
 					{
-						pos -= currentLine.size();
+						throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
 					}
 				}
 				else
@@ -208,9 +216,7 @@ void Parser::findTag(const std::string& str, blockParams& params)
 	}
 	else
 	{
-		size_t begin = params.foundPos + params.offset;
-		std::string errorLine(str.begin() + begin, str.begin() + str.find("}", begin) + 1);
-		throw RenderError("Parser::findTag(): incorrect tag.", __FILE__, __LINE__, errorLine);
+		throw RenderError("Parser::findTag(): missing closing tag or it is invalid.", __FILE__, __LINE__);
 	}
 }
 

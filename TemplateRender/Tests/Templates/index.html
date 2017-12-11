@@ -19,10 +19,10 @@
     {% if (first_author) %}
         {% if (second_author) %}
             <h2 class="title">{{ first_author }} and {{ second_author }} Present</h2>
-        { % else %}
+        {% else %}
             <h2 class="title">{{ first_author }} Presents</h2>
         {% endif %}
-    { % else % }
+    {% else %}
         {% if (second_author) %}
             <h2 class="title">{{ second_author }} Presents</h2>
         {% else %}
@@ -37,7 +37,7 @@
                 <ol>
                     {% for (int j = 10; j > 0; j--) %}
                         <li>first` - [{{ i }}][{{ j }}]</li>
-                    {% endfor %}
+                    { % endfor %}
                 </ol>
                  {% #include "snippet.html" %}
                 <hr>
@@ -93,6 +93,6 @@
     {% if (4 == 4) %}
         <h4>4 is equal to 4</h4>
     {% endif %}
-    {          % #include "snippet.html" %}
+    {% #include "snippet.html" %}
 </body>
 </html>

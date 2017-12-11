@@ -28,10 +28,11 @@ and `MEDIA_DIR` for media files search.
     Example:
     ```
         std::vector<std::pair<std::string, std::string>> context = {
-            { "first_variable", "first_value" },
-            { "second_variable", "second_value" },
-            { "third_variable", "third_value" },
+            { "first_key", "first_value" },
+            { "second_key", "second_value" },
+            { "third_key", "third_value" },
         };
+        Context* contextObject = new Context(context);
 	```
 4. Design a template (check for 'Available syntax' section).
 5. In `AppStart.cpp` call `TemplateRender::render()` function and pass arguments:
@@ -40,7 +41,6 @@ the first is template name, the second is rendered HTML document name, the third
 
     Example:
     ```
-        Context* contextObject = new Context(context);
         TemplateRender::render("index.html", "completed.html", contextObject);
     ```
 6. Build and run the project using Microsoft Visual Studio tools.
