@@ -29,6 +29,14 @@
             <h3 style="text-align:center;">undefined</h3>
         {% endif %}
     {% endif %}
+    <hr>
+    <h3>A collection of integers:</h3>
+    <h4>|
+        {% foreach (auto var : test_collection) %}
+            {{ var }} |
+        {% endfor %}
+    </h4>
+    <hr>
     <img src="{% #static 'test_image' %}" alt="test image" />
     <ol>
         {% for (int i = 0; i < 3; i++) %}
@@ -37,7 +45,7 @@
                 <ol>
                     {% for (int j = 10; j > 0; j--) %}
                         <li>first` - [{{ i }}][{{ j }}]</li>
-                    { % endfor %}
+                    {% endfor %}
                 </ol>
                  {% #include "snippet.html" %}
                 <hr>

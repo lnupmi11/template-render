@@ -40,7 +40,14 @@ std::string Parser::parseInline(const std::string& code, Context* context)
 						contextValue = context->getByKey(contextValue);
 						if (contextValue.size() > 0)
 						{
-							result += contextValue;
+							if (contextValue.find("~~|(") == std::string::npos)
+							{
+								result += contextValue;
+							}
+							else
+							{
+								throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine, "The collection of objects is not renderable, use for each loop");
+							}
 						}
 						else
 						{
@@ -49,7 +56,7 @@ std::string Parser::parseInline(const std::string& code, Context* context)
 					}
 					else
 					{
-						throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
+						throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine, "Empty variable tag.");
 					}
 				}
 				else
@@ -99,6 +106,10 @@ std::string Parser::parseInline(const std::string& code, Context* context)
 				{
 					throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
 				}
+			}
+			else if (Parser::matchString(currentLine, REGEX::EMPTY_TAG))
+			{
+				throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
 			}
 		}
 		result += std::string(code.begin() + pos, code.begin() + code.size());
@@ -237,6 +248,10 @@ codeType Parser::getCodeType(const std::string& code)
 	{
 		result = codeType::forLoop;
 	}
+	else if (Parser::matchString(statement, REGEX::FOREACH_REGEX))
+	{
+		result = codeType::foreachLoop;
+	}
 	else if (Parser::matchString(statement, REGEX::IF_REGEX))
 	{
 		result = codeType::ifStatament;
@@ -275,12 +290,17 @@ std::string Parser::executeCode(const std::string& code, Context* context)
 {
 	forLoopParams forParameters;
 	ifParams ifParameters;
+	foreachLoopParams foreachParameters;
 	std::string body(""), result("");
 	switch (Parser::getCodeType(code))
 	{
 	case codeType::forLoop:
-		body = LoopStatement::parse(code, forParameters);
-		result = LoopStatement::execute(body, forParameters);
+		body = LoopStatement::parseForLoop(code, forParameters);
+		result = LoopStatement::executeForLoop(body, forParameters);
+		break;
+	case codeType::foreachLoop:
+		body = LoopStatement::parseForeachLoop(code, foreachParameters);
+		result = LoopStatement::executeForeachLoop(body, foreachParameters, context);
 		break;
 	case codeType::ifStatament:
 		body = IfStatement::parse(code, ifParameters);
@@ -291,6 +311,22 @@ std::string Parser::executeCode(const std::string& code, Context* context)
 		break;
 	default:
 		throw RenderError("Parser::executeCode(): incorrect type of code.", __FILE__, __LINE__);
+	}
+	return result;
+}
+
+std::vector<std::string> Parser::parseCollection(const std::string& collection)
+{
+	std::vector<std::string> result;
+	if (collection.size() > 0)
+	{
+		std::regex expression("\\~\\~\\|\\(\.*\\)\\|\\~\\~");
+		std::sregex_iterator begin(collection.begin(), collection.end(), expression), end;
+		for (auto it = begin; it != end; it++)
+		{
+			std::string object(it->str());
+			result.push_back(std::string(object.begin() + 4, object.end() - 4));
+		}
 	}
 	return result;
 }

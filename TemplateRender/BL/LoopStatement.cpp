@@ -4,7 +4,9 @@
 #include "Parser.h"
 #include <regex>
 
-std::string LoopStatement::parse(const std::string& code, forLoopParams& parameters)
+#include <iostream>
+
+std::string LoopStatement::parseForLoop(const std::string& code, forLoopParams& parameters)
 {
 	std::smatch data;
 	std::regex_search(code, data, std::regex(REGEX::FOR_REGEX));
@@ -70,7 +72,7 @@ std::string LoopStatement::parse(const std::string& code, forLoopParams& paramet
 	return result;
 }
 
-std::string LoopStatement::execute(const std::string& loopBody, const forLoopParams& parameters)
+std::string LoopStatement::executeForLoop(const std::string& loopBody, const forLoopParams& parameters)
 {
 	std::string result("");
 	if (parameters.increment)
@@ -99,6 +101,62 @@ std::string LoopStatement::execute(const std::string& loopBody, const forLoopPar
 		else
 		{
 			throw RenderError("LoopStatement::execute(): invalid loop condition.", __FILE__, __LINE__);
+		}
+	}
+	return result;
+}
+
+std::string LoopStatement::parseForeachLoop(const std::string& code, foreachLoopParams& parameters)
+{
+	std::string result("");
+	std::smatch data;
+	std::regex_search(code, data, std::regex(REGEX::FOREACH_REGEX));
+	std::string loopStatement(data.str());
+	size_t beginPos = loopStatement.find("auto");
+	if (beginPos != std::string::npos)
+	{
+		beginPos = loopStatement.find(' ', beginPos);
+		size_t endPos = loopStatement.find(':', beginPos);
+		if (endPos != std::string::npos)
+		{
+			std::string var(loopStatement.begin() + beginPos, loopStatement.begin() + endPos);
+			parameters.varName = std::regex_replace(var, std::regex("\\s+"), "");
+			beginPos = loopStatement.find(')', endPos);
+			var = std::string(loopStatement.begin() + endPos + 1, loopStatement.begin() + beginPos);
+			parameters.containerName = std::regex_replace(var, std::regex("\\s+"), "");
+			result = std::string(code.begin() + code.find('}', beginPos) + 1, code.begin() + code.rfind('{'));
+		}
+		else
+		{
+			throw RenderError("LoopStatement::parseForeachLoop(): invalid loop statement.", __FILE__, __LINE__, loopStatement);
+		}
+	}
+	else
+	{
+		std::string errMessage("type of variable is missing or incorrect.");
+		throw RenderError("LoopStatement::parseForeachLoop(): invalid loop statement.", __FILE__, __LINE__, loopStatement, errMessage);
+	}
+	return result;
+}
+
+std::string LoopStatement::executeForeachLoop(const std::string& loopBody, const foreachLoopParams& parameters, Context* context)
+{
+	std::string result("");
+	if (context)
+	{
+		std::string collectionName = context->getByKey(parameters.containerName);
+		if (collectionName.size() > 0)
+		{
+			std::vector<std::string> collection = Parser::parseCollection(collectionName);
+			for (const auto& var : collection)
+			{
+				std::string temp(std::regex_replace(loopBody, std::regex("\\{\\{\\s*" + parameters.varName + "\\s*\\}\\}"), var));
+				result += temp;
+			}
+		}
+		else
+		{
+			throw RenderError("LoopStatement::executeForeachLoop(): collection '" + parameters.containerName + "' does not exist.", __FILE__, __LINE__);
 		}
 	}
 	return result;

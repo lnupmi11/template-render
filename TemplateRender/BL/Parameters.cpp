@@ -16,4 +16,6 @@ blockParams::blockParams(
 
 forLoopParams::forLoopParams() : numberOfIteration(0), increment(false), fewer(false), iteratorName("") {};
 
+foreachLoopParams::foreachLoopParams() : varName(""), containerName("") {};
+
 ifParams::ifParams() : type(conditionType::none), firstVar(""), secondVar(""), elseString("") {};

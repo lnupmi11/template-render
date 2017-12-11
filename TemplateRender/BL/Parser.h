@@ -42,5 +42,9 @@ public:
 	// Info:
 	// According to code type executes body of specific statement.
 	static std::string executeCode(const std::string& code, Context* context);
+
+	// Info:
+	// Parses a vector composed by TemplateRender::str() method.
+	static std::vector<std::string> parseCollection(const std::string& collection);
 };
 

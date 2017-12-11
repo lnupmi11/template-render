@@ -33,6 +33,14 @@ struct forLoopParams
 	forLoopParams();
 };
 
+struct foreachLoopParams
+{
+	std::string varName;
+	std::string containerName;
+
+	foreachLoopParams();
+};
+
 enum conditionType
 {
 	less,
@@ -57,6 +65,7 @@ struct ifParams
 enum codeType
 {
 	forLoop,
+	foreachLoop,
 	ifStatament,
 	comment
 };
