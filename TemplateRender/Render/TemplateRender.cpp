@@ -1,12 +1,11 @@
 #include "TemplateRender.h"
-#include "Parser.h"
 #include "../BL/HTML.h"
 #include "../BL/LoopStatement.h"
 #include "../BL/Regex.h"
 #include "../Config/Config.h"
 #include <iostream>
 
-void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data)
+void TemplateRender::render(const std::string& templatePath, const std::string& htmlPath, Context* data)
 {
 	try
 	{

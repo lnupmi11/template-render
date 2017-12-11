@@ -11,7 +11,7 @@ public:
 
 	// Info:
 	// Executes 'if' statement.
-	static std::string execute(const std::string& body, const ifParams& parameters, ContextBase* context);
+	static std::string execute(const std::string& body, const ifParams& parameters, Context* context);
 
 private:
 	// Info:
@@ -21,7 +21,7 @@ private:
 	// Info:
 	// Checks the condition and returns its result.
 	template<typename dataType>
-	static bool condition(const dataType& left, const dataType& right, const ifParams& parameters, ContextBase* context)
+	static bool condition(const dataType& left, const dataType& right, const ifParams& parameters, Context* context)
 	{
 		bool result = false;
 		switch (parameters.type)

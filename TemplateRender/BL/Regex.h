@@ -15,6 +15,6 @@ namespace REGEX
 	static const std::string COMPARISON_SYMBOL_REGEX("\\s*(<|>|==|!=|<=|>=)\\s*");
 	static const std::string INCLUDE_TAG_REGEX("\\{\\s*%\\s*#include\\s*\"\\w+\\.(html|htm)\"\\s*%\\s*\\}");
 	static const std::string BLOCK_TAG_REGEX("(" + BEGIN_TAG_REGEX + ")|(" + END_TAG_REGEX + ")");
-	static const std::string IMAGE_TAG_REGEX("\\{\\s*%\\s*#image\\s*'?\\w+(\\.\\w+)?'?\\s*%\\s*\\}");
-	static const std::string INLINE_TAG_REGEX("(" + VAR_REGEX + ")|(" + INCLUDE_TAG_REGEX + ")|(" + IMAGE_TAG_REGEX + ")");
+	static const std::string STATIC_TAG_REGEX("\\{\\s*%\\s*#(?!include)\\w*\\s*'?\\w+(\\.\\w+)?'?\\s*%\\s*\\}");
+	static const std::string INLINE_TAG_REGEX("(" + VAR_REGEX + ")|(" + INCLUDE_TAG_REGEX + ")|(" + STATIC_TAG_REGEX + ")");
 }

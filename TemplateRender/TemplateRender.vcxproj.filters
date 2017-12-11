@@ -30,9 +30,6 @@
     <ClCompile Include="AppStart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Parser.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\RenderError.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -54,15 +51,15 @@
     <ClCompile Include="BL\Parameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BL\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tests\Tests.h">
       <Filter>Tests</Filter>
     </ClInclude>
     <ClInclude Include="Render\TemplateRender.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Parser.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Utils\RenderError.h">
@@ -92,5 +89,17 @@
     <ClInclude Include="Utils\Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BL\Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tests\Templates\snippet.html" />
+    <None Include="Tests\Templates\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Tests\Media\test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

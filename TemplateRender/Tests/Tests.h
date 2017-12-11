@@ -19,7 +19,7 @@ void TEST_CASE()
 		{ "test_image", "test.png" }
 	};
 	
-	TemplateRender::render("index.html", "completed.html", new Context<std::string>(context));
+	TemplateRender::render("index.html", "completed.html", new Context(context));
 
 	finish = clock();
 	float renderingTime = (float)(finish - start) / CLOCKS_PER_SEC;

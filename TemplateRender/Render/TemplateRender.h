@@ -1,5 +1,5 @@
 #pragma once
-#include "Parser.h"
+#include "../BL/Parser.h"
 
 class TemplateRender
 {
@@ -7,5 +7,5 @@ public:
 
 	// Info:
 	// Renders the template.
-	static void render(const std::string& templatePath, const std::string& htmlPath, ContextBase* data = nullptr);
+	static void render(const std::string& templatePath, const std::string& htmlPath, Context* data = nullptr);
 };

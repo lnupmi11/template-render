@@ -1,6 +1,6 @@
 #pragma once
 #include "../DTO/Context.h"
-#include "../BL/Parameters.h"
+#include "Parameters.h"
 #include <vector>
 
 class Parser
@@ -13,7 +13,7 @@ public:
 
 	// Info:
 	// Finds declared variables and replace them with context data.
-	static std::string parseInline(const std::string& code, ContextBase* context);
+	static std::string parseInline(const std::string& code, Context* context);
 
 	// Info:
 	// Finds substring position using regular expression.
@@ -37,10 +37,10 @@ public:
 
 	// Info:
 	// Parses HTML code, using recursion.
-	static std::string parseTemplate(const std::string& code, ContextBase* context);
+	static std::string parseTemplate(const std::string& code, Context* context);
 
 	// Info:
 	// According to code type executes body of specific statement.
-	static std::string executeCode(const std::string& code, ContextBase* context);
+	static std::string executeCode(const std::string& code, Context* context);
 };
 

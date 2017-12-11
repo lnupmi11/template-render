@@ -15,13 +15,34 @@ the project in Microsoft Visual Studio.
 1. Include `Utils/Header.h` to a file where `TemplateRender::render()` is used.
 2. In `Config/Config.h` file specify the paths `TEMPLATE_DIR` for template search, `ENDPOINT_DIR` for rendered HTML document 
 and `MEDIA_DIR` for media files search.
-(Default values which are used for testing: `TEMPLATE_DIR = "ROOT_DIR/Tests/Templates/"`, `ENDPOINT_DIR = "ROOT_DIR/Tests/"`, `MEDIA_DIR = "ROOT_DIR/Tests/Media/"`)
-3. Create context object using vector of pairs of keys and values (or do not create if it is not used).
-    > \* Operator `std::ostringstream` is required for custom classes and structures.
+
+    Default values which are used for testing:
+    ```
+        TEMPLATE_DIR: "ROOT_DIR/Tests/Templates/"
+        ENDPOINT_DIR: "ROOT_DIR/Tests/"
+        MEDIA_DIR: "ROOT_DIR/Tests/Media/"
+    ```
+3. Create a context object using vector of pairs of keys and values (or do not create if it is not used).
+    > \* Keys and values must have `std::string` type.
+
+    Example:
+    ```
+        std::vector<std::pair<std::string, std::string>> context = {
+            { "first_variable", "first_value" },
+            { "second_variable", "second_value" },
+            { "third_variable", "third_value" },
+        };
+	```
 4. Design a template (check for 'Available syntax' section).
 5. In `AppStart.cpp` call `TemplateRender::render()` function and pass arguments:
 the first is template name, the second is rendered HTML document name, the third is your context
 (if context is not used ignore this argument, default is `nullptr`).
+
+    Example:
+    ```
+        Context* contextObject = new Context(context);
+        TemplateRender::render("index.html", "completed.html", contextObject);
+    ```
 6. Build and run the project using Microsoft Visual Studio tools.
 7. Find rendered HTML document in the `ENDPOINT_DIR` directory that was specified earlier.  
 
@@ -78,15 +99,15 @@ the first is template name, the second is rendered HTML document name, the third
     ```
         {{ some_var_from_context }}
     ```
-6. Images.
+6. Static files.
 
     Example:
 
     ```
-        <img src="{% #image 'some_image_from_context' %}" />
+        <img src="{% #static 'some_image_from_context' %}" />
     ```
     ```
-        <img src="{% #image 'some_image.png' %}" />
+        <img src="{% #static 'some_image.png' %}" />
     ```
 
 ### Authors

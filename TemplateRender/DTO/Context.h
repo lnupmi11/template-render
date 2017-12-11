@@ -3,25 +3,11 @@
 #include <map>
 #include <vector>
 
-class ContextBase
-{
-public:
-	virtual std::string getByKey(const std::string& key) = 0;
-};
-
-template <class dataType = std::string>
-class Context : public ContextBase
+class Context
 {
 private:
-	std::map<std::string, dataType> list;
+	std::map<std::string, std::string> list;
 public:
-	Context(const std::vector<std::pair<std::string, dataType>>& data)
-	{
-		for (size_t i = 0; i < data.size(); i++)
-		{
-			this->list[data[i].first] = data[i].second;
-		}
-	}
+	Context(const std::vector<std::pair<std::string, std::string>>& data);
 	std::string getByKey(const std::string& key);
-
 };

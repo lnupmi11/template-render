@@ -1,6 +1,6 @@
 #include "IfStatement.h"
 #include "../Utils/RenderError.h"
-#include "../Render/Parser.h"
+#include "Parser.h"
 #include "Regex.h"
 #include <regex>
 #include <queue>
@@ -79,7 +79,7 @@ std::string IfStatement::parse(const std::string& code, ifParams& parameters)
 	return std::string(code.begin() + beginPos, code.begin() + elsePos);
 }
 
-std::string IfStatement::execute(const std::string& body, const ifParams& parameters, ContextBase* context)
+std::string IfStatement::execute(const std::string& body, const ifParams& parameters, Context* context)
 {
 	std::string result("");
 	bool check = false;

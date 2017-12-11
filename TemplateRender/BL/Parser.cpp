@@ -1,8 +1,8 @@
 #include "Parser.h"
-#include "../BL/Regex.h"
-#include "../BL/LoopStatement.h"
-#include "../BL/IfStatement.h"
-#include "../BL/HTML.h"
+#include "Regex.h"
+#include "LoopStatement.h"
+#include "IfStatement.h"
+#include "HTML.h"
 #include "../Config/Config.h"
 #include <regex>
 #include <algorithm>
@@ -13,7 +13,7 @@ bool Parser::matchString(const std::string& str, const std::string& regexStr)
 	return std::regex_search(str.begin(), str.end(), std::regex(regexStr));
 }
 
-std::string Parser::parseInline(const std::string& code, ContextBase* context)
+std::string Parser::parseInline(const std::string& code, Context* context)
 {
 	std::string result("");
 	if (!Parser::matchString(code, REGEX::INLINE_TAG_REGEX))
@@ -55,34 +55,41 @@ std::string Parser::parseInline(const std::string& code, ContextBase* context)
 				std::string snippet = HTML::read(CONFIG::TEMPLATE_DIR + std::string(currentLine.begin() + startOffset, currentLine.begin() + endOffset));
 				result += Parser::parseInline(Parser::parseTemplate(snippet, context), context);
 			}
-			else if (Parser::matchString(currentLine, REGEX::IMAGE_TAG_REGEX))
+			else if (Parser::matchString(currentLine, REGEX::STATIC_TAG_REGEX))
 			{
-				size_t k = 0;
-				size_t startOffset = currentLine.find("'"), endOffset;
-				if (startOffset != std::string::npos)
+				if (currentLine.find("static") != std::string::npos)
 				{
-					endOffset = currentLine.find("'", ++startOffset);
-					if (endOffset == std::string::npos)
+					size_t k = 0;
+					size_t startOffset = currentLine.find("'"), endOffset;
+					if (startOffset != std::string::npos)
+					{
+						endOffset = currentLine.find("'", ++startOffset);
+						if (endOffset == std::string::npos)
+						{
+							throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
+						}
+					}
+					else
 					{
 						throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
+					}
+					std::string staticFileName(currentLine.begin() + startOffset, currentLine.begin() + endOffset);
+					result += CONFIG::MEDIA_DIR;
+					if (staticFileName.find('.') == std::string::npos)
+					{
+						if (context)
+						{
+							result += context->getByKey(std::regex_replace(staticFileName, std::regex("\\W+"), ""));
+						}
+					}
+					else
+					{
+						result += staticFileName;
 					}
 				}
 				else
 				{
 					throw RenderError("Parser::parseInline(): invalid template syntax.", __FILE__, __LINE__, currentLine);
-				}
-				std::string imageName(currentLine.begin() + startOffset, currentLine.begin() + endOffset);
-				result += CONFIG::MEDIA_DIR;
-				if (imageName.find('.') == std::string::npos)
-				{
-					if (context)
-					{
-						result += context->getByKey(std::regex_replace(imageName, std::regex("\\W+"), ""));
-					}
-				}
-				else
-				{
-					result += imageName;
 				}
 			}
 		}
@@ -239,7 +246,7 @@ codeType Parser::getCodeType(const std::string& code)
 	return result;
 }
 
-std::string Parser::parseTemplate(const std::string& code, ContextBase* context)
+std::string Parser::parseTemplate(const std::string& code, Context* context)
 {
 	std::string result("");
 	std::vector<block> blocks;
@@ -258,7 +265,7 @@ std::string Parser::parseTemplate(const std::string& code, ContextBase* context)
 	return result;
 }
 
-std::string Parser::executeCode(const std::string& code, ContextBase* context)
+std::string Parser::executeCode(const std::string& code, Context* context)
 {
 	forLoopParams forParameters;
 	ifParams ifParameters;

@@ -118,12 +118,13 @@
     <ClCompile Include="BL\IfStatement.cpp" />
     <ClCompile Include="BL\LoopStatement.cpp" />
     <ClCompile Include="BL\Parameters.cpp" />
+    <ClCompile Include="BL\Parser.cpp" />
     <ClCompile Include="DTO\Context.cpp" />
-    <ClCompile Include="Render\Parser.cpp" />
     <ClCompile Include="Render\TemplateRender.cpp" />
     <ClCompile Include="Utils\RenderError.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BL\Parser.h" />
     <ClInclude Include="BL\Regex.h" />
     <ClInclude Include="BL\HTML.h" />
     <ClInclude Include="BL\IfStatement.h" />
@@ -132,10 +133,16 @@
     <ClInclude Include="Config\Config.h" />
     <ClInclude Include="DTO\Context.h" />
     <ClInclude Include="Render\TemplateRender.h" />
-    <ClInclude Include="Render\Parser.h" />
     <ClInclude Include="Tests\Tests.h" />
     <ClInclude Include="Utils\Header.h" />
     <ClInclude Include="Utils\RenderError.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tests\Templates\index.html" />
+    <None Include="Tests\Templates\snippet.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Tests\Media\test.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,7 +29,7 @@
             <h3 style="text-align:center;">undefined</h3>
         {% endif %}
     {% endif %}
-    <img src="{% #image 'test_image' %}" alt="test image" />
+    <img src="{% #static 'test_image' %}" alt="test image" />
     <ol>
         {% for (int i = 0; i < 3; i++) %}
              <li>First
@@ -71,7 +71,7 @@
         {% endfor %}
     </ol>
     <hr>
-    <img src="{% #image 'test.png' %}" alt="test image" />
+    <img src="{% #static 'test.png' %}" alt="test image" />
     <hr>
     {% if (3 > 4) %}
         <h4>3 is greater than 4</h4>
