@@ -23,14 +23,18 @@ and `MEDIA_DIR` for media files search.
         MEDIA_DIR: "ROOT_DIR/Tests/Media/"
     ```
 3. Create a context object using vector of pairs of keys and values (or do not create if it is not used).
-    > \* Keys and values must have `std::string` type.
+    > \* Keys and values must have `std::string` type, use `TemplateRender::str()` to convert any data to string.
+    
+    > \* Required an `std::ostringstream` operator for custom data types.
+    
+    > \* For arrays of objects use `std::vector` container.
 
     Example:
     ```
         std::vector<std::pair<std::string, std::string>> context = {
             { "first_key", "first_value" },
             { "second_key", "second_value" },
-            { "third_key", "third_value" },
+            { "third_key", TemplateRender::str<int>(2017) }
         };
         Context* contextObject = new Context(context);
 	```
@@ -58,7 +62,18 @@ the first is template name, the second is rendered HTML document name, the third
             /*loop_body*/
         {% endfor %}
     ```
-2. 'If' statement tag.
+2. 'Foreach' loop statement tag.
+
+    Example:
+    
+    ```
+        {% for (auto some_var : some_collection) %}
+            /*loop_body*/
+            {{ some_var }}
+            /*loop_body*/
+        {% endfor %}
+    ```
+3. 'If' statement tag.
 
     Example:
 
@@ -75,14 +90,14 @@ the first is template name, the second is rendered HTML document name, the third
         {% endif %}
     ```
     > \* Only a comparison of two strings or two numbers is available.
-3. Tag for including another html documents.
+4. Tag for including another html documents.
 
     Example:
 
     ```
         {% #include "some_snippet.html" %}
     ```
-4. Tag for commenting code in templates.
+5. Tag for commenting code in templates.
 
     Example:
 
@@ -92,14 +107,14 @@ the first is template name, the second is rendered HTML document name, the third
         {% endcomment %}
     ```
     
-5. Variables.
+6. Variables.
 
     Example:
 
     ```
         {{ some_var_from_context }}
     ```
-6. Static files.
+7. Static files.
 
     Example:
 

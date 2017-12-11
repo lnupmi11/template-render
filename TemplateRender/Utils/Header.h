@@ -10,6 +10,7 @@
 		* <string>
 		* <vector>
 		* <map>
+		* <sstream>
 		* <unistd.h> - Linux
 		* <direct.h> - Windows
 */
