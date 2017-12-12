@@ -1,5 +1,5 @@
 #include "Functions.h"
-#include"..//GlobalVariables.h"
+#include"../Render/GlobalVariables.h"
 #include<Windows.h>
 
 
@@ -54,6 +54,11 @@ bool HelperFunctions::isStateModified(const string & previousVersion, const stri
 	bool result;
 	result = previousVersion != currentVersion;
 	return result;
+}
+
+bool HelperFunctions::isFileEmpty(ifstream & file)
+{
+	return file.peek() == ifstream::traits_type::eof();
 }
 
 void HelperFunctions::validateFileName(const string& fileName)

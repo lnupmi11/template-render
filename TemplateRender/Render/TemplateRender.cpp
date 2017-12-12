@@ -1,7 +1,7 @@
 #include "../Utils/Functions.h"
 #include "../Render/Parser.h"
 #include "TemplateRender.h"
-#include "../GlobalVariables.h"
+#include "../Render/GlobalVariables.h"
 #include "Compile.h"
 
 string VSWHEREPATH = "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe";
@@ -93,7 +93,6 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 
 		ifstream ifsVsDevCmdPath("VsDevCmdPath.txt");
 		ofstream ofsVsDevCmdPath;
-		//
 
 		if (!ifsProjectSettings.is_open())
 		{
@@ -101,7 +100,7 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			ofsProjectSettings << 3;
 		}
 
-		if (!ifsVsDevCmdPath.is_open())
+		if (!ifsVsDevCmdPath.is_open() || HelperFunctions::isFileEmpty(ifsVsDevCmdPath))
 		{
 			ofsVsDevCmdPath.open("VsDevCmdPath.txt");
 			cout << "Before first  launch , at x64/Debug or Debug/ or , if you launch project from vs at TemplateRender/   in file VsDevCmdPath.txt enter a path to VsDevCmd.bat \n";
@@ -135,11 +134,7 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			{
 				ofs << 2;
 				string tmp = EXEFILEPATH;
-				//ofsVsDevCmdPath.open("VsDevCmdPath.txt", ios_base::out);
-				//ifsVsDevCmdPath >> DEVPROMPTPATH;
 				getline(ifsVsDevCmdPath, DEVPROMPTPATH);
-				//cout << DEVPROMPTPATH << "\n";
-				//system("pause");
 				if (DEVPROMPTPATH == "")
 				{
 					ofs.close();
@@ -168,7 +163,6 @@ void TemplateRender::render(const string& htmlPagePath, Model& Model)
 			ofsVsDevCmdPath.close();
 		}
 
-		//cout << "\n" << INDEXHTMLFILEPATH;
 		ShellExecute(0, "open", INDEXHTMLFILEPATH.c_str(),
 			NULL,
 			NULL, SW_HIDE);

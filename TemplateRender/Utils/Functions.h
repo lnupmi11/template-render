@@ -34,16 +34,12 @@ private:
 
 
 public:
-
-	// Info
-	// Get all from cpphtml(simple html page with our cpp code) page     
 	static string getCppHtmlCode(const string& fileName);
-	// Info
-	// Add  begin(also libraries) and end to cpp code;
 	static string createCompletedCppCode(const string& ñppCode);
 	static void execute(const string& command);
 	static string getFileContent(const string& path);
 	static bool isStateModified(const string& previousVersion, const string& currentVersion);
+	static bool isFileEmpty(ifstream& file);
 	static void setArchitecture();
 	static void createPaths();
 };

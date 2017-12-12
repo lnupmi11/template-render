@@ -71,8 +71,8 @@
     <ClInclude Include="DTO\Model.h">
       <Filter>DTO</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalVariables.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Render\GlobalVariables.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

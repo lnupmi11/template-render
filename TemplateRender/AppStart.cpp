@@ -1,5 +1,5 @@
 #include "Render\TemplateRender.h"
-#include"GlobalVariables.h"
+#include"../TemplateRender/Render/GlobalVariables.h"
 #include"Utils\Functions.h"
 
 using namespace std;
