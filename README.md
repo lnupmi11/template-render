@@ -7,8 +7,12 @@ Download as a zip archive or clone the repository:
 ```
 git clone https://github.com/lnupmi11/template-render.git
 ```
-Move to the project folder and use `TemplateRender.sln` for opening
-the project in Microsoft Visual Studio.
+Move to the project folder and switch the branch into dev:
+```
+cd template-render
+git checkout dev
+```
+Use `TemplateRender.sln` for opening the project in Microsoft Visual Studio.
 
 ### Usage
 
@@ -135,4 +139,4 @@ the first is template name, the second is rendered HTML document name, the third
 * **[Andrii Vaskiv](https://github.com/AndriiVaskiv)**
 * **[Oleg Zhuk](https://github.com/NSArray47)**
 
-> Note: project is not tested completely, so, there still can be bugs.
+> Note: the project is not tested completely, so, there still can be bugs.
